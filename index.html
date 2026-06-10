@@ -163,6 +163,8 @@
   .compact-stat b{display:block;color:var(--green);font-size:15px}
   .compact-stat span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
   .code-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;background:#21180f;color:#fff4df;border-radius:9px;padding:10px;overflow:auto;white-space:pre-wrap}
+  .sync-strip{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+  .sync-strip button{flex:1 1 140px}
   @media (max-width:900px){
     .today-command{grid-template-columns:1fr}
     .dashboard,.split{grid-template-columns:1fr}
@@ -172,18 +174,35 @@
     .boxes{grid-template-columns:repeat(32,1fr)}
   }
   @media (max-width:560px){
-    body{padding-bottom:88px}
-    .hero{grid-template-columns:50px 1fr 50px;padding-top:16px}
-    .avatar{width:50px;height:50px;border-radius:14px;font-size:24px}
-    h1{font-size:24px}
-    .year-ring{width:50px;height:50px;font-size:13px}
-    .pulse{grid-template-columns:repeat(2,1fr)}
-    main{padding:12px 10px}
+    body{padding-bottom:40px}
+    .hero{grid-template-columns:30px 1fr 78px;padding:6px 9px 5px;gap:7px}
+    .avatar{width:34px;height:34px;border-radius:10px;font-size:18px}
+    h1{font-size:19px}
+    .subtitle{display:none}
+    .year-ring{display:none}
+    .pulse{display:contents}
+    .pulse-item:not(.top-progress){display:none}
+    .top-progress{grid-column:3;grid-row:1;align-self:center;background:rgba(0,0,0,.17);border-radius:8px;padding:5px}
+    .pulse-label{font-size:8px;letter-spacing:.8px}
+    .pulse-value,.top-progress-value{font-size:11px}
+    .top-progress-row{gap:5px}
+    .top-progress-track{height:4px}
+    .nav{padding:5px 8px;gap:4px}
+    .nav-btn{font-size:10px;padding:5px 8px}
+    main{padding:8px 8px}
+    .card{padding:10px;border-radius:8px}
+    .section-title{font-size:18px}
+    details.day-panel summary{padding:10px 11px}
+    .panel-body{padding:0 10px 10px}
     .stats{grid-template-columns:repeat(2,1fr)}
     .actions{grid-template-columns:1fr}
     .project-grid,.wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:1fr}
     .trait{grid-template-columns:82px 1fr 30px}
     .boxes{grid-template-columns:repeat(25,1fr);gap:2px}
+    .bottom{padding:5px 9px 7px}
+    .bottom-label{display:none}
+    .bottom-value{font-size:12px;margin-top:0}
+    .bottom button{padding:5px 8px;font-size:10px}
   }
 </style>
 </head>
@@ -227,6 +246,11 @@
         </div>
         <div class="score-line" style="margin-top:8px"><div id="homeProgressFill" style="width:0%"></div></div>
         <div class="firebase-status" id="firebaseStatus" style="margin-top:8px">Firebase: локальный режим</div>
+        <div class="sync-strip">
+          <button class="ghost" onclick="showView('integrations')">Синхронизация Apple</button>
+          <button class="primary" onclick="enableNotifications()">Включить уведомления</button>
+        </div>
+        <div class="firebase-status" id="notificationStatus" style="margin-top:7px">Уведомления: не включены</div>
       </div>
       <div class="grid">
         <details class="day-panel" open>
@@ -452,11 +476,12 @@
     </div>
     <div class="grid split" style="margin-top:10px">
       <div class="card">
-        <div class="section-kicker">Apple Shortcut JSON</div>
-        <div class="section-title">Импорт дел и календаря на сегодня</div>
+        <div class="section-kicker">Синхронизация Apple</div>
+        <div class="section-title">Разово: календарь и напоминания на сегодня</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:8px">Вставь JSON из Команд Apple один раз и нажми синхронизировать. Дела и встречи появятся на главном экране и сохранятся в Firebase.</p>
         <textarea id="appleJsonInput" placeholder='{"date":"2026-06-10","tasks":[{"title":"Позвонить","source":"Reminders"}],"calendar":[{"time":"14:00","title":"Встреча","source":"Minical"}]}'></textarea>
         <div class="save-row">
-          <button class="primary" onclick="importAppleJson()">Импортировать</button>
+          <button class="primary" onclick="importAppleJson()">Синхронизировать</button>
           <button class="ghost" onclick="clearAppleSync()">Очистить Apple импорт</button>
         </div>
         <div class="knowledge-list" id="appleSyncStatus" style="margin-top:10px"></div>
@@ -525,6 +550,7 @@ window.LIFE_OS_FIREBASE_CONFIG={
 <script>
 const stateKey="ilya_life_os_v1";
 const todayKey=new Date().toISOString().slice(0,10);
+let notificationTimers=[];
 const morningHabits=[
   {id:"tan",name:"Загар по погоде",meta:"если есть солнце и время"},
   {id:"breath",name:"Дыхательная практика",meta:"5-10 минут"},
@@ -687,6 +713,54 @@ function renderHome(){
   document.getElementById("habitTodayBadge").textContent=`${data.habits.filter(h=>isDone(`habit-${h.id}`)).length}/${data.habits.length}`;
   document.getElementById("taskTodayBadge").textContent=`${data.tasks.filter((t,i)=>isDone(`task-${t.id||i}`)).length}/${data.tasks.length}`;
   document.getElementById("calendarTodayBadge").textContent=`${data.calendar.length} событий`;
+  scheduleNotifications();
+}
+function notificationAvailable(){
+  return "Notification" in window;
+}
+async function enableNotifications(){
+  if(!notificationAvailable()){
+    updateNotificationStatus("Уведомления: браузер не поддерживает");
+    return;
+  }
+  const result=await Notification.requestPermission();
+  if(result==="granted"){
+    updateNotificationStatus("Уведомления: включены");
+    new Notification("Life OS", {body:"Уведомления включены. Напоминания дня будут приходить, пока сайт открыт."});
+    scheduleNotifications();
+  }else{
+    updateNotificationStatus("Уведомления: запрет в браузере");
+  }
+}
+function updateNotificationStatus(text){
+  const el=document.getElementById("notificationStatus");
+  if(el)el.textContent=text;
+}
+function scheduleNotifications(){
+  notificationTimers.forEach(clearTimeout);
+  notificationTimers=[];
+  if(!notificationAvailable()){
+    updateNotificationStatus("Уведомления: браузер не поддерживает");
+    return;
+  }
+  if(Notification.permission!=="granted"){
+    updateNotificationStatus(Notification.permission==="denied"?"Уведомления: запрет в браузере":"Уведомления: не включены");
+    return;
+  }
+  updateNotificationStatus("Уведомления: включены");
+  const data=allHomeItems();
+  const candidates=[
+    ...data.calendar.map((event,i)=>({key:`event-${event.id||i}`,time:event.time,title:event.title,source:event.source||"календарь"})),
+    ...data.habits.filter(h=>/^\d\d:\d\d$/.test(h.meta||"")).map(h=>({key:`habit-${h.id}`,time:h.meta,title:h.name,source:"привычка"}))
+  ];
+  candidates.forEach(item=>{
+    if(!item.time||isDone(item.key))return;
+    const due=new Date(`${todayKey}T${item.time}:00`);
+    const delay=due.getTime()-Date.now();
+    if(delay>0&&delay<86400000){
+      notificationTimers.push(setTimeout(()=>new Notification(item.title,{body:item.source}),delay));
+    }
+  });
 }
 function addTask(){
   const input=document.getElementById("taskInput");
