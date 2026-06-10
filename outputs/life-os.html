@@ -93,6 +93,8 @@
   .wardrobe{grid-template-columns:repeat(4,1fr)}
   .wardrobe .card{min-height:116px}
   .money-grid{grid-template-columns:repeat(4,1fr)}
+  .three-grid{grid-template-columns:repeat(3,1fr)}
+  .two-grid{grid-template-columns:repeat(2,1fr)}
   .finance-number{font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--green);font-weight:700;margin-top:4px}
   .connectors{display:grid;gap:8px}
   .connector{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:10px}
@@ -108,10 +110,19 @@
   .event:before{content:"";position:absolute;left:-17px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--gold)}
   .event b{display:block;margin-bottom:3px}
   .event span{font-size:12px;color:var(--muted)}
-  textarea{width:100%;min-height:112px;resize:vertical;border:1.5px solid var(--line);background:#fffdf8;border-radius:9px;padding:10px;color:var(--ink);outline:none}
+  textarea,input,select{width:100%;border:1.5px solid var(--line);background:#fffdf8;border-radius:9px;padding:10px;color:var(--ink);outline:none}
+  textarea{min-height:112px;resize:vertical}
+  input[type="file"]{padding:8px;background:var(--paper2)}
+  label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--muted);font-weight:800;margin:8px 0 5px}
   .save-row{display:flex;gap:8px;margin-top:8px}
   .primary{border:0;background:var(--green);color:#fff3df;border-radius:8px;padding:10px 12px;font-size:12px;font-weight:800}
   .ghost{border:1px solid var(--line);background:var(--paper);color:var(--green);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:800}
+  .file-card{background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:10px;display:grid;gap:8px}
+  .file-card img{width:100%;max-height:180px;object-fit:cover;border-radius:7px;border:1px solid var(--line)}
+  .file-actions{display:flex;gap:7px;flex-wrap:wrap}
+  .file-actions a,.file-actions button{border:1px solid var(--line);background:var(--paper);color:var(--green);border-radius:8px;padding:8px 10px;text-decoration:none;font-size:12px;font-weight:800}
+  .mini-form{display:grid;gap:8px}
+  .reminder-time{font-family:Georgia,"Times New Roman",serif;font-size:20px;color:var(--green);font-weight:700}
   .bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--green);box-shadow:0 -5px 22px rgba(0,0,0,.18);padding:10px 14px 18px}
   .bottom-inner{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
   .bottom-label{font-size:10px;color:#aac6b8;text-transform:uppercase;letter-spacing:1.4px}
@@ -121,7 +132,7 @@
     .dashboard,.split{grid-template-columns:1fr}
     .today-grid{grid-template-columns:1fr}
     .project-grid{grid-template-columns:repeat(2,1fr)}
-    .wardrobe,.money-grid{grid-template-columns:repeat(2,1fr)}
+    .wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:repeat(2,1fr)}
     .boxes{grid-template-columns:repeat(32,1fr)}
   }
   @media (max-width:560px){
@@ -134,7 +145,7 @@
     main{padding:12px 10px}
     .stats{grid-template-columns:repeat(2,1fr)}
     .actions{grid-template-columns:1fr}
-    .project-grid,.wardrobe,.money-grid{grid-template-columns:1fr}
+    .project-grid,.wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:1fr}
     .trait{grid-template-columns:82px 1fr 30px}
     .boxes{grid-template-columns:repeat(25,1fr);gap:2px}
   }
@@ -198,15 +209,27 @@
   </section>
 
   <section class="view" id="habits">
-    <div class="card">
-      <div class="habit-head">
-        <div>
-          <div class="section-kicker">Дневник привычек</div>
-          <div class="section-title">1000 боксов дисциплины</div>
+    <div class="grid split">
+      <div class="card">
+        <div class="habit-head">
+          <div>
+            <div class="section-kicker">Дневник привычек</div>
+            <div class="section-title">1000 боксов дисциплины</div>
+          </div>
+          <div class="habit-count"><span id="boxCount">0</span>/1000</div>
         </div>
-        <div class="habit-count"><span id="boxCount">0</span>/1000</div>
+        <div class="boxes" id="boxes"></div>
       </div>
-      <div class="boxes" id="boxes"></div>
+      <div class="card">
+        <div class="section-kicker">Мои привычки и напоминания</div>
+        <div class="section-title">Добавляй сам</div>
+        <div class="mini-form">
+          <input id="habitName" placeholder="Например: прогулка 30 минут">
+          <input id="habitTime" type="time">
+          <button class="primary" onclick="addHabit()">Добавить привычку</button>
+        </div>
+        <div class="knowledge-list" id="customHabits" style="margin-top:10px"></div>
+      </div>
     </div>
   </section>
 
@@ -251,6 +274,112 @@
         <div class="event"><b>Этап 1</b><span>ручной CSV-импорт раз в неделю</span></div>
         <div class="event"><b>Этап 2</b><span>автоматизация через Shortcuts, если приложение отдает данные</span></div>
         <div class="event"><b>Этап 3</b><span>финансовый AI анализирует только твои показатели и цели</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="resume">
+    <div class="grid three-grid" id="resumeSlots"></div>
+  </section>
+
+  <section class="view" id="auto">
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Авто</div>
+        <div class="section-title">Паспорт машины</div>
+        <div class="mini-form">
+          <input id="carName" placeholder="Марка, модель, год">
+          <input id="carMileage" placeholder="Пробег">
+          <input id="carVin" placeholder="VIN / номер кузова">
+          <button class="primary" onclick="saveCar()">Сохранить авто</button>
+        </div>
+        <div class="knowledge-list" id="carInfo" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">ТО и ремонт</div>
+        <div class="section-title">История обслуживания</div>
+        <div class="mini-form">
+          <input id="serviceDate" type="date">
+          <input id="serviceTitle" placeholder="Что сделали">
+          <input id="serviceCost" placeholder="Стоимость">
+          <textarea id="serviceNote" placeholder="Детали, запчасти, сервис"></textarea>
+          <button class="primary" onclick="addService()">Добавить запись</button>
+        </div>
+        <div class="timeline" id="serviceLog" style="margin-top:12px"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="section-kicker">Сканы документов</div>
+      <div class="section-title">СТС, ПТС, страховка, чеки</div>
+      <label>Название документа</label>
+      <input id="autoDocName" placeholder="Например: ОСАГО 2026">
+      <label>Файл</label>
+      <input id="autoDocFile" type="file" accept="image/*,.pdf">
+      <button class="primary" style="margin-top:8px" onclick="saveFile('autoDocs','autoDocName','autoDocFile')">Загрузить документ</button>
+      <div class="grid three-grid" id="autoDocs" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="view" id="health">
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Здоровье</div>
+        <div class="section-title">История болезни и лечения</div>
+        <div class="mini-form">
+          <input id="healthDate" type="date">
+          <input id="healthTitle" placeholder="Событие: анализы, лечение, диагноз">
+          <textarea id="healthNote" placeholder="Симптомы, назначения, результат"></textarea>
+          <button class="primary" onclick="addHealthEvent()">Добавить запись</button>
+        </div>
+        <div class="timeline" id="healthLog" style="margin-top:12px"></div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Врачи и контакты</div>
+        <div class="section-title">К кому обращаться</div>
+        <div class="mini-form">
+          <input id="doctorName" placeholder="Имя врача">
+          <input id="doctorSpec" placeholder="Специализация">
+          <input id="doctorPhone" placeholder="Телефон / клиника">
+          <button class="primary" onclick="addDoctor()">Добавить врача</button>
+        </div>
+        <div class="knowledge-list" id="doctorList" style="margin-top:10px"></div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="section-kicker">Фото, анализы, лечение</div>
+      <div class="section-title">Медицинские файлы</div>
+      <label>Название файла</label>
+      <input id="healthFileName" placeholder="Например: анализ крови июнь">
+      <label>Файл</label>
+      <input id="healthFile" type="file" accept="image/*,.pdf">
+      <button class="primary" style="margin-top:8px" onclick="saveFile('healthFiles','healthFileName','healthFile')">Загрузить файл</button>
+      <div class="grid three-grid" id="healthFiles" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <section class="view" id="integrations">
+    <div class="grid split">
+      <div class="card dark">
+        <div class="section-kicker">Что реально подключать</div>
+        <div class="section-title">Живая синхронизация</div>
+        <div class="connectors">
+          <div class="connector"><div><b>Apple Calendar / Minical</b><span>Minical читает системный календарь Apple, значит работаем через Apple Calendar/ICS</span></div><div class="switch on"></div></div>
+          <div class="connector"><div><b>Apple Reminders</b><span>задачи и напоминания лучше гонять через Shortcuts</span></div><div class="switch on"></div></div>
+          <div class="connector"><div><b>Apple Health</b><span>вес, сон, шаги, тренировки через экспорт Health или Health Auto Export</span></div><div class="switch"></div></div>
+          <div class="connector"><div><b>Mist / питание</b><span>если нет API, берем CSV/скрин/экспорт и превращаем в показатели</span></div><div class="switch"></div></div>
+          <div class="connector"><div><b>Money Flow</b><span>если нет API, начинаем с CSV-экспорта и регулярного импорта</span></div><div class="switch"></div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Следующие действия</div>
+        <div class="section-title">Что тебе подготовить</div>
+        <div class="timeline">
+          <div class="event"><b>1. Резюме</b><span>три PDF/DOCX версии: ресторанный консалтинг, операционный директор, предприниматель</span></div>
+          <div class="event"><b>2. Авто</b><span>фото/сканы СТС, страховки, чеков, список последних ремонтов и пробег</span></div>
+          <div class="event"><b>3. Здоровье</b><span>контакты врачей, важные анализы, история лечения, фото по лечению</span></div>
+          <div class="event"><b>4. Календарь</b><span>решить: локально через Apple Shortcuts или веб-сервер с авторизацией</span></div>
+          <div class="event"><b>5. AI</b><span>собрать базу “обо мне”: цели, принципы, проекты, финансы, здоровье, ограничения</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -301,6 +430,10 @@ const views=[
   ["library","Знания"],
   ["cabinet","Кабинет"],
   ["finance","Финансы"],
+  ["resume","Резюме"],
+  ["auto","Авто"],
+  ["health","Здоровье"],
+  ["integrations","Связи"],
   ["legacy","Наследие"]
 ];
 const traits=[
@@ -345,7 +478,12 @@ const wardrobe=[
   ["Аксессуары","ремни, очки, портфель"],["Покупки","лист желаний и приоритет"]
 ];
 function loadState(){
-  try{return JSON.parse(localStorage.getItem(stateKey))||{checks:{},boosts:{},boxes:144,notes:[]}}catch(e){return{checks:{},boosts:{},boxes:144,notes:[]}}
+  try{
+    const saved=JSON.parse(localStorage.getItem(stateKey))||{};
+    return Object.assign({checks:{},boosts:{},boxes:144,notes:[],habits:[],resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
+  }catch(e){
+    return{checks:{},boosts:{},boxes:144,notes:[],habits:[],resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
+  }
 }
 function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
 function buildNav(){
@@ -428,6 +566,25 @@ function renderBoxes(){
     root.appendChild(b);
   }
 }
+function renderCustomHabits(){
+  const root=document.getElementById("customHabits");
+  if(!root)return;
+  root.innerHTML="";
+  if(!state.habits.length)root.innerHTML='<div class="note"><b>Пока нет личных привычек</b><span class="badge">добавь</span></div>';
+  state.habits.forEach((h,i)=>{
+    root.insertAdjacentHTML("beforeend",`<div class="note"><b>${h.name}<br><span class="reminder-time">${h.time||"без времени"}</span></b><button class="ghost" onclick="removeItem('habits',${i})">Удалить</button></div>`);
+  });
+}
+function addHabit(){
+  const name=document.getElementById("habitName").value.trim();
+  const time=document.getElementById("habitTime").value;
+  if(!name)return;
+  state.habits.unshift({name,time});
+  document.getElementById("habitName").value="";
+  document.getElementById("habitTime").value="";
+  save();
+  renderCustomHabits();
+}
 function renderProjects(){
   const root=document.getElementById("projectsGrid");
   root.innerHTML="";
@@ -445,6 +602,133 @@ function renderWardrobe(){
   const root=document.getElementById("wardrobe");
   root.innerHTML="";
   wardrobe.forEach(([name,text])=>root.insertAdjacentHTML("beforeend",`<div class="card"><div class="section-kicker">мужской кабинет</div><div class="section-title">${name}</div><p style="font-size:13px;color:var(--muted);line-height:1.4">${text}</p></div>`));
+}
+function renderResume(){
+  const root=document.getElementById("resumeSlots");
+  if(!root)return;
+  root.innerHTML="";
+  const names=["Резюме 1","Резюме 2","Резюме 3"];
+  state.resumeSlots.forEach((file,i)=>{
+    root.insertAdjacentHTML("beforeend",`<div class="card"><div class="section-kicker">слот ${i+1}</div><div class="section-title">${file?file.name:names[i]}</div><label>Название</label><input id="resumeName${i}" placeholder="Например: Консалтинг HoReCa" value="${file?escapeAttr(file.name):""}"><label>PDF/DOCX</label><input id="resumeFile${i}" type="file" accept=".pdf,.doc,.docx,image/*"><div class="save-row"><button class="primary" onclick="saveResume(${i})">Загрузить</button>${file?`<button class="ghost" onclick="printFile('resumeSlots',${i})">Печать</button>`:""}</div>${file?fileMarkup(file,"resumeSlots",i):'<div class="note" style="margin-top:10px"><b>Свободный слот</b><span class="badge">пусто</span></div>'}</div>`);
+  });
+}
+async function saveResume(i){
+  const name=document.getElementById(`resumeName${i}`).value.trim()||`Резюме ${i+1}`;
+  const input=document.getElementById(`resumeFile${i}`);
+  if(!input.files[0])return;
+  state.resumeSlots[i]=await readFile(input.files[0],name);
+  save();
+  renderResume();
+}
+function renderCar(){
+  const info=document.getElementById("carInfo");
+  if(!info)return;
+  document.getElementById("carName").value=state.car.name||"";
+  document.getElementById("carMileage").value=state.car.mileage||"";
+  document.getElementById("carVin").value=state.car.vin||"";
+  info.innerHTML=`<div class="note"><b>${state.car.name||"Авто не заполнено"}</b><span class="badge">${state.car.mileage||"пробег"}</span></div><div class="note"><b>${state.car.vin||"VIN не указан"}</b><span class="badge">VIN</span></div>`;
+  renderTimeline("serviceLog",state.services,"Записей ТО пока нет");
+  renderFiles("autoDocs",state.autoDocs,"autoDocs");
+}
+function saveCar(){
+  state.car={name:document.getElementById("carName").value.trim(),mileage:document.getElementById("carMileage").value.trim(),vin:document.getElementById("carVin").value.trim()};
+  save();
+  renderCar();
+}
+function addService(){
+  const item={date:document.getElementById("serviceDate").value,title:document.getElementById("serviceTitle").value.trim(),cost:document.getElementById("serviceCost").value.trim(),note:document.getElementById("serviceNote").value.trim()};
+  if(!item.title)return;
+  state.services.unshift(item);
+  ["serviceDate","serviceTitle","serviceCost","serviceNote"].forEach(id=>document.getElementById(id).value="");
+  save();
+  renderCar();
+}
+function renderHealth(){
+  if(!document.getElementById("healthLog"))return;
+  renderTimeline("healthLog",state.healthEvents,"История здоровья пока пустая");
+  const doctors=document.getElementById("doctorList");
+  doctors.innerHTML="";
+  if(!state.doctors.length)doctors.innerHTML='<div class="note"><b>Врачи пока не добавлены</b><span class="badge">контакты</span></div>';
+  state.doctors.forEach((d,i)=>doctors.insertAdjacentHTML("beforeend",`<div class="note"><b>${d.name}<br><span style="color:var(--muted);font-size:12px">${d.spec||""} · ${d.phone||""}</span></b><button class="ghost" onclick="removeItem('doctors',${i})">Удалить</button></div>`));
+  renderFiles("healthFiles",state.healthFiles,"healthFiles");
+}
+function addHealthEvent(){
+  const item={date:document.getElementById("healthDate").value,title:document.getElementById("healthTitle").value.trim(),note:document.getElementById("healthNote").value.trim()};
+  if(!item.title)return;
+  state.healthEvents.unshift(item);
+  ["healthDate","healthTitle","healthNote"].forEach(id=>document.getElementById(id).value="");
+  save();
+  renderHealth();
+}
+function addDoctor(){
+  const item={name:document.getElementById("doctorName").value.trim(),spec:document.getElementById("doctorSpec").value.trim(),phone:document.getElementById("doctorPhone").value.trim()};
+  if(!item.name)return;
+  state.doctors.unshift(item);
+  ["doctorName","doctorSpec","doctorPhone"].forEach(id=>document.getElementById(id).value="");
+  save();
+  renderHealth();
+}
+function renderTimeline(id,items,empty){
+  const root=document.getElementById(id);
+  root.innerHTML="";
+  if(!items.length){root.innerHTML=`<div class="event"><b>${empty}</b><span>добавь первую запись</span></div>`;return}
+  items.forEach((item,i)=>root.insertAdjacentHTML("beforeend",`<div class="event"><b>${item.date||"без даты"} · ${item.title||""}</b><span>${item.cost?item.cost+" · ":""}${item.note||""}</span><div class="save-row"><button class="ghost" onclick="removeTimeline('${id}',${i})">Удалить</button></div></div>`));
+}
+function removeTimeline(id,i){
+  const map={serviceLog:"services",healthLog:"healthEvents"};
+  state[map[id]].splice(i,1);
+  save();
+  renderCar();
+  renderHealth();
+}
+async function saveFile(collection,nameId,fileId){
+  const name=document.getElementById(nameId).value.trim();
+  const input=document.getElementById(fileId);
+  if(!input.files[0])return;
+  state[collection].unshift(await readFile(input.files[0],name||input.files[0].name));
+  document.getElementById(nameId).value="";
+  input.value="";
+  save();
+  renderCar();
+  renderHealth();
+}
+function readFile(file,name){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve({name,type:file.type,size:file.size,data:reader.result,added:new Date().toLocaleDateString("ru-RU")});
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+function renderFiles(id,files,collection){
+  const root=document.getElementById(id);
+  root.innerHTML="";
+  if(!files.length){root.innerHTML='<div class="note"><b>Файлы пока не загружены</b><span class="badge">пусто</span></div>';return}
+  files.forEach((file,i)=>root.insertAdjacentHTML("beforeend",fileMarkup(file,collection,i)));
+}
+function fileMarkup(file,collection,i){
+  const isImage=(file.type||"").startsWith("image/");
+  return `<div class="file-card">${isImage?`<img src="${file.data}" alt="">`:""}<div><b>${file.name}</b><br><span style="font-size:11px;color:var(--muted)">${file.added||""}</span></div><div class="file-actions"><a href="${file.data}" download="${file.name}">Скачать</a><a href="${file.data}" target="_blank">Открыть</a><button onclick="printFile('${collection}',${i})">Печать</button><button onclick="removeFile('${collection}',${i})">Удалить</button></div></div>`;
+}
+function printFile(collection,i){
+  const file=collection==="resumeSlots"?state.resumeSlots[i]:state[collection][i];
+  if(!file)return;
+  const w=window.open(file.data,"_blank");
+  if(w)w.onload=()=>w.print();
+}
+function removeFile(collection,i){
+  if(collection==="resumeSlots")state.resumeSlots[i]=null;
+  else state[collection].splice(i,1);
+  save();
+  renderAll();
+}
+function removeItem(collection,i){
+  state[collection].splice(i,1);
+  save();
+  renderAll();
+}
+function escapeAttr(value){
+  return String(value).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;");
 }
 function renderTotals(){
   const done=Object.values(state.checks).filter(Boolean).length;
@@ -477,9 +761,13 @@ function renderAll(){
   renderActions();
   renderToday();
   renderBoxes();
+  renderCustomHabits();
   renderProjects();
   renderKnowledge();
   renderWardrobe();
+  renderResume();
+  renderCar();
+  renderHealth();
   renderTotals();
 }
 buildNav();
