@@ -22,8 +22,8 @@
     --shadow:0 10px 32px rgba(47,32,18,.12);
   }
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  html{scroll-behavior:smooth}
-  body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:92px}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:16px;overflow-x:hidden}
   button,input,textarea{font:inherit}
   button{cursor:pointer}
   .shell{max-width:1180px;margin:0 auto}
@@ -166,33 +166,39 @@
   .sync-strip{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
   .sync-strip button{flex:1 1 140px}
   .hq{display:grid;gap:10px}
-  .hq-hero{background:#17130f;color:#fff4df;border-color:#3a2b1d}
-  .hq-hero .section-kicker{color:#bca47d}
-  .hq-hero .section-title{color:#fff4df}
-  .progress-big{height:13px;background:#33271c;border-radius:999px;overflow:hidden;margin:10px 0 8px}
-  .progress-big div{height:100%;background:linear-gradient(90deg,#7fb08d,var(--gold));transition:width .25s}
-  .progress-text{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:#fff4df}
-  .hq-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}
-  .hq-panel{background:#211a14;border:1px solid #3e3024;color:#fff4df;border-radius:10px;overflow:hidden}
+  .hq-hero{background:var(--paper);color:var(--ink);border-color:var(--line)}
+  .hq-hero .section-kicker{color:var(--muted)}
+  .hq-hero .section-title{color:var(--green)}
+  .day-meta{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+  .day-date{font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--green);font-weight:700}
+  .day-weather{color:var(--muted);font-size:13px;font-weight:800}
+  .progress-big{height:15px;background:#eadcc9;border-radius:999px;overflow:hidden;margin:8px 0}
+  .progress-big div{height:100%;background:linear-gradient(90deg,var(--green2),var(--gold));transition:width .25s}
+  .progress-text{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:1px}
+  .goal-progress-line{margin-top:12px}
+  .hq-grid{display:grid;grid-template-columns:1fr;gap:10px}
+  .hq-panel{background:var(--paper);border:1.5px solid var(--line);color:var(--ink);border-radius:10px;overflow:hidden}
   .hq-panel summary{list-style:none;padding:12px 13px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer}
   .hq-panel summary::-webkit-details-marker{display:none}
   .hq-panel .panel-body{padding:0 12px 12px}
-  .hq-panel input,.hq-panel textarea{background:#17130f;border-color:#49392b;color:#fff4df}
-  .hq-panel input::placeholder,.hq-panel textarea::placeholder{color:#8f806e}
-  .hq-item{display:flex;gap:9px;align-items:flex-start;background:#17130f;border:1px solid #3e3024;border-radius:9px;padding:9px;margin-top:7px}
+  .hq-panel input,.hq-panel textarea{background:#fffdf8;border-color:var(--line);color:var(--ink)}
+  .hq-panel input::placeholder,.hq-panel textarea::placeholder{color:#9b8a76}
+  .hq-item{display:flex;gap:9px;align-items:flex-start;background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:9px;margin-top:7px}
   .hq-item.done{opacity:.58}
   .hq-item.done .day-text b{text-decoration:line-through}
   .hq-item .box{margin-top:1px}
   .hq-item.done .box{background:var(--green2);border-color:var(--green2)}
   .hq-item.done .box:after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
-  .hq-item .day-text span{color:#b6a791}
-  .hq-actions{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:8px}
-  .delete-btn{border:1px solid #4a3829;background:#2b2118;color:#d8c5a6;border-radius:8px;padding:8px 9px;font-size:12px;font-weight:800}
+  .hq-item .day-text span{color:var(--muted)}
+  .hq-actions{display:flex;gap:7px;margin-top:8px;overflow:hidden}
+  .hq-actions input{width:auto;min-width:0;flex:1 1 auto}
+  .plus-btn{width:42px;min-height:42px;flex:0 0 42px;border:0;background:var(--green);color:#fff3df;border-radius:8px;padding:0;font-size:24px;line-height:1;font-weight:800;display:grid;place-items:center}
+  .delete-btn{border:1px solid var(--line);background:var(--paper);color:var(--green);border-radius:8px;padding:8px 9px;font-size:12px;font-weight:800}
   .summary-line{display:grid;gap:7px}
-  .summary-line .note{background:#17130f;border-color:#3e3024;color:#fff4df}
-  .summary-line .note span{color:#b6a791}
+  .summary-line .note{background:var(--paper2);border-color:var(--line);color:var(--ink)}
+  .summary-line .note span{color:var(--muted)}
   .goal-mini{display:grid;gap:7px}
-  .goal-mini .note{background:#17130f;border-color:#3e3024;color:#fff4df}
+  .goal-mini .note{background:var(--paper2);border-color:var(--line);color:var(--ink)}
   @media (max-width:900px){
     .today-command{grid-template-columns:1fr}
     .hq-grid{grid-template-columns:1fr}
@@ -219,10 +225,14 @@
     .nav{padding:5px 8px;gap:4px}
     .nav-btn{font-size:10px;padding:5px 8px}
     main{padding:8px 8px}
-    .card{padding:10px;border-radius:8px}
-    .section-title{font-size:18px}
-    details.day-panel summary{padding:10px 11px}
-    .panel-body{padding:0 10px 10px}
+    .card{padding:13px;border-radius:8px}
+    .section-title{font-size:20px}
+    .day-date{font-size:22px}
+    .day-weather{width:100%}
+    details.day-panel summary,.hq-panel summary{padding:13px 12px}
+    .panel-body{padding:0 12px 13px}
+    .hq-item,.day-item,.note{padding:12px}
+    input,textarea,select{padding:12px}
     .stats{grid-template-columns:repeat(2,1fr)}
     .actions{grid-template-columns:1fr}
     .project-grid,.wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:1fr}
@@ -251,7 +261,6 @@
         <div class="pulse-item top-progress">
           <div class="pulse-label">День</div>
           <div class="top-progress-row">
-            <div class="top-progress-value" id="topDayProgress">0/0</div>
             <div class="top-progress-track"><div class="top-progress-fill" id="topDayFill"></div></div>
           </div>
         </div>
@@ -266,75 +275,41 @@
   <section class="view active" id="home">
     <div class="hq">
       <div class="card hq-hero">
-        <div class="section-kicker" id="todayDateLabel">Сегодня</div>
-        <div class="section-title">Штаб дня</div>
-        <div class="progress-text" id="dayProgressText">День выполнен на 0%</div>
-        <div class="progress-big"><div id="dayProgressFill" style="width:0%"></div></div>
-        <div class="compact-stats">
-          <div class="compact-stat"><b id="homeDone">0</b><span>закрыто</span></div>
-          <div class="compact-stat"><b id="homeTotal">0</b><span>всего</span></div>
-          <div class="compact-stat"><b id="homePercent">0%</b><span>день</span></div>
+        <div class="day-meta">
+          <div>
+            <div class="section-kicker">Сегодня</div>
+            <div class="day-date" id="todayDateLabel">10 июня, среда</div>
+          </div>
+          <div class="day-weather" id="weatherLabel">Рязань · погода загружается...</div>
         </div>
-        <div class="firebase-status" id="firebaseStatus" style="margin-top:8px">Firebase: локальный режим</div>
+        <div class="progress-text">Прогресс дня</div>
+        <div class="progress-big"><div id="dayProgressFill" style="width:0%"></div></div>
+        <div class="goal-progress-line">
+          <div class="progress-text">Цели</div>
+          <div class="progress-big"><div id="goalProgressFill" style="width:0%"></div></div>
+        </div>
       </div>
 
       <div class="hq-grid">
         <div class="grid">
           <details class="hq-panel" id="panelTasks" open ontoggle="savePanelState('tasks',this.open)">
-            <summary>Дела <span class="badge" id="taskTodayBadge">0/0</span></summary>
+            <summary>Дела</summary>
             <div class="panel-body">
               <div class="hq-actions">
-                <input id="taskInput" placeholder="Новое дело">
-                <button class="primary" onclick="addTask()">Добавить</button>
+                <button class="plus-btn" onclick="addTask()" aria-label="Добавить дело">+</button>
               </div>
               <div id="homeTasks"></div>
             </div>
           </details>
 
           <details class="hq-panel" id="panelEvents" open ontoggle="savePanelState('events',this.open)">
-            <summary>Встречи <span class="badge" id="calendarTodayBadge">0</span></summary>
+            <summary>Расписание</summary>
             <div class="panel-body">
-              <div class="mini-form">
-                <input id="calendarTime" type="time">
-                <input id="calendarInput" placeholder="Название">
-                <input id="eventPlaceInput" placeholder="Место">
-                <textarea id="eventCommentInput" placeholder="Комментарий"></textarea>
-                <button class="primary" onclick="addCalendarEvent()">Добавить встречу</button>
+              <div class="hq-actions">
+                <button class="plus-btn" onclick="addCalendarEvent()" aria-label="Добавить в расписание">+</button>
               </div>
               <div id="homeCalendar"></div>
             </div>
-          </details>
-        </div>
-
-        <div class="grid">
-          <details class="hq-panel" id="panelHabits" open ontoggle="savePanelState('habits',this.open)">
-            <summary>Привычки <span class="badge" id="habitTodayBadge">0/0</span></summary>
-            <div class="panel-body">
-              <div id="homeHabits"></div>
-            </div>
-          </details>
-
-          <details class="hq-panel" id="panelFinance" open ontoggle="savePanelState('finance',this.open)">
-            <summary>Финансы <span class="badge" id="financeTodayBadge">ввод</span></summary>
-            <div class="panel-body">
-              <div class="mini-form">
-                <input id="financeIncome" type="number" placeholder="Доход сегодня">
-                <input id="financeExpense" type="number" placeholder="Расход сегодня">
-                <input id="financeBalance" type="number" placeholder="Баланс месяца">
-                <textarea id="financeComment" placeholder="Комментарий"></textarea>
-                <button class="primary" onclick="saveFinance()">Сохранить</button>
-              </div>
-            </div>
-          </details>
-
-          <details class="hq-panel" id="panelHealth" open ontoggle="savePanelState('health',this.open)">
-            <summary>Здоровье <span class="badge" id="healthTodayBadge">сводка</span></summary>
-            <div class="panel-body summary-line" id="healthSummary"></div>
-          </details>
-
-          <details class="hq-panel" id="panelGoals" open ontoggle="savePanelState('goals',this.open)">
-            <summary>Цели <span class="badge">1-3</span></summary>
-            <div class="panel-body goal-mini" id="homeGoals"></div>
           </details>
         </div>
       </div>
@@ -363,24 +338,17 @@
   <section class="view" id="habits">
     <div class="grid split">
       <div class="card">
-        <div class="habit-head">
-          <div>
-            <div class="section-kicker">Дневник привычек</div>
-            <div class="section-title">1000 боксов дисциплины</div>
-          </div>
-          <div class="habit-count"><span id="boxCount">0</span>/1000</div>
-        </div>
-        <div class="boxes" id="boxes"></div>
-      </div>
-      <div class="card">
         <div class="section-kicker">Мои привычки и напоминания</div>
-        <div class="section-title">Добавляй сам</div>
-        <div class="mini-form">
-          <input id="habitName" placeholder="Например: прогулка 30 минут">
-          <input id="habitTime" type="time">
-          <button class="primary" onclick="addHabit()">Добавить привычку</button>
+        <div class="section-title">Привычки</div>
+        <div class="hq-actions">
+          <button class="plus-btn" onclick="addHabit()" aria-label="Добавить привычку">+</button>
         </div>
         <div class="knowledge-list" id="customHabits" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Сегодня</div>
+        <div class="section-title">Ежедневные привычки</div>
+        <div id="homeHabits"></div>
       </div>
     </div>
   </section>
@@ -518,8 +486,8 @@
   <section class="view" id="integrations">
     <div class="grid split">
       <div class="card dark">
-        <div class="section-kicker">Что реально подключать</div>
-        <div class="section-title">Живая синхронизация</div>
+        <div class="section-kicker">Apple</div>
+        <div class="section-title">Календарь и напоминания</div>
         <div class="connectors">
           <div class="connector"><div><b>Apple Calendar / Minical</b><span>Minical читает системный календарь Apple, значит работаем через Apple Calendar/ICS</span></div><div class="switch on"></div></div>
           <div class="connector"><div><b>Apple Reminders</b><span>задачи и напоминания лучше гонять через Shortcuts</span></div><div class="switch on"></div></div>
@@ -542,9 +510,8 @@
     </div>
     <div class="grid split" style="margin-top:10px">
       <div class="card">
-        <div class="section-kicker">Синхронизация Apple</div>
-        <div class="section-title">Разово: календарь и напоминания на сегодня</div>
-        <p style="font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:8px">Вставь JSON из Команд Apple один раз и нажми синхронизировать. Дела и встречи появятся на главном экране и сохранятся в Firebase.</p>
+        <div class="section-kicker">Apple</div>
+        <div class="section-title">Календарь и напоминания на сегодня</div>
         <textarea id="appleJsonInput" placeholder='{"date":"2026-06-10","tasks":[{"title":"Позвонить","source":"Reminders"}],"calendar":[{"time":"14:00","title":"Встреча","source":"Minical"}]}'></textarea>
         <div class="save-row">
           <button class="primary" onclick="importAppleJson()">Синхронизировать</button>
@@ -593,16 +560,6 @@
   </section>
 </main>
 
-<div class="bottom">
-  <div class="bottom-inner">
-    <div>
-      <div class="bottom-label">Прогресс дня</div>
-      <div class="bottom-value" id="bottomProgress">0 из 12 действий</div>
-    </div>
-    <button onclick="resetDay()">Сбросить день</button>
-  </div>
-</div>
-
 <script>
 window.LIFE_OS_FIREBASE_CONFIG={
   apiKey:"AIzaSyC8zjzgLvU25WpzIlBWiE4nfvqKZo15AAo",
@@ -626,7 +583,7 @@ const morningHabits=[
 const views=[
   ["home","Штаб"],
   ["goals","Цели"],
-  ["habits","1000 боксов"],
+  ["habits","Привычки"],
   ["projects","Проекты"],
   ["library","Знания"],
   ["cabinet","Кабинет"],
@@ -661,13 +618,8 @@ const today=[
   {title:"День",items:[["Работа","reputation",1],["Обучение","intellect",1],["Спорт","power",1],["Финансы","money",1]]},
   {title:"Вечер",items:[["Чтение","intellect",1],["Дневник","discipline",1],["Подготовка к завтра","discipline",1],["Люди","relations",1]]}
 ];
-const defaultTasks=[
-  {id:"reminders-placeholder",title:"Подключить Apple Reminders через Shortcuts",source:"мост для напоминаний"},
-  {id:"plan-day",title:"Выбрать 3 главных дела дня",source:"фокус"}
-];
-const defaultCalendar=[
-  {id:"calendar-placeholder",time:"09:00",title:"Подключить Apple Calendar / Minical",source:"календарь"}
-];
+const defaultTasks=[];
+const defaultCalendar=[];
 const defaultGoals=[
   {id:"life-os",title:"Сделать Life OS живой системой",steps:["Firebase синхронизация","Apple календарь и напоминания","Главный экран Сегодня"]},
   {id:"body",title:"Вернуть сильную физическую форму",steps:["Утренние привычки","Тренировки","Контроль веса и сна"]}
@@ -677,7 +629,7 @@ const defaultDay=()=>({
   habits:morningHabits.map(h=>({id:h.id,title:h.name,note:h.meta,done:false})),
   events:[],
   finance:{income:"",expense:"",balance:"",comment:""},
-  panels:{tasks:true,events:true,habits:true,finance:true,health:true,goals:true}
+  panels:{tasks:true,events:true,habits:true,goals:true}
 });
 const state=loadState();
 const projects=[
@@ -711,10 +663,29 @@ function todayDay(){
   const day=state.days[todayKey];
   day.tasks=day.tasks||[];
   day.events=day.events||[];
+  day.tasks=day.tasks.filter(item=>!["reminders-placeholder","plan-day"].includes(item.id));
+  day.events=day.events.filter(item=>item.id!=="calendar-placeholder");
   day.habits=day.habits&&day.habits.length?day.habits:defaultDay().habits;
   day.finance=day.finance||{income:"",expense:"",balance:"",comment:""};
   day.panels=Object.assign(defaultDay().panels,day.panels||{});
+  syncAppleIntoDay(day);
   return day;
+}
+function syncAppleIntoDay(day){
+  const sync=state.appleSync||{};
+  if(sync.date&&sync.date!==todayKey)return;
+  (sync.tasks||[]).forEach((task,i)=>{
+    const id=task.id||`apple-task-${i}`;
+    if(!day.tasks.some(item=>item.id===id)){
+      day.tasks.push({id,title:task.title||task.name||"Без названия",note:task.source||"Apple Reminders",done:false});
+    }
+  });
+  (sync.calendar||sync.events||[]).forEach((event,i)=>{
+    const id=event.id||`apple-event-${i}`;
+    if(!day.events.some(item=>item.id===id)){
+      day.events.push({id,time:event.time||event.start||"",title:event.title||event.name||"Событие",place:event.place||"",comment:event.comment||event.source||"Apple Calendar",done:false});
+    }
+  });
 }
 function save(){
   localStorage.setItem(stateKey,JSON.stringify(state));
@@ -776,31 +747,29 @@ function renderHome(){
   const habitRoot=document.getElementById("homeHabits");
   const taskRoot=document.getElementById("homeTasks");
   const calendarRoot=document.getElementById("homeCalendar");
-  const goalRoot=document.getElementById("homeGoals");
-  if(!habitRoot)return;
-  document.getElementById("todayDateLabel").textContent=new Date().toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+  if(!taskRoot||!calendarRoot)return;
+  document.getElementById("todayDateLabel").textContent=formatTodayLabel();
   applyPanelState(day);
   taskRoot.innerHTML=day.tasks.length?day.tasks.map((task,i)=>hqItem("task",i,task.title,task.note||"")).join(""):'<div class="hq-item"><div class="day-text"><b>Дел нет</b><span>Добавь первое дело на сегодня</span></div></div>';
-  calendarRoot.innerHTML=day.events.length?day.events.map((event,i)=>hqItem("event",i,`${event.time||"--:--"} · ${event.title}`,`${event.place||""}${event.comment?" · "+event.comment:""}`)).join(""):'<div class="hq-item"><div class="day-text"><b>Встреч нет</b><span>Добавь время, место и комментарий</span></div></div>';
-  habitRoot.innerHTML=day.habits.map((habit,i)=>hqItem("habit",i,habit.title,habit.note||"")).join("");
+  calendarRoot.innerHTML=day.events.length?day.events.map((event,i)=>hqItem("event",i,`${event.time||"--:--"} · ${event.title}`,`${event.place||""}${event.comment?" · "+event.comment:""}`)).join(""):'<div class="hq-item"><div class="day-text"><b>Расписание пустое</b><span>Добавь время, место и комментарий</span></div></div>';
+  if(habitRoot)habitRoot.innerHTML=day.habits.map((habit,i)=>hqItem("habit",i,habit.title,habit.note||"")).join("");
   renderFinanceInputs(day);
   renderHealthSummary();
-  renderGoalMini();
   renderGoalsList();
   const total=day.tasks.length+day.habits.length+day.events.length;
   const done=[...day.tasks,...day.habits,...day.events].filter(item=>item.done).length;
   const pct=total?Math.round(done/total*100):0;
-  document.getElementById("homeDone").textContent=done;
-  document.getElementById("homeTotal").textContent=total;
-  document.getElementById("homePercent").textContent=pct+"%";
-  document.getElementById("dayProgressText").textContent=`День выполнен на ${pct}%`;
   document.getElementById("dayProgressFill").style.width=pct+"%";
-  document.getElementById("topDayProgress").textContent=`${done}/${total}`;
   document.getElementById("topDayFill").style.width=pct+"%";
-  document.getElementById("habitTodayBadge").textContent=`${day.habits.filter(h=>h.done).length}/${day.habits.length}`;
-  document.getElementById("taskTodayBadge").textContent=`${day.tasks.filter(t=>t.done).length}/${day.tasks.length}`;
-  document.getElementById("calendarTodayBadge").textContent=`${day.events.filter(e=>e.done).length}/${day.events.length}`;
+  const goalPct=goalProgressPercent();
+  const goalFill=document.getElementById("goalProgressFill");
+  if(goalFill)goalFill.style.width=goalPct+"%";
   scheduleNotifications();
+}
+function formatTodayLabel(){
+  const value=new Date().toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+  const parts=value.split(", ");
+  return parts.length>1?`${parts[1]}, ${parts[0]}`:value;
 }
 function hqItem(type,index,title,meta){
   const item=todayDay()[type==="event"?"events":type==="habit"?"habits":"tasks"][index];
@@ -823,7 +792,7 @@ function savePanelState(name,open){
   save();
 }
 function applyPanelState(day){
-  [["panelTasks","tasks"],["panelEvents","events"],["panelHabits","habits"],["panelFinance","finance"],["panelHealth","health"],["panelGoals","goals"]].forEach(([id,key])=>{
+  [["panelTasks","tasks"],["panelEvents","events"],["panelHabits","habits"]].forEach(([id,key])=>{
     const el=document.getElementById(id);
     if(el)el.open=day.panels[key]!==false;
   });
@@ -861,10 +830,10 @@ function scheduleNotifications(){
     return;
   }
   updateNotificationStatus("Уведомления: включены");
-  const data=allHomeItems();
+  const day=todayDay();
   const candidates=[
-    ...data.calendar.map((event,i)=>({key:`event-${event.id||i}`,time:event.time,title:event.title,source:event.source||"календарь"})),
-    ...data.habits.filter(h=>/^\d\d:\d\d$/.test(h.meta||"")).map(h=>({key:`habit-${h.id}`,time:h.meta,title:h.name,source:"привычка"}))
+    ...day.events.map((event,i)=>({key:`event-${event.id||i}`,time:event.time,title:event.title,source:event.comment||"календарь"})),
+    ...day.habits.filter(h=>/^\d\d:\d\d$/.test(h.note||"")).map(h=>({key:`habit-${h.id}`,time:h.note,title:h.title,source:"привычка"}))
   ];
   candidates.forEach(item=>{
     if(!item.time||isDone(item.key))return;
@@ -877,24 +846,28 @@ function scheduleNotifications(){
 }
 function addTask(){
   const input=document.getElementById("taskInput");
-  const title=input.value.trim();
+  const title=(input&&input.value.trim())||prompt("Новое дело")||"";
   if(!title)return;
   todayDay().tasks.unshift({id:"task-"+Date.now(),title,note:"",done:false});
-  input.value="";
+  if(input)input.value="";
   save();
   renderAll();
 }
 function addCalendarEvent(){
-  const title=document.getElementById("calendarInput").value.trim();
-  const time=document.getElementById("calendarTime").value;
-  const place=document.getElementById("eventPlaceInput").value.trim();
-  const comment=document.getElementById("eventCommentInput").value.trim();
+  const titleEl=document.getElementById("calendarInput");
+  const timeEl=document.getElementById("calendarTime");
+  const placeEl=document.getElementById("eventPlaceInput");
+  const commentEl=document.getElementById("eventCommentInput");
+  const title=(titleEl&&titleEl.value.trim())||prompt("Что добавить в расписание?")||"";
+  const time=(timeEl&&timeEl.value)||prompt("Время, например 14:00")||"";
+  const place=(placeEl&&placeEl.value.trim())||prompt("Место")||"";
+  const comment=(commentEl&&commentEl.value.trim())||prompt("Комментарий")||"";
   if(!title)return;
   todayDay().events.push({id:"event-"+Date.now(),time,title,place,comment,done:false});
-  document.getElementById("calendarInput").value="";
-  document.getElementById("calendarTime").value="";
-  document.getElementById("eventPlaceInput").value="";
-  document.getElementById("eventCommentInput").value="";
+  if(titleEl)titleEl.value="";
+  if(timeEl)timeEl.value="";
+  if(placeEl)placeEl.value="";
+  if(commentEl)commentEl.value="";
   save();
   renderAll();
 }
@@ -970,7 +943,23 @@ function renderGoalMini(){
 function renderGoalsList(){
   const root=document.getElementById("goalsList");
   if(!root)return;
-  root.innerHTML=(state.goals||[]).map((goal,i)=>`<div class="goal-card"><div class="goal-head"><b>${escapeHtml(goal.title)}</b><button class="ghost" onclick="removeItem('goals',${i})">Удалить</button></div><div class="day-list">${(goal.steps||[]).map(step=>`<div class="check-item"><div class="box"></div><div class="check-name">${escapeHtml(step)}</div></div>`).join("")}</div><div class="save-row"><input id="step-${i}" placeholder="Следующий шаг"><button class="ghost" onclick="addGoalStep(${i})">Добавить шаг</button></div></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">пусто</span></div>';
+  root.innerHTML=(state.goals||[]).map((goal,i)=>`<div class="goal-card"><div class="goal-head"><b>${escapeHtml(goal.title)}</b><button class="ghost" onclick="removeItem('goals',${i})">Удалить</button></div><div class="day-list">${(goal.steps||[]).map((step,si)=>`<div class="check-item${goalStepDone(i,si)?" done":""}" onclick="toggleGoalStep(${i},${si})"><div class="box"></div><div class="check-name">${escapeHtml(step)}</div></div>`).join("")}</div><div class="save-row"><input id="step-${i}" placeholder="Следующий шаг"><button class="ghost" onclick="addGoalStep(${i})">Добавить шаг</button></div></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">пусто</span></div>';
+}
+function goalStepDone(goalIndex,stepIndex){
+  return !!(state.goalDone&&state.goalDone[`${goalIndex}-${stepIndex}`]);
+}
+function toggleGoalStep(goalIndex,stepIndex){
+  state.goalDone=state.goalDone||{};
+  const key=`${goalIndex}-${stepIndex}`;
+  state.goalDone[key]=!state.goalDone[key];
+  save();
+  renderAll();
+}
+function goalProgressPercent(){
+  const steps=(state.goals||[]).flatMap((goal,gi)=>(goal.steps||[]).map((_,si)=>`${gi}-${si}`));
+  if(!steps.length)return 0;
+  const done=steps.filter(key=>state.goalDone&&state.goalDone[key]).length;
+  return Math.round(done/steps.length*100);
 }
 function importAppleJson(){
   const input=document.getElementById("appleJsonInput");
@@ -981,6 +970,7 @@ function importAppleJson(){
       tasks:(payload.tasks||[]).map((task,i)=>({id:task.id||`apple-task-${Date.now()}-${i}`,title:task.title||task.name||"Без названия",source:task.source||"Apple Reminders"})),
       calendar:(payload.calendar||payload.events||[]).map((event,i)=>({id:event.id||`apple-event-${Date.now()}-${i}`,time:event.time||event.start||"",title:event.title||event.name||"Событие",source:event.source||"Apple Calendar"}))
     };
+    syncAppleIntoDay(todayDay());
     input.value="";
     save();
     renderAll();
@@ -1043,9 +1033,11 @@ function renderToday(){
 }
 function renderBoxes(){
   const root=document.getElementById("boxes");
+  if(!root)return;
   root.innerHTML="";
   const count=state.boxes||0;
-  document.getElementById("boxCount").textContent=count;
+  const counter=document.getElementById("boxCount");
+  if(counter)counter.textContent=count;
   for(let i=1;i<=1000;i++){
     const b=document.createElement("div");
     b.className="tiny-box"+(i<=count?" filled":"")+(i%100===0&&i<=count?" gold":"");
@@ -1062,12 +1054,10 @@ function renderCustomHabits(){
   });
 }
 function addHabit(){
-  const name=document.getElementById("habitName").value.trim();
-  const time=document.getElementById("habitTime").value;
+  const name=prompt("Новая привычка")||"";
+  const time=prompt("Время, например 09:00")||"";
   if(!name)return;
   state.habits.unshift({name,time});
-  document.getElementById("habitName").value="";
-  document.getElementById("habitTime").value="";
   save();
   renderAll();
 }
@@ -1221,14 +1211,36 @@ function escapeHtml(value){
 }
 function renderTotals(){
   const done=Object.values(state.checks).filter(Boolean).length;
-  const day=todayDay();
-  const homeTotal=day.tasks.length+day.habits.length+day.events.length;
-  const homeDone=[...day.tasks,...day.habits,...day.events].filter(item=>item.done).length;
   const doneToday=document.getElementById("doneToday");
   const xpToday=document.getElementById("xpToday");
   if(doneToday)doneToday.textContent=done;
   if(xpToday)xpToday.textContent=done;
-  document.getElementById("bottomProgress").textContent=`${homeDone} из ${homeTotal} на сегодня`;
+}
+function weatherText(code){
+  if([0,1].includes(code))return "ясно";
+  if([2,3].includes(code))return "облачно";
+  if([45,48].includes(code))return "туман";
+  if([51,53,55,61,63,65,80,81,82].includes(code))return "дождь";
+  if([71,73,75,85,86].includes(code))return "снег";
+  if([95,96,99].includes(code))return "гроза";
+  return "погода";
+}
+function setWeatherLabel(text){
+  const el=document.getElementById("weatherLabel");
+  if(el)el.textContent=text;
+}
+function fetchWeather(lat,lon){
+  fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`)
+    .then(response=>response.json())
+    .then(data=>{
+      const current=data.current||{};
+      const temp=Math.round(current.temperature_2m);
+      setWeatherLabel(Number.isFinite(temp)?`Рязань · ${temp}°C, ${weatherText(current.weather_code)}`:"Рязань · погода недоступна");
+    })
+    .catch(()=>setWeatherLabel("Рязань · погода недоступна"));
+}
+function loadWeather(){
+  fetchWeather(54.6296,39.7419);
 }
 function saveNote(){
   const el=document.getElementById("noteInput");
@@ -1286,6 +1298,7 @@ window.setFirebaseStatus=function(text,connected){
 };
 buildNav();
 renderAll();
+loadWeather();
 </script>
 <script type="module">
 const config=window.LIFE_OS_FIREBASE_CONFIG;
