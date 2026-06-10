@@ -132,9 +132,9 @@
   .day-score{background:var(--green);color:#fff3df;border-color:rgba(255,255,255,.15);position:relative;overflow:hidden}
   .day-score:after{content:"";position:absolute;inset:auto -20% -46% -20%;height:140px;background:rgba(189,150,87,.18);transform:rotate(-4deg)}
   .score-main{position:relative;z-index:1;display:grid;gap:12px}
-  .score-number{font-family:Georgia,"Times New Roman",serif;font-size:58px;line-height:.9;font-weight:700}
-  .score-number span{font-size:22px;color:#cde0d6}
-  .slogan{font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.12;color:#fff4df}
+  .score-number{font-family:Georgia,"Times New Roman",serif;font-size:38px;line-height:.95;font-weight:700;color:var(--green)}
+  .score-number span{font-size:18px;color:var(--muted)}
+  .slogan{font-family:Georgia,"Times New Roman",serif;font-size:18px;line-height:1.16;color:var(--green);margin-bottom:10px}
   .score-line{height:8px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
   .score-line div{height:100%;background:linear-gradient(90deg,var(--gold),#f0d9a5)}
   details.day-panel{background:var(--paper);border:1.5px solid var(--line);border-radius:10px;overflow:hidden}
@@ -153,6 +153,16 @@
   .goal-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
   .goal-head b{font-size:14px}
   .firebase-status{display:inline-flex;align-items:center;gap:6px;border-radius:99px;background:var(--green3);color:var(--green2);font-size:10px;font-weight:900;padding:5px 8px;text-transform:uppercase;letter-spacing:.8px}
+  .top-progress{display:grid;gap:4px}
+  .top-progress-row{display:flex;align-items:center;gap:8px}
+  .top-progress-value{font-size:13px;color:#fff4df;font-weight:800;min-width:38px}
+  .top-progress-track{height:6px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden;flex:1}
+  .top-progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),#f1d8a0)}
+  .compact-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .compact-stat{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:7px}
+  .compact-stat b{display:block;color:var(--green);font-size:15px}
+  .compact-stat span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+  .code-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;background:#21180f;color:#fff4df;border-radius:9px;padding:10px;overflow:auto;white-space:pre-wrap}
   @media (max-width:900px){
     .today-command{grid-template-columns:1fr}
     .dashboard,.split{grid-template-columns:1fr}
@@ -190,8 +200,14 @@
       <div class="pulse">
         <div class="pulse-item"><div class="pulse-label">Возраст</div><div class="pulse-value">33 года</div></div>
         <div class="pulse-item"><div class="pulse-label">Вес</div><div class="pulse-value">86.4 кг</div></div>
-        <div class="pulse-item"><div class="pulse-label">Настроение</div><div class="pulse-value" id="moodText">Собран</div></div>
-        <div class="pulse-item"><div class="pulse-label">Цель года</div><div class="pulse-value">Собрать систему жизни</div></div>
+        <div class="pulse-item top-progress">
+          <div class="pulse-label">День</div>
+          <div class="top-progress-row">
+            <div class="top-progress-value" id="topDayProgress">0/0</div>
+            <div class="top-progress-track"><div class="top-progress-fill" id="topDayFill"></div></div>
+          </div>
+        </div>
+        <div class="pulse-item"><div class="pulse-label">Данные</div><div class="pulse-value" id="firebaseStatusText">local</div></div>
       </div>
     </div>
     <nav class="nav" id="nav"></nav>
@@ -200,32 +216,19 @@
 
 <main class="shell">
   <section class="view active" id="home">
-    <div class="today-command">
-      <div class="card day-score">
-        <div class="score-main">
-          <div>
-            <div class="section-kicker">Главный экран</div>
-            <div class="slogan">Цель без плана что лодка без весел.</div>
-          </div>
-          <div>
-            <div class="score-number"><span id="homeDone">0</span><span>/</span><span id="homeTotal">0</span></div>
-            <div class="score-line"><div id="homeProgressFill" style="width:0%"></div></div>
-          </div>
-          <div class="stats">
-            <div class="stat"><b id="homePercent">0%</b><span>день</span></div>
-            <div class="stat"><b id="homeGoalCount">0</b><span>цели</span></div>
-            <div class="stat"><b id="firebaseStatusText">local</b><span>данные</span></div>
-          </div>
-          <div class="firebase-status" id="firebaseStatus">Firebase: локальный режим</div>
+    <div class="grid">
+      <div class="card">
+        <div class="section-kicker">Сегодня</div>
+        <div class="section-title" style="margin-bottom:8px">Дела и встречи</div>
+        <div class="compact-stats">
+          <div class="compact-stat"><b id="homeDone">0</b><span>сделано</span></div>
+          <div class="compact-stat"><b id="homeTotal">0</b><span>всего</span></div>
+          <div class="compact-stat"><b id="homePercent">0%</b><span>день</span></div>
         </div>
+        <div class="score-line" style="margin-top:8px"><div id="homeProgressFill" style="width:0%"></div></div>
+        <div class="firebase-status" id="firebaseStatus" style="margin-top:8px">Firebase: локальный режим</div>
       </div>
       <div class="grid">
-        <details class="day-panel" open>
-          <summary>Мои привычки утром <span class="badge" id="habitTodayBadge">0/0</span></summary>
-          <div class="panel-body">
-            <div class="day-list" id="homeHabits"></div>
-          </div>
-        </details>
         <details class="day-panel" open>
           <summary>Дела из напоминаний <span class="badge" id="taskTodayBadge">0/0</span></summary>
           <div class="panel-body">
@@ -248,8 +251,15 @@
           </div>
         </details>
         <details class="day-panel" open>
+          <summary>Мои привычки утром <span class="badge" id="habitTodayBadge">0/0</span></summary>
+          <div class="panel-body">
+            <div class="day-list" id="homeHabits"></div>
+          </div>
+        </details>
+        <details class="day-panel" open>
           <summary>Цели и шаги <span class="badge" id="goalsTodayBadge">план</span></summary>
           <div class="panel-body">
+            <div class="slogan">Цель без плана что лодка без весел.</div>
             <div class="mini-form">
               <input id="goalInput" placeholder="Сложная цель">
               <input id="goalStepInput" placeholder="Первый понятный шаг">
@@ -440,6 +450,31 @@
         </div>
       </div>
     </div>
+    <div class="grid split" style="margin-top:10px">
+      <div class="card">
+        <div class="section-kicker">Apple Shortcut JSON</div>
+        <div class="section-title">Импорт дел и календаря на сегодня</div>
+        <textarea id="appleJsonInput" placeholder='{"date":"2026-06-10","tasks":[{"title":"Позвонить","source":"Reminders"}],"calendar":[{"time":"14:00","title":"Встреча","source":"Minical"}]}'></textarea>
+        <div class="save-row">
+          <button class="primary" onclick="importAppleJson()">Импортировать</button>
+          <button class="ghost" onclick="clearAppleSync()">Очистить Apple импорт</button>
+        </div>
+        <div class="knowledge-list" id="appleSyncStatus" style="margin-top:10px"></div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Формат для Shortcuts</div>
+        <div class="section-title">Такой JSON должен приходить в Firebase</div>
+        <div class="code-box">{
+  "date": "2026-06-10",
+  "tasks": [
+    {"title": "Купить витамины", "source": "Apple Reminders"}
+  ],
+  "calendar": [
+    {"time": "12:30", "title": "Встреча", "source": "Minical"}
+  ]
+}</div>
+      </div>
+    </div>
   </section>
 
   <section class="view" id="legacy">
@@ -478,7 +513,14 @@
 </div>
 
 <script>
-window.LIFE_OS_FIREBASE_CONFIG=null;
+window.LIFE_OS_FIREBASE_CONFIG={
+  apiKey:"AIzaSyC8zjzgLvU25WpzIlBWiE4nfvqKZo15AAo",
+  authDomain:"my-life-os-9e1e6.firebaseapp.com",
+  projectId:"my-life-os-9e1e6",
+  storageBucket:"my-life-os-9e1e6.firebasestorage.app",
+  messagingSenderId:"474583721915",
+  appId:"1:474583721915:web:61022bdde5302f85a6c69e"
+};
 </script>
 <script>
 const stateKey="ilya_life_os_v1";
@@ -559,9 +601,9 @@ const wardrobe=[
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(stateKey))||{};
-    return Object.assign({checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
+    return Object.assign({checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
   }catch(e){
-    return{checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
+    return{checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
   }
 }
 function save(){
@@ -599,9 +641,11 @@ function renderTraits(){
 }
 function allHomeItems(){
   const habits=[...morningHabits,...(state.habits||[]).map((h,i)=>({id:`custom-${i}`,name:h.name,meta:h.time||"личная привычка"}))];
-  const tasks=state.tasks||[];
+  const apple=state.appleSync&&state.appleSync.date===todayKey?state.appleSync:{tasks:[],calendar:[]};
+  const tasks=[...(state.tasks||[]),...(apple.tasks||[]).map((t,i)=>({id:`apple-task-${i}`,title:t.title,source:t.source||"Apple Reminders"}))];
+  const calendar=[...(state.calendar||[]),...(apple.calendar||[]).map((e,i)=>({id:`apple-event-${i}`,time:e.time,title:e.title,source:e.source||"Apple Calendar"}))];
   const steps=(state.goals||[]).flatMap((g,gi)=>(g.steps||[]).map((s,si)=>({goal:g.title,step:s,key:`goal-${gi}-${si}`})));
-  return {habits,tasks,calendar:state.calendar||[],steps};
+  return {habits,tasks,calendar,steps};
 }
 function isDone(key){return !!(state.todayDone&&state.todayDone[todayKey]&&state.todayDone[todayKey][key])}
 function setDone(key,value){
@@ -638,7 +682,8 @@ function renderHome(){
   document.getElementById("homeTotal").textContent=total;
   document.getElementById("homePercent").textContent=pct+"%";
   document.getElementById("homeProgressFill").style.width=pct+"%";
-  document.getElementById("homeGoalCount").textContent=(state.goals||[]).length;
+  document.getElementById("topDayProgress").textContent=`${done}/${total}`;
+  document.getElementById("topDayFill").style.width=pct+"%";
   document.getElementById("habitTodayBadge").textContent=`${data.habits.filter(h=>isDone(`habit-${h.id}`)).length}/${data.habits.length}`;
   document.getElementById("taskTodayBadge").textContent=`${data.tasks.filter((t,i)=>isDone(`task-${t.id||i}`)).length}/${data.tasks.length}`;
   document.getElementById("calendarTodayBadge").textContent=`${data.calendar.length} событий`;
@@ -681,6 +726,33 @@ function addGoalStep(i){
   input.value="";
   save();
   renderHome();
+}
+function importAppleJson(){
+  const input=document.getElementById("appleJsonInput");
+  try{
+    const payload=JSON.parse(input.value);
+    state.appleSync={
+      date:payload.date||todayKey,
+      tasks:(payload.tasks||[]).map((task,i)=>({id:task.id||`apple-task-${Date.now()}-${i}`,title:task.title||task.name||"Без названия",source:task.source||"Apple Reminders"})),
+      calendar:(payload.calendar||payload.events||[]).map((event,i)=>({id:event.id||`apple-event-${Date.now()}-${i}`,time:event.time||event.start||"",title:event.title||event.name||"Событие",source:event.source||"Apple Calendar"}))
+    };
+    input.value="";
+    save();
+    renderAll();
+  }catch(e){
+    alert("JSON не прочитан. Проверь кавычки, запятые и структуру.");
+  }
+}
+function clearAppleSync(){
+  state.appleSync={date:"",tasks:[],calendar:[]};
+  save();
+  renderAll();
+}
+function renderAppleSync(){
+  const root=document.getElementById("appleSyncStatus");
+  if(!root)return;
+  const sync=state.appleSync||{date:"",tasks:[],calendar:[]};
+  root.innerHTML=`<div class="note"><b>${sync.date||"Apple импорт пуст"}</b><span class="badge">дата</span></div><div class="note"><b>${(sync.tasks||[]).length} напоминаний</b><span class="badge">tasks</span></div><div class="note"><b>${(sync.calendar||[]).length} событий</b><span class="badge">calendar</span></div>`;
 }
 function renderActions(){
   const root=document.getElementById("quickActions");
@@ -909,7 +981,6 @@ function renderTotals(){
   if(doneToday)doneToday.textContent=done;
   if(xpToday)xpToday.textContent=done;
   document.getElementById("bottomProgress").textContent=`${homeDone} из ${homeTotal} на сегодня`;
-  document.getElementById("moodText").textContent=homeDone>=Math.ceil(homeTotal*.7)?"В тонусе":homeDone>=Math.ceil(homeTotal*.35)?"Собран":"Разгон";
 }
 function saveNote(){
   const el=document.getElementById("noteInput");
@@ -943,6 +1014,7 @@ function renderAll(){
   renderResume();
   renderCar();
   renderHealth();
+  renderAppleSync();
   renderTotals();
 }
 window.applyCloudState=function(cloudState){
@@ -986,7 +1058,7 @@ if(config&&config.apiKey){
     window.setFirebaseStatus("Firebase: синхронизация включена",true);
   }catch(error){
     console.warn("Firebase is not connected",error);
-    window.setFirebaseStatus("Firebase: ошибка подключения",false);
+    window.setFirebaseStatus(`Firebase: ${error.code||"ошибка подключения"}`,false);
   }
 }else{
   window.setFirebaseStatus("Firebase: локальный режим",false);
