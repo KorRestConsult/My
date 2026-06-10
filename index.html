@@ -165,8 +165,37 @@
   .code-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;background:#21180f;color:#fff4df;border-radius:9px;padding:10px;overflow:auto;white-space:pre-wrap}
   .sync-strip{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
   .sync-strip button{flex:1 1 140px}
+  .hq{display:grid;gap:10px}
+  .hq-hero{background:#17130f;color:#fff4df;border-color:#3a2b1d}
+  .hq-hero .section-kicker{color:#bca47d}
+  .hq-hero .section-title{color:#fff4df}
+  .progress-big{height:13px;background:#33271c;border-radius:999px;overflow:hidden;margin:10px 0 8px}
+  .progress-big div{height:100%;background:linear-gradient(90deg,#7fb08d,var(--gold));transition:width .25s}
+  .progress-text{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:#fff4df}
+  .hq-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}
+  .hq-panel{background:#211a14;border:1px solid #3e3024;color:#fff4df;border-radius:10px;overflow:hidden}
+  .hq-panel summary{list-style:none;padding:12px 13px;font-weight:900;display:flex;justify-content:space-between;gap:10px;align-items:center;cursor:pointer}
+  .hq-panel summary::-webkit-details-marker{display:none}
+  .hq-panel .panel-body{padding:0 12px 12px}
+  .hq-panel input,.hq-panel textarea{background:#17130f;border-color:#49392b;color:#fff4df}
+  .hq-panel input::placeholder,.hq-panel textarea::placeholder{color:#8f806e}
+  .hq-item{display:flex;gap:9px;align-items:flex-start;background:#17130f;border:1px solid #3e3024;border-radius:9px;padding:9px;margin-top:7px}
+  .hq-item.done{opacity:.58}
+  .hq-item.done .day-text b{text-decoration:line-through}
+  .hq-item .box{margin-top:1px}
+  .hq-item.done .box{background:var(--green2);border-color:var(--green2)}
+  .hq-item.done .box:after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
+  .hq-item .day-text span{color:#b6a791}
+  .hq-actions{display:grid;grid-template-columns:1fr auto;gap:7px;margin-top:8px}
+  .delete-btn{border:1px solid #4a3829;background:#2b2118;color:#d8c5a6;border-radius:8px;padding:8px 9px;font-size:12px;font-weight:800}
+  .summary-line{display:grid;gap:7px}
+  .summary-line .note{background:#17130f;border-color:#3e3024;color:#fff4df}
+  .summary-line .note span{color:#b6a791}
+  .goal-mini{display:grid;gap:7px}
+  .goal-mini .note{background:#17130f;border-color:#3e3024;color:#fff4df}
   @media (max-width:900px){
     .today-command{grid-template-columns:1fr}
+    .hq-grid{grid-template-columns:1fr}
     .dashboard,.split{grid-template-columns:1fr}
     .today-grid{grid-template-columns:1fr}
     .project-grid{grid-template-columns:repeat(2,1fr)}
@@ -235,69 +264,100 @@
 
 <main class="shell">
   <section class="view active" id="home">
-    <div class="grid">
-      <div class="card">
-        <div class="section-kicker">Сегодня</div>
-        <div class="section-title" style="margin-bottom:8px">Дела и встречи</div>
+    <div class="hq">
+      <div class="card hq-hero">
+        <div class="section-kicker" id="todayDateLabel">Сегодня</div>
+        <div class="section-title">Штаб дня</div>
+        <div class="progress-text" id="dayProgressText">День выполнен на 0%</div>
+        <div class="progress-big"><div id="dayProgressFill" style="width:0%"></div></div>
         <div class="compact-stats">
-          <div class="compact-stat"><b id="homeDone">0</b><span>сделано</span></div>
+          <div class="compact-stat"><b id="homeDone">0</b><span>закрыто</span></div>
           <div class="compact-stat"><b id="homeTotal">0</b><span>всего</span></div>
           <div class="compact-stat"><b id="homePercent">0%</b><span>день</span></div>
         </div>
-        <div class="score-line" style="margin-top:8px"><div id="homeProgressFill" style="width:0%"></div></div>
         <div class="firebase-status" id="firebaseStatus" style="margin-top:8px">Firebase: локальный режим</div>
-        <div class="sync-strip">
-          <button class="ghost" onclick="showView('integrations')">Синхронизация Apple</button>
-          <button class="primary" onclick="enableNotifications()">Включить уведомления</button>
-        </div>
-        <div class="firebase-status" id="notificationStatus" style="margin-top:7px">Уведомления: не включены</div>
       </div>
-      <div class="grid">
-        <details class="day-panel" open>
-          <summary>Дела из напоминаний <span class="badge" id="taskTodayBadge">0/0</span></summary>
-          <div class="panel-body">
-            <div class="mini-form">
-              <input id="taskInput" placeholder="Добавить дело на сегодня">
-              <button class="primary" onclick="addTask()">Добавить дело</button>
+
+      <div class="hq-grid">
+        <div class="grid">
+          <details class="hq-panel" id="panelTasks" open ontoggle="savePanelState('tasks',this.open)">
+            <summary>Дела <span class="badge" id="taskTodayBadge">0/0</span></summary>
+            <div class="panel-body">
+              <div class="hq-actions">
+                <input id="taskInput" placeholder="Новое дело">
+                <button class="primary" onclick="addTask()">Добавить</button>
+              </div>
+              <div id="homeTasks"></div>
             </div>
-            <div class="day-list" id="homeTasks" style="margin-top:8px"></div>
-          </div>
-        </details>
-        <details class="day-panel" open>
-          <summary>Календарь дня <span class="badge" id="calendarTodayBadge">0 событий</span></summary>
-          <div class="panel-body">
-            <div class="mini-form">
-              <input id="calendarTime" type="time">
-              <input id="calendarInput" placeholder="Событие в календаре">
-              <button class="primary" onclick="addCalendarEvent()">Добавить событие</button>
+          </details>
+
+          <details class="hq-panel" id="panelEvents" open ontoggle="savePanelState('events',this.open)">
+            <summary>Встречи <span class="badge" id="calendarTodayBadge">0</span></summary>
+            <div class="panel-body">
+              <div class="mini-form">
+                <input id="calendarTime" type="time">
+                <input id="calendarInput" placeholder="Название">
+                <input id="eventPlaceInput" placeholder="Место">
+                <textarea id="eventCommentInput" placeholder="Комментарий"></textarea>
+                <button class="primary" onclick="addCalendarEvent()">Добавить встречу</button>
+              </div>
+              <div id="homeCalendar"></div>
             </div>
-            <div class="day-list" id="homeCalendar" style="margin-top:8px"></div>
-          </div>
-        </details>
-        <details class="day-panel" open>
-          <summary>Мои привычки утром <span class="badge" id="habitTodayBadge">0/0</span></summary>
-          <div class="panel-body">
-            <div class="day-list" id="homeHabits"></div>
-          </div>
-        </details>
-        <details class="day-panel" open>
-          <summary>Цели и шаги <span class="badge" id="goalsTodayBadge">план</span></summary>
-          <div class="panel-body">
-            <div class="slogan">Цель без плана что лодка без весел.</div>
-            <div class="mini-form">
-              <input id="goalInput" placeholder="Сложная цель">
-              <input id="goalStepInput" placeholder="Первый понятный шаг">
-              <button class="primary" onclick="addGoal()">Добавить цель</button>
+          </details>
+        </div>
+
+        <div class="grid">
+          <details class="hq-panel" id="panelHabits" open ontoggle="savePanelState('habits',this.open)">
+            <summary>Привычки <span class="badge" id="habitTodayBadge">0/0</span></summary>
+            <div class="panel-body">
+              <div id="homeHabits"></div>
             </div>
-            <div id="homeGoals"></div>
-          </div>
-        </details>
+          </details>
+
+          <details class="hq-panel" id="panelFinance" open ontoggle="savePanelState('finance',this.open)">
+            <summary>Финансы <span class="badge" id="financeTodayBadge">ввод</span></summary>
+            <div class="panel-body">
+              <div class="mini-form">
+                <input id="financeIncome" type="number" placeholder="Доход сегодня">
+                <input id="financeExpense" type="number" placeholder="Расход сегодня">
+                <input id="financeBalance" type="number" placeholder="Баланс месяца">
+                <textarea id="financeComment" placeholder="Комментарий"></textarea>
+                <button class="primary" onclick="saveFinance()">Сохранить</button>
+              </div>
+            </div>
+          </details>
+
+          <details class="hq-panel" id="panelHealth" open ontoggle="savePanelState('health',this.open)">
+            <summary>Здоровье <span class="badge" id="healthTodayBadge">сводка</span></summary>
+            <div class="panel-body summary-line" id="healthSummary"></div>
+          </details>
+
+          <details class="hq-panel" id="panelGoals" open ontoggle="savePanelState('goals',this.open)">
+            <summary>Цели <span class="badge">1-3</span></summary>
+            <div class="panel-body goal-mini" id="homeGoals"></div>
+          </details>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="view" id="today">
-    <div class="grid today-grid" id="todayGrid"></div>
+  <section class="view" id="goals">
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Цели</div>
+        <div class="section-title">Цель без плана что лодка без весел.</div>
+        <div class="mini-form">
+          <input id="goalInput" placeholder="Сложная цель">
+          <input id="goalStepInput" placeholder="Первый понятный шаг">
+          <button class="primary" onclick="addGoal()">Добавить цель</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Планы</div>
+        <div class="section-title">Главные направления</div>
+        <div id="goalsList"></div>
+      </div>
+    </div>
   </section>
 
   <section class="view" id="habits">
@@ -353,19 +413,25 @@
   </section>
 
   <section class="view" id="finance">
-    <div class="grid money-grid">
-      <div class="card"><div class="section-kicker">Капитал</div><div class="finance-number">индекс 72</div></div>
-      <div class="card"><div class="section-kicker">Доход месяца</div><div class="finance-number">+18%</div></div>
-      <div class="card"><div class="section-kicker">Инвестиции</div><div class="finance-number">31%</div></div>
-      <div class="card"><div class="section-kicker">Долги</div><div class="finance-number">-6%</div></div>
-    </div>
-    <div class="card" style="margin-top:10px">
-      <div class="section-kicker">Интеграция</div>
-      <div class="section-title">Money Flow подключается через экспорт/импорт, если нет открытого API</div>
-      <div class="timeline">
-        <div class="event"><b>Этап 1</b><span>ручной CSV-импорт раз в неделю</span></div>
-        <div class="event"><b>Этап 2</b><span>автоматизация через Shortcuts, если приложение отдает данные</span></div>
-        <div class="event"><b>Этап 3</b><span>финансовый AI анализирует только твои показатели и цели</span></div>
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Финансы сегодня</div>
+        <div class="section-title">Ручной ввод</div>
+        <div class="mini-form">
+          <input id="financeIncomePage" type="number" placeholder="Доход сегодня">
+          <input id="financeExpensePage" type="number" placeholder="Расход сегодня">
+          <input id="financeBalancePage" type="number" placeholder="Баланс месяца">
+          <textarea id="financeCommentPage" placeholder="Комментарий"></textarea>
+          <button class="primary" onclick="saveFinancePage()">Сохранить</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Интеграции</div>
+        <div class="section-title">Money Flow - planned</div>
+        <div class="timeline">
+          <div class="event"><b>Сейчас</b><span>ручной ввод дохода, расхода, баланса и комментария</span></div>
+          <div class="event"><b>Позже</b><span>импорт через файл/текст или API, если он доступен</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -559,7 +625,7 @@ const morningHabits=[
 ];
 const views=[
   ["home","Штаб"],
-  ["today","Сегодня"],
+  ["goals","Цели"],
   ["habits","1000 боксов"],
   ["projects","Проекты"],
   ["library","Знания"],
@@ -606,6 +672,13 @@ const defaultGoals=[
   {id:"life-os",title:"Сделать Life OS живой системой",steps:["Firebase синхронизация","Apple календарь и напоминания","Главный экран Сегодня"]},
   {id:"body",title:"Вернуть сильную физическую форму",steps:["Утренние привычки","Тренировки","Контроль веса и сна"]}
 ];
+const defaultDay=()=>({
+  tasks:[],
+  habits:morningHabits.map(h=>({id:h.id,title:h.name,note:h.meta,done:false})),
+  events:[],
+  finance:{income:"",expense:"",balance:"",comment:""},
+  panels:{tasks:true,events:true,habits:true,finance:true,health:true,goals:true}
+});
 const state=loadState();
 const projects=[
   ["KorRestConsult","Ресторанный консалтинг, стандарты, обучение","62%"],
@@ -627,14 +700,26 @@ const wardrobe=[
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(stateKey))||{};
-    return Object.assign({checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
+    return Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
   }catch(e){
-    return{checks:{},todayDone:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
+    return{checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
   }
+}
+function todayDay(){
+  state.days=state.days||{};
+  if(!state.days[todayKey])state.days[todayKey]=defaultDay();
+  const day=state.days[todayKey];
+  day.tasks=day.tasks||[];
+  day.events=day.events||[];
+  day.habits=day.habits&&day.habits.length?day.habits:defaultDay().habits;
+  day.finance=day.finance||{income:"",expense:"",balance:"",comment:""};
+  day.panels=Object.assign(defaultDay().panels,day.panels||{});
+  return day;
 }
 function save(){
   localStorage.setItem(stateKey,JSON.stringify(state));
   if(window.lifeCloud&&window.lifeCloud.saveState)window.lifeCloud.saveState(state);
+  if(window.lifeCloud&&window.lifeCloud.saveDay)window.lifeCloud.saveDay(todayKey,todayDay());
 }
 function buildNav(){
   const nav=document.getElementById("nav");
@@ -687,33 +772,61 @@ function dayItem(key,title,meta){
   return `<div class="day-item${done?" done":""}" onclick="setDone('${key}',${!done})"><div class="box"></div><div class="day-text"><b>${title}</b><span>${meta||""}</span></div></div>`;
 }
 function renderHome(){
-  const data=allHomeItems();
+  const day=todayDay();
   const habitRoot=document.getElementById("homeHabits");
   const taskRoot=document.getElementById("homeTasks");
   const calendarRoot=document.getElementById("homeCalendar");
   const goalRoot=document.getElementById("homeGoals");
   if(!habitRoot)return;
-  habitRoot.innerHTML=data.habits.map(h=>dayItem(`habit-${h.id}`,h.name,h.meta)).join("");
-  taskRoot.innerHTML=data.tasks.length?data.tasks.map((t,i)=>dayItem(`task-${t.id||i}`,t.title,t.source||"напоминание")).join(""):'<div class="note"><b>Дел на сегодня нет</b><span class="badge">чисто</span></div>';
-  calendarRoot.innerHTML=data.calendar.length?data.calendar.map((e,i)=>dayItem(`event-${e.id||i}`,`${e.time||"--:--"} · ${e.title}`,e.source||"событие")).join(""):'<div class="note"><b>Событий нет</b><span class="badge">окно</span></div>';
-  goalRoot.innerHTML="";
-  (state.goals||[]).forEach((goal,gi)=>{
-    const steps=(goal.steps||[]).map((step,si)=>dayItem(`goal-${gi}-${si}`,step,goal.title)).join("");
-    goalRoot.insertAdjacentHTML("beforeend",`<div class="goal-card"><div class="goal-head"><b>${goal.title}</b><button class="ghost" onclick="removeItem('goals',${gi})">Удалить</button></div><div class="day-list">${steps}</div><div class="save-row"><input id="step-${gi}" placeholder="Следующий шаг"><button class="ghost" onclick="addGoalStep(${gi})">Добавить шаг</button></div></div>`);
-  });
-  const total=data.habits.length+data.tasks.length+data.calendar.length+data.steps.length;
-  const done=[...data.habits.map(h=>`habit-${h.id}`),...data.tasks.map((t,i)=>`task-${t.id||i}`),...data.calendar.map((e,i)=>`event-${e.id||i}`),...data.steps.map(s=>s.key)].filter(isDone).length;
+  document.getElementById("todayDateLabel").textContent=new Date().toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
+  applyPanelState(day);
+  taskRoot.innerHTML=day.tasks.length?day.tasks.map((task,i)=>hqItem("task",i,task.title,task.note||"")).join(""):'<div class="hq-item"><div class="day-text"><b>Дел нет</b><span>Добавь первое дело на сегодня</span></div></div>';
+  calendarRoot.innerHTML=day.events.length?day.events.map((event,i)=>hqItem("event",i,`${event.time||"--:--"} · ${event.title}`,`${event.place||""}${event.comment?" · "+event.comment:""}`)).join(""):'<div class="hq-item"><div class="day-text"><b>Встреч нет</b><span>Добавь время, место и комментарий</span></div></div>';
+  habitRoot.innerHTML=day.habits.map((habit,i)=>hqItem("habit",i,habit.title,habit.note||"")).join("");
+  renderFinanceInputs(day);
+  renderHealthSummary();
+  renderGoalMini();
+  renderGoalsList();
+  const total=day.tasks.length+day.habits.length+day.events.length;
+  const done=[...day.tasks,...day.habits,...day.events].filter(item=>item.done).length;
   const pct=total?Math.round(done/total*100):0;
   document.getElementById("homeDone").textContent=done;
   document.getElementById("homeTotal").textContent=total;
   document.getElementById("homePercent").textContent=pct+"%";
-  document.getElementById("homeProgressFill").style.width=pct+"%";
+  document.getElementById("dayProgressText").textContent=`День выполнен на ${pct}%`;
+  document.getElementById("dayProgressFill").style.width=pct+"%";
   document.getElementById("topDayProgress").textContent=`${done}/${total}`;
   document.getElementById("topDayFill").style.width=pct+"%";
-  document.getElementById("habitTodayBadge").textContent=`${data.habits.filter(h=>isDone(`habit-${h.id}`)).length}/${data.habits.length}`;
-  document.getElementById("taskTodayBadge").textContent=`${data.tasks.filter((t,i)=>isDone(`task-${t.id||i}`)).length}/${data.tasks.length}`;
-  document.getElementById("calendarTodayBadge").textContent=`${data.calendar.length} событий`;
+  document.getElementById("habitTodayBadge").textContent=`${day.habits.filter(h=>h.done).length}/${day.habits.length}`;
+  document.getElementById("taskTodayBadge").textContent=`${day.tasks.filter(t=>t.done).length}/${day.tasks.length}`;
+  document.getElementById("calendarTodayBadge").textContent=`${day.events.filter(e=>e.done).length}/${day.events.length}`;
   scheduleNotifications();
+}
+function hqItem(type,index,title,meta){
+  const item=todayDay()[type==="event"?"events":type==="habit"?"habits":"tasks"][index];
+  return `<div class="hq-item${item.done?" done":""}"><div class="box" onclick="toggleDayItem('${type}',${index})"></div><div class="day-text" onclick="toggleDayItem('${type}',${index})"><b>${escapeHtml(title)}</b><span>${escapeHtml(meta||"")}</span></div><button class="delete-btn" onclick="deleteDayItem('${type}',${index})">Удалить</button></div>`;
+}
+function toggleDayItem(type,index){
+  const list=todayDay()[type==="event"?"events":type==="habit"?"habits":"tasks"];
+  list[index].done=!list[index].done;
+  save();
+  renderAll();
+}
+function deleteDayItem(type,index){
+  const list=todayDay()[type==="event"?"events":type==="habit"?"habits":"tasks"];
+  list.splice(index,1);
+  save();
+  renderAll();
+}
+function savePanelState(name,open){
+  todayDay().panels[name]=open;
+  save();
+}
+function applyPanelState(day){
+  [["panelTasks","tasks"],["panelEvents","events"],["panelHabits","habits"],["panelFinance","finance"],["panelHealth","health"],["panelGoals","goals"]].forEach(([id,key])=>{
+    const el=document.getElementById(id);
+    if(el)el.open=day.panels[key]!==false;
+  });
 }
 function notificationAvailable(){
   return "Notification" in window;
@@ -766,20 +879,24 @@ function addTask(){
   const input=document.getElementById("taskInput");
   const title=input.value.trim();
   if(!title)return;
-  state.tasks.unshift({id:"task-"+Date.now(),title,source:"добавлено вручную"});
+  todayDay().tasks.unshift({id:"task-"+Date.now(),title,note:"",done:false});
   input.value="";
   save();
-  renderHome();
+  renderAll();
 }
 function addCalendarEvent(){
   const title=document.getElementById("calendarInput").value.trim();
   const time=document.getElementById("calendarTime").value;
+  const place=document.getElementById("eventPlaceInput").value.trim();
+  const comment=document.getElementById("eventCommentInput").value.trim();
   if(!title)return;
-  state.calendar.push({id:"event-"+Date.now(),time,title,source:"добавлено вручную"});
+  todayDay().events.push({id:"event-"+Date.now(),time,title,place,comment,done:false});
   document.getElementById("calendarInput").value="";
   document.getElementById("calendarTime").value="";
+  document.getElementById("eventPlaceInput").value="";
+  document.getElementById("eventCommentInput").value="";
   save();
-  renderHome();
+  renderAll();
 }
 function addGoal(){
   const title=document.getElementById("goalInput").value.trim();
@@ -789,7 +906,7 @@ function addGoal(){
   document.getElementById("goalInput").value="";
   document.getElementById("goalStepInput").value="";
   save();
-  renderHome();
+  renderAll();
 }
 function addGoalStep(i){
   const input=document.getElementById(`step-${i}`);
@@ -799,7 +916,61 @@ function addGoalStep(i){
   state.goals[i].steps.push(step);
   input.value="";
   save();
-  renderHome();
+  renderAll();
+}
+function saveFinance(){
+  const day=todayDay();
+  day.finance={
+    income:document.getElementById("financeIncome").value,
+    expense:document.getElementById("financeExpense").value,
+    balance:document.getElementById("financeBalance").value,
+    comment:document.getElementById("financeComment").value.trim()
+  };
+  save();
+  renderAll();
+}
+function saveFinancePage(){
+  const day=todayDay();
+  day.finance={
+    income:document.getElementById("financeIncomePage").value,
+    expense:document.getElementById("financeExpensePage").value,
+    balance:document.getElementById("financeBalancePage").value,
+    comment:document.getElementById("financeCommentPage").value.trim()
+  };
+  save();
+  renderAll();
+}
+function renderFinanceInputs(day){
+  if(!document.getElementById("financeIncome"))return;
+  document.getElementById("financeIncome").value=day.finance.income||"";
+  document.getElementById("financeExpense").value=day.finance.expense||"";
+  document.getElementById("financeBalance").value=day.finance.balance||"";
+  document.getElementById("financeComment").value=day.finance.comment||"";
+  const badge=document.getElementById("financeTodayBadge");
+  if(badge)badge.textContent=(day.finance.income||day.finance.expense||day.finance.balance)?"сохранено":"ввод";
+  if(document.getElementById("financeIncomePage")){
+    document.getElementById("financeIncomePage").value=day.finance.income||"";
+    document.getElementById("financeExpensePage").value=day.finance.expense||"";
+    document.getElementById("financeBalancePage").value=day.finance.balance||"";
+    document.getElementById("financeCommentPage").value=day.finance.comment||"";
+  }
+}
+function renderHealthSummary(){
+  const root=document.getElementById("healthSummary");
+  if(!root)return;
+  const last=(state.healthEvents||[])[0];
+  const doctors=(state.doctors||[]).length;
+  root.innerHTML=`<div class="note"><b>${last?last.title:"Записей нет"}</b><span>${last?last.date||"без даты":"здоровье"}</span></div><div class="note"><b>${doctors} врачей</b><span>контакты</span></div>`;
+}
+function renderGoalMini(){
+  const root=document.getElementById("homeGoals");
+  if(!root)return;
+  root.innerHTML=(state.goals||[]).slice(0,3).map(goal=>`<div class="note"><b>${escapeHtml(goal.title)}</b><span class="badge">${(goal.steps||[]).length} шагов</span></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">добавь</span></div>';
+}
+function renderGoalsList(){
+  const root=document.getElementById("goalsList");
+  if(!root)return;
+  root.innerHTML=(state.goals||[]).map((goal,i)=>`<div class="goal-card"><div class="goal-head"><b>${escapeHtml(goal.title)}</b><button class="ghost" onclick="removeItem('goals',${i})">Удалить</button></div><div class="day-list">${(goal.steps||[]).map(step=>`<div class="check-item"><div class="box"></div><div class="check-name">${escapeHtml(step)}</div></div>`).join("")}</div><div class="save-row"><input id="step-${i}" placeholder="Следующий шаг"><button class="ghost" onclick="addGoalStep(${i})">Добавить шаг</button></div></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">пусто</span></div>';
 }
 function importAppleJson(){
   const input=document.getElementById("appleJsonInput");
@@ -1045,11 +1216,14 @@ function removeItem(collection,i){
 function escapeAttr(value){
   return String(value).replaceAll("&","&amp;").replaceAll('"',"&quot;").replaceAll("<","&lt;");
 }
+function escapeHtml(value){
+  return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+}
 function renderTotals(){
   const done=Object.values(state.checks).filter(Boolean).length;
-  const data=allHomeItems();
-  const homeTotal=data.habits.length+data.tasks.length+data.calendar.length+data.steps.length;
-  const homeDone=[...data.habits.map(h=>`habit-${h.id}`),...data.tasks.map((t,i)=>`task-${t.id||i}`),...data.calendar.map((e,i)=>`event-${e.id||i}`),...data.steps.map(s=>s.key)].filter(isDone).length;
+  const day=todayDay();
+  const homeTotal=day.tasks.length+day.habits.length+day.events.length;
+  const homeDone=[...day.tasks,...day.habits,...day.events].filter(item=>item.done).length;
   const doneToday=document.getElementById("doneToday");
   const xpToday=document.getElementById("xpToday");
   if(doneToday)doneToday.textContent=done;
@@ -1079,7 +1253,7 @@ function renderAll(){
   renderHome();
   renderTraits();
   renderActions();
-  renderToday();
+  if(document.getElementById("todayGrid"))renderToday();
   renderBoxes();
   renderCustomHabits();
   renderProjects();
@@ -1094,6 +1268,13 @@ function renderAll(){
 window.applyCloudState=function(cloudState){
   if(!cloudState)return;
   Object.assign(state,cloudState);
+  localStorage.setItem(stateKey,JSON.stringify(state));
+  renderAll();
+};
+window.applyCloudDay=function(date,day){
+  if(!day)return;
+  state.days=state.days||{};
+  state.days[date]=Object.assign(defaultDay(),day);
   localStorage.setItem(stateKey,JSON.stringify(state));
   renderAll();
 };
@@ -1120,13 +1301,21 @@ if(config&&config.apiKey){
     const auth=getAuth(app);
     const credential=await signInAnonymously(auth);
     const stateRef=doc(db,"users",credential.user.uid,"lifeos","state");
+    const dayRef=doc(db,"users","default","days",todayKey);
     const snap=await getDoc(stateRef);
     if(snap.exists())window.applyCloudState(snap.data().state);
+    const daySnap=await getDoc(dayRef);
+    if(daySnap.exists())window.applyCloudDay(todayKey,daySnap.data());
     let timer=null;
+    let dayTimer=null;
     window.lifeCloud={
       saveState(data){
         clearTimeout(timer);
         timer=setTimeout(()=>setDoc(stateRef,{state:data,updatedAt:serverTimestamp()},{merge:true}),700);
+      },
+      saveDay(date,day){
+        clearTimeout(dayTimer);
+        dayTimer=setTimeout(()=>setDoc(doc(db,"users","default","days",date),Object.assign({},day,{updatedAt:serverTimestamp()}),{merge:true}),450);
       }
     };
     window.setFirebaseStatus("Firebase: синхронизация включена",true);
