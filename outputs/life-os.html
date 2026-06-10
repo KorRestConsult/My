@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Илья · Life OS</title>
+<style>
+  :root{
+    --bg:#f5efe6;
+    --paper:#fffaf3;
+    --paper2:#fbf4ea;
+    --ink:#21180f;
+    --muted:#7b6855;
+    --line:#e4d4be;
+    --gold:#bd9657;
+    --gold2:#d6bc87;
+    --green:#263f35;
+    --green2:#3d6756;
+    --green3:#e6efe9;
+    --blue:#263d58;
+    --red:#9b4a3d;
+    --shadow:0 10px 32px rgba(47,32,18,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{min-height:100vh;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding-bottom:92px}
+  button,input,textarea{font:inherit}
+  button{cursor:pointer}
+  .shell{max-width:1180px;margin:0 auto}
+  .topbar{position:sticky;top:0;z-index:50;background:var(--green);box-shadow:0 2px 18px rgba(0,0,0,.18)}
+  .hero{padding:18px 14px 12px;display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center}
+  .avatar{width:56px;height:56px;border-radius:16px;background:linear-gradient(145deg,#dfc28b,#785f3c);display:grid;place-items:center;color:#fff4df;font-size:28px;font-weight:800;border:1px solid rgba(255,255,255,.22)}
+  .identity{min-width:0}
+  h1{font-family:Georgia,"Times New Roman",serif;color:#fff3de;font-size:26px;line-height:1;font-weight:700;letter-spacing:.2px}
+  .subtitle{margin-top:5px;color:#b9d0c3;text-transform:uppercase;letter-spacing:1.7px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .year-ring{width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--gold) 44%,rgba(255,255,255,.16) 0);display:grid;place-items:center;color:#fff3de;font-family:Georgia,"Times New Roman",serif;font-weight:700;border:1px solid rgba(255,255,255,.16)}
+  .pulse{grid-column:1/-1;background:rgba(0,0,0,.17);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .pulse-item{min-width:0}
+  .pulse-label{font-size:9px;color:#a9c5b7;text-transform:uppercase;letter-spacing:1px}
+  .pulse-value{margin-top:3px;color:#fff4df;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nav{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:10px 12px;background:var(--bg);border-bottom:1px solid rgba(120,84,43,.14)}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-btn{flex:0 0 auto;border:1.5px solid var(--line);background:var(--paper);color:#694e31;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:700;transition:.18s}
+  .nav-btn.active{background:var(--green);border-color:var(--green);color:#fff1dc}
+  main{padding:14px 12px}
+  .view{display:none;animation:show .18s ease}
+  .view.active{display:block}
+  @keyframes show{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .grid{display:grid;gap:10px}
+  .dashboard{grid-template-columns:1.1fr .9fr}
+  .card{background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:13px;box-shadow:0 4px 16px rgba(61,42,22,.05)}
+  .card.dark{background:var(--green);border-color:rgba(255,255,255,.13);color:#fff2df}
+  .section-title{font-family:Georgia,"Times New Roman",serif;font-size:21px;line-height:1.1;margin-bottom:9px}
+  .section-kicker{font-size:10px;text-transform:uppercase;letter-spacing:1.7px;color:var(--muted);margin-bottom:6px}
+  .dark .section-kicker{color:#aac6b8}
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .stat{background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:10px}
+  .stat b{display:block;font-family:Georgia,"Times New Roman",serif;font-size:22px;color:var(--green)}
+  .stat span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+  .trait{display:grid;grid-template-columns:94px 1fr 34px;align-items:center;gap:8px;margin:9px 0}
+  .trait-name{font-size:12px;font-weight:700;color:#3b2a19}
+  .bar{height:7px;background:#eadcc9;border-radius:99px;overflow:hidden}
+  .fill{height:100%;background:linear-gradient(90deg,var(--green2),var(--gold));border-radius:inherit;transition:width .3s}
+  .trait-val{text-align:right;color:var(--muted);font-size:11px;font-weight:700}
+  .actions{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:11px}
+  .action-btn{border:1px solid var(--line);background:#fffaf3;color:#3e2b18;border-radius:8px;padding:10px;font-size:12px;font-weight:800;text-align:left}
+  .action-btn:active,.check-item:active,.project:active{transform:scale(.985)}
+  .today-grid{grid-template-columns:repeat(3,1fr)}
+  .period h3,.project h3{font-family:Georgia,"Times New Roman",serif;font-size:18px;margin-bottom:9px}
+  .check-item{display:flex;gap:9px;align-items:center;background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:9px;margin-top:7px}
+  .box{width:20px;height:20px;flex:0 0 20px;border-radius:6px;border:2px solid var(--gold);display:grid;place-items:center;background:#fff}
+  .check-item.done{background:var(--green3);border-color:#b7cebF;color:#6c7e73}
+  .check-item.done .box{background:var(--green2);border-color:var(--green2)}
+  .check-item.done .box:after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
+  .check-name{font-size:13px;font-weight:700}
+  .check-xp{margin-left:auto;font-size:10px;color:var(--gold);font-weight:800}
+  .habit-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:10px}
+  .habit-count{font-family:Georgia,"Times New Roman",serif;font-size:28px;color:var(--green);font-weight:700}
+  .boxes{display:grid;grid-template-columns:repeat(40,1fr);gap:3px}
+  .tiny-box{aspect-ratio:1;border-radius:2px;background:#eadcc9;border:1px solid rgba(117,82,43,.16)}
+  .tiny-box.filled{background:var(--green2)}
+  .tiny-box.gold{background:var(--gold)}
+  .project-grid{grid-template-columns:repeat(5,1fr)}
+  .project{background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:12px;min-height:132px;display:flex;flex-direction:column;gap:9px}
+  .project small{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:1px}
+  .project p{font-size:12px;color:#604a34;line-height:1.35}
+  .project-progress{margin-top:auto}
+  .split{grid-template-columns:1fr 1fr}
+  .knowledge-list{display:grid;gap:8px}
+  .note{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:10px}
+  .note b{font-size:13px}
+  .badge{border-radius:99px;padding:4px 8px;background:var(--green3);color:var(--green2);font-size:10px;font-weight:800}
+  .wardrobe{grid-template-columns:repeat(4,1fr)}
+  .wardrobe .card{min-height:116px}
+  .money-grid{grid-template-columns:repeat(4,1fr)}
+  .finance-number{font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--green);font-weight:700;margin-top:4px}
+  .connectors{display:grid;gap:8px}
+  .connector{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:9px;padding:10px}
+  .connector span{font-size:12px;color:#dce9e2}
+  .connector b{font-size:13px;color:#fff3df}
+  .switch{width:38px;height:22px;border-radius:99px;background:rgba(255,255,255,.18);position:relative;flex:0 0 38px}
+  .switch:after{content:"";position:absolute;width:16px;height:16px;border-radius:50%;background:#fff3df;top:3px;left:3px}
+  .switch.on{background:var(--gold)}
+  .switch.on:after{left:19px}
+  .timeline{position:relative;padding-left:18px}
+  .timeline:before{content:"";position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--line)}
+  .event{position:relative;margin:0 0 12px;background:var(--paper2);border:1px solid var(--line);border-radius:9px;padding:10px}
+  .event:before{content:"";position:absolute;left:-17px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--gold)}
+  .event b{display:block;margin-bottom:3px}
+  .event span{font-size:12px;color:var(--muted)}
+  textarea{width:100%;min-height:112px;resize:vertical;border:1.5px solid var(--line);background:#fffdf8;border-radius:9px;padding:10px;color:var(--ink);outline:none}
+  .save-row{display:flex;gap:8px;margin-top:8px}
+  .primary{border:0;background:var(--green);color:#fff3df;border-radius:8px;padding:10px 12px;font-size:12px;font-weight:800}
+  .ghost{border:1px solid var(--line);background:var(--paper);color:var(--green);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:800}
+  .bottom{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--green);box-shadow:0 -5px 22px rgba(0,0,0,.18);padding:10px 14px 18px}
+  .bottom-inner{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+  .bottom-label{font-size:10px;color:#aac6b8;text-transform:uppercase;letter-spacing:1.4px}
+  .bottom-value{font-family:Georgia,"Times New Roman",serif;color:#fff4df;font-size:19px;font-weight:700;margin-top:2px}
+  .bottom button{background:rgba(255,255,255,.1);color:#fff4df;border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:10px 12px;font-size:12px;font-weight:800}
+  @media (max-width:900px){
+    .dashboard,.split{grid-template-columns:1fr}
+    .today-grid{grid-template-columns:1fr}
+    .project-grid{grid-template-columns:repeat(2,1fr)}
+    .wardrobe,.money-grid{grid-template-columns:repeat(2,1fr)}
+    .boxes{grid-template-columns:repeat(32,1fr)}
+  }
+  @media (max-width:560px){
+    body{padding-bottom:88px}
+    .hero{grid-template-columns:50px 1fr 50px;padding-top:16px}
+    .avatar{width:50px;height:50px;border-radius:14px;font-size:24px}
+    h1{font-size:24px}
+    .year-ring{width:50px;height:50px;font-size:13px}
+    .pulse{grid-template-columns:repeat(2,1fr)}
+    main{padding:12px 10px}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .actions{grid-template-columns:1fr}
+    .project-grid,.wardrobe,.money-grid{grid-template-columns:1fr}
+    .trait{grid-template-columns:82px 1fr 30px}
+    .boxes{grid-template-columns:repeat(25,1fr);gap:2px}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="shell">
+    <div class="hero">
+      <div class="avatar">И</div>
+      <div class="identity">
+        <h1>Илья</h1>
+        <div class="subtitle">Life OS · личная штаб-квартира · RPG-панель</div>
+      </div>
+      <div class="year-ring" id="yearPercent">44%</div>
+      <div class="pulse">
+        <div class="pulse-item"><div class="pulse-label">Возраст</div><div class="pulse-value">33 года</div></div>
+        <div class="pulse-item"><div class="pulse-label">Вес</div><div class="pulse-value">86.4 кг</div></div>
+        <div class="pulse-item"><div class="pulse-label">Настроение</div><div class="pulse-value" id="moodText">Собран</div></div>
+        <div class="pulse-item"><div class="pulse-label">Цель года</div><div class="pulse-value">Собрать систему жизни</div></div>
+      </div>
+    </div>
+    <nav class="nav" id="nav"></nav>
+  </div>
+</header>
+
+<main class="shell">
+  <section class="view active" id="home">
+    <div class="grid dashboard">
+      <div class="card">
+        <div class="section-kicker">Панель персонажа</div>
+        <div class="section-title">Характеристики растут от действий</div>
+        <div id="traits"></div>
+        <div class="actions" id="quickActions"></div>
+      </div>
+      <div class="grid">
+        <div class="card dark">
+          <div class="section-kicker">AI на основе Ильи</div>
+          <div class="section-title">Личный советник</div>
+          <div class="connectors">
+            <div class="connector"><div><b>Память обо мне</b><span> цели, принципы, проекты, заметки</span></div><div class="switch on"></div></div>
+            <div class="connector"><div><b>Календарь</b><span> события, напоминания, дедлайны</span></div><div class="switch"></div></div>
+            <div class="connector"><div><b>Питание / Mist</b><span> калории, БЖУ, рацион</span></div><div class="switch"></div></div>
+            <div class="connector"><div><b>Money Flow</b><span> импорт финансовых показателей</span></div><div class="switch"></div></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-kicker">Сегодня</div>
+          <div class="stats">
+            <div class="stat"><b id="doneToday">0</b><span>сделано</span></div>
+            <div class="stat"><b id="xpToday">0</b><span>XP сегодня</span></div>
+            <div class="stat"><b id="streak">12</b><span>серия дней</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="today">
+    <div class="grid today-grid" id="todayGrid"></div>
+  </section>
+
+  <section class="view" id="habits">
+    <div class="card">
+      <div class="habit-head">
+        <div>
+          <div class="section-kicker">Дневник привычек</div>
+          <div class="section-title">1000 боксов дисциплины</div>
+        </div>
+        <div class="habit-count"><span id="boxCount">0</span>/1000</div>
+      </div>
+      <div class="boxes" id="boxes"></div>
+    </div>
+  </section>
+
+  <section class="view" id="projects">
+    <div class="grid project-grid" id="projectsGrid"></div>
+  </section>
+
+  <section class="view" id="library">
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Библиотека знаний</div>
+        <div class="section-title">Чтобы Telegram не съедал память</div>
+        <div class="knowledge-list" id="knowledge"></div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Быстрая заметка</div>
+        <div class="section-title">Сохранить мысль</div>
+        <textarea id="noteInput" placeholder="Ссылка, мысль, идея для внедрения..."></textarea>
+        <div class="save-row">
+          <button class="primary" onclick="saveNote()">Сохранить</button>
+          <button class="ghost" onclick="clearNotes()">Очистить заметки</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="cabinet">
+    <div class="grid wardrobe" id="wardrobe"></div>
+  </section>
+
+  <section class="view" id="finance">
+    <div class="grid money-grid">
+      <div class="card"><div class="section-kicker">Капитал</div><div class="finance-number">индекс 72</div></div>
+      <div class="card"><div class="section-kicker">Доход месяца</div><div class="finance-number">+18%</div></div>
+      <div class="card"><div class="section-kicker">Инвестиции</div><div class="finance-number">31%</div></div>
+      <div class="card"><div class="section-kicker">Долги</div><div class="finance-number">-6%</div></div>
+    </div>
+    <div class="card" style="margin-top:10px">
+      <div class="section-kicker">Интеграция</div>
+      <div class="section-title">Money Flow подключается через экспорт/импорт, если нет открытого API</div>
+      <div class="timeline">
+        <div class="event"><b>Этап 1</b><span>ручной CSV-импорт раз в неделю</span></div>
+        <div class="event"><b>Этап 2</b><span>автоматизация через Shortcuts, если приложение отдает данные</span></div>
+        <div class="event"><b>Этап 3</b><span>финансовый AI анализирует только твои показатели и цели</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="legacy">
+    <div class="grid split">
+      <div class="card">
+        <div class="section-kicker">Карта жизни</div>
+        <div class="section-title">Что я хочу успеть</div>
+        <div class="timeline">
+          <div class="event"><b>Италия</b><span>маршрут, рестораны, стиль, наблюдения</span></div>
+          <div class="event"><b>Собственный бутик-отель</b><span>концепция, экономика, место, сервис</span></div>
+          <div class="event"><b>100 ресторанов клиентов</b><span>репутация KorRestConsult</span></div>
+          <div class="event"><b>Книга</b><span>методология сервиса и управления</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-kicker">Наследие</div>
+        <div class="section-title">Мои принципы</div>
+        <div class="knowledge-list">
+          <div class="note"><b>Действие важнее красивой идеи</b><span class="badge">принцип</span></div>
+          <div class="note"><b>Сервис начинается с уважения</b><span class="badge">работа</span></div>
+          <div class="note"><b>Система должна помогать жить, а не давить</b><span class="badge">жизнь</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="bottom">
+  <div class="bottom-inner">
+    <div>
+      <div class="bottom-label">Прогресс дня</div>
+      <div class="bottom-value" id="bottomProgress">0 из 12 действий</div>
+    </div>
+    <button onclick="resetDay()">Сбросить день</button>
+  </div>
+</div>
+
+<script>
+const stateKey="ilya_life_os_v1";
+const state=loadState();
+const views=[
+  ["home","Штаб"],
+  ["today","Сегодня"],
+  ["habits","1000 боксов"],
+  ["projects","Проекты"],
+  ["library","Знания"],
+  ["cabinet","Кабинет"],
+  ["finance","Финансы"],
+  ["legacy","Наследие"]
+];
+const traits=[
+  ["health","Здоровье",67],
+  ["power","Сила",54],
+  ["endurance","Выносливость",48],
+  ["discipline","Дисциплина",73],
+  ["money","Финансы",61],
+  ["relations","Отношения",58],
+  ["intellect","Интеллект",69],
+  ["style","Стиль",46],
+  ["reputation","Репутация",64]
+];
+const actions=[
+  ["Тренировка","+1 сила","power",1],
+  ["Не курил день","+1 здоровье","health",1],
+  ["Прочитал 20 страниц","+1 интеллект","intellect",1],
+  ["Разбор гардероба","+1 стиль","style",1],
+  ["Закрыл задачу проекта","+1 репутация","reputation",1],
+  ["Финансовый учет","+1 финансы","money",1]
+];
+const today=[
+  {title:"Утро",items:[["Вода","health",1],["Зарядка","endurance",1],["Витамины","health",1],["План дня","discipline",1]]},
+  {title:"День",items:[["Работа","reputation",1],["Обучение","intellect",1],["Спорт","power",1],["Финансы","money",1]]},
+  {title:"Вечер",items:[["Чтение","intellect",1],["Дневник","discipline",1],["Подготовка к завтра","discipline",1],["Люди","relations",1]]}
+];
+const projects=[
+  ["KorRestConsult","Ресторанный консалтинг, стандарты, обучение","62%"],
+  ["Mirra","Система контента, знаний и операционных процессов","48%"],
+  ["Slow Bistro","Концепция, сервис, экономика, запуск","34%"],
+  ["ZapFormat","Инструменты упаковки и автоматизации","27%"],
+  ["Личные инвестиции","Капитал, дисциплина, спокойные решения","41%"]
+];
+const knowledge=[
+  ["Ресторанный сервис","изучить"],["Продажи","внедрить"],["Маркетинг","прочитать"],
+  ["Финансы","изучить"],["Психология","прочитать"],["Мужской стиль","внедрить"],
+  ["Автомобили","прочитать"],["Здоровье","изучить"]
+];
+const wardrobe=[
+  ["Костюмы","фото, посадка, сочетания"],["Обувь","уход, сезон, комплекты"],
+  ["Часы","история, сервис, желание"],["Парфюм","сезон, образ, повод"],
+  ["Аксессуары","ремни, очки, портфель"],["Покупки","лист желаний и приоритет"]
+];
+function loadState(){
+  try{return JSON.parse(localStorage.getItem(stateKey))||{checks:{},boosts:{},boxes:144,notes:[]}}catch(e){return{checks:{},boosts:{},boxes:144,notes:[]}}
+}
+function save(){localStorage.setItem(stateKey,JSON.stringify(state))}
+function buildNav(){
+  const nav=document.getElementById("nav");
+  views.forEach(([id,label],i)=>{
+    const b=document.createElement("button");
+    b.className="nav-btn"+(i===0?" active":"");
+    b.textContent=label;
+    b.onclick=()=>showView(id);
+    nav.appendChild(b);
+  });
+}
+function showView(id){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelectorAll(".nav-btn")[views.findIndex(v=>v[0]===id)].classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function traitValue(id,base){
+  return Math.min(100,base+(state.boosts[id]||0));
+}
+function renderTraits(){
+  const root=document.getElementById("traits");
+  root.innerHTML="";
+  traits.forEach(([id,name,base])=>{
+    const val=traitValue(id,base);
+    root.insertAdjacentHTML("beforeend",`<div class="trait"><div class="trait-name">${name}</div><div class="bar"><div class="fill" style="width:${val}%"></div></div><div class="trait-val">${val}</div></div>`);
+  });
+}
+function renderActions(){
+  const root=document.getElementById("quickActions");
+  root.innerHTML="";
+  actions.forEach(([name,xp,trait,amount])=>{
+    const b=document.createElement("button");
+    b.className="action-btn";
+    b.innerHTML=`${name}<br><span style="color:var(--gold);font-size:11px">${xp}</span>`;
+    b.onclick=()=>boost(trait,amount);
+    root.appendChild(b);
+  });
+}
+function boost(trait,amount){
+  state.boosts[trait]=(state.boosts[trait]||0)+amount;
+  state.boxes=Math.min(1000,(state.boxes||0)+1);
+  save();
+  renderAll();
+}
+function renderToday(){
+  const root=document.getElementById("todayGrid");
+  root.innerHTML="";
+  today.forEach((period,pi)=>{
+    const card=document.createElement("div");
+    card.className="card period";
+    card.innerHTML=`<h3>${period.title}</h3>`;
+    period.items.forEach(([name,trait,xp],ii)=>{
+      const key=`${pi}_${ii}`;
+      const item=document.createElement("div");
+      item.className="check-item"+(state.checks[key]?" done":"");
+      item.innerHTML=`<div class="box"></div><div class="check-name">${name}</div><div class="check-xp">+${xp}</div>`;
+      item.onclick=()=>{
+        state.checks[key]=!state.checks[key];
+        state.boosts[trait]=(state.boosts[trait]||0)+(state.checks[key]?xp:-xp);
+        state.boxes=Math.max(0,Math.min(1000,(state.boxes||0)+(state.checks[key]?1:-1)));
+        save();
+        renderAll();
+      };
+      card.appendChild(item);
+    });
+    root.appendChild(card);
+  });
+}
+function renderBoxes(){
+  const root=document.getElementById("boxes");
+  root.innerHTML="";
+  const count=state.boxes||0;
+  document.getElementById("boxCount").textContent=count;
+  for(let i=1;i<=1000;i++){
+    const b=document.createElement("div");
+    b.className="tiny-box"+(i<=count?" filled":"")+(i%100===0&&i<=count?" gold":"");
+    root.appendChild(b);
+  }
+}
+function renderProjects(){
+  const root=document.getElementById("projectsGrid");
+  root.innerHTML="";
+  projects.forEach(([name,text,pct])=>{
+    root.insertAdjacentHTML("beforeend",`<article class="project"><small>проект</small><h3>${name}</h3><p>${text}</p><div class="project-progress"><div class="bar"><div class="fill" style="width:${pct}"></div></div><small>${pct}</small></div></article>`);
+  });
+}
+function renderKnowledge(){
+  const root=document.getElementById("knowledge");
+  root.innerHTML="";
+  knowledge.forEach(([name,status])=>root.insertAdjacentHTML("beforeend",`<div class="note"><b>${name}</b><span class="badge">${status}</span></div>`));
+  (state.notes||[]).forEach(note=>root.insertAdjacentHTML("beforeend",`<div class="note"><b>${note}</b><span class="badge">сохранено</span></div>`));
+}
+function renderWardrobe(){
+  const root=document.getElementById("wardrobe");
+  root.innerHTML="";
+  wardrobe.forEach(([name,text])=>root.insertAdjacentHTML("beforeend",`<div class="card"><div class="section-kicker">мужской кабинет</div><div class="section-title">${name}</div><p style="font-size:13px;color:var(--muted);line-height:1.4">${text}</p></div>`));
+}
+function renderTotals(){
+  const done=Object.values(state.checks).filter(Boolean).length;
+  document.getElementById("doneToday").textContent=done;
+  document.getElementById("xpToday").textContent=done;
+  document.getElementById("bottomProgress").textContent=`${done} из 12 действий`;
+  document.getElementById("moodText").textContent=done>=8?"В тонусе":done>=4?"Собран":"Разгон";
+}
+function saveNote(){
+  const el=document.getElementById("noteInput");
+  const value=el.value.trim();
+  if(!value)return;
+  state.notes=[value,...(state.notes||[])].slice(0,12);
+  el.value="";
+  save();
+  renderKnowledge();
+}
+function clearNotes(){
+  state.notes=[];
+  save();
+  renderKnowledge();
+}
+function resetDay(){
+  state.checks={};
+  save();
+  renderAll();
+}
+function renderAll(){
+  renderTraits();
+  renderActions();
+  renderToday();
+  renderBoxes();
+  renderProjects();
+  renderKnowledge();
+  renderWardrobe();
+  renderTotals();
+}
+buildNav();
+renderAll();
+</script>
+</body>
+</html>
