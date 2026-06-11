@@ -165,10 +165,80 @@
   .code-box{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;background:#21180f;color:#fff4df;border-radius:9px;padding:10px;overflow:auto;white-space:pre-wrap}
   .sync-strip{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
   .sync-strip button{flex:1 1 140px}
-  .hq{display:grid;gap:10px}
-  .hq-hero{background:var(--paper);color:var(--ink);border-color:var(--line)}
-  .hq-hero .section-kicker{color:var(--muted)}
-  .hq-hero .section-title{color:var(--green)}
+  .hq{display:grid;gap:18px}
+  .topbar{position:relative;background:linear-gradient(145deg,#18382d,#0e2a22);box-shadow:none;border-bottom:0}
+  .topbar .shell{max-width:1280px;padding:14px 22px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+  .hero{padding:0;grid-template-columns:auto auto;gap:18px}
+  .avatar{width:72px;height:72px;border-radius:18px;font-size:34px;background:linear-gradient(145deg,#eccb8b,#9f7a43);box-shadow:inset 0 1px rgba(255,255,255,.35),0 10px 24px rgba(0,0,0,.2)}
+  h1{font-size:42px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
+  .subtitle,.year-ring,.pulse{display:none}
+  .nav{background:transparent;border:0;padding:0;gap:24px;justify-content:flex-end;align-items:center;overflow:visible}
+  .nav-btn{display:grid;place-items:center;gap:7px;min-width:86px;border:0;background:transparent;color:#f7ead4;border-radius:14px;padding:10px 12px;font-size:14px;font-weight:600}
+  .nav-btn svg{width:34px;height:34px;stroke:#efc785;stroke-width:1.7;fill:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+  .nav-btn.active{background:rgba(8,31,25,.54);color:#fff7e9;box-shadow:inset 0 1px rgba(255,255,255,.04)}
+  main.shell{max-width:1280px;padding:18px 22px}
+  .hq-hero{background:radial-gradient(circle at 48% 50%,rgba(255,255,255,.08),transparent 32%),linear-gradient(145deg,#294f40,#14362c 72%);color:#fff5e5;border:1px solid rgba(255,255,255,.2);border-radius:24px;box-shadow:0 12px 30px rgba(29,42,31,.22);padding:34px 40px}
+  .hq-hero .section-kicker{color:#d8e7de}
+  .hq-hero .section-title{color:#fff5e5}
+  .command-grid{display:grid;grid-template-columns:260px minmax(330px,1fr) 310px;gap:34px;align-items:center}
+  .metric-stack{display:grid;gap:22px}
+  .hero-metric{display:grid;grid-template-columns:54px 1fr;gap:18px;align-items:center;padding-bottom:22px;border-bottom:1px solid rgba(235,221,200,.2)}
+  .hero-metric:last-child{border-bottom:0;padding-bottom:0}
+  .hero-icon{font-size:42px;line-height:1;color:#efbd63}
+  .hero-metric strong{display:block;font-size:28px;color:#fff;letter-spacing:.2px}
+  .hero-metric span{display:block;margin-top:6px;color:#e5d8c5;font-size:16px}
+  .day-ring-wrap{display:grid;place-items:center;min-width:0}
+  .day-ring{position:relative;width:min(390px,100%);aspect-ratio:1}
+  .day-ring svg{width:100%;height:100%;display:block;overflow:visible}
+  .ring-hour{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff8ec;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+  .ring-center{position:absolute;inset:23%;display:grid;place-items:center;text-align:center;border-radius:50%;color:#fff7eb}
+  .weekday{font-size:23px;letter-spacing:.6px}
+  .day-number{font-family:Georgia,"Times New Roman",serif;font-size:92px;line-height:.88;font-weight:800;text-shadow:0 4px 8px rgba(0,0,0,.22)}
+  .month-label{font-size:23px;letter-spacing:.5px}
+  .time-pill{display:inline-block;margin-top:14px;border-radius:12px;background:linear-gradient(145deg,#d9ad6f,#ad834d);padding:9px 15px;color:#fff;font-weight:800;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.18)}
+  .progress-stack{display:grid;gap:28px;border-left:1px solid rgba(235,221,200,.22);padding-left:28px}
+  .progress-card{display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:center;padding-bottom:26px;border-bottom:1px solid rgba(235,221,200,.18)}
+  .progress-card:last-child{border-bottom:0;padding-bottom:0}
+  .progress-card svg{width:42px;height:42px;stroke:var(--accent,#efc36f);stroke-width:1.8;fill:none}
+  .progress-card b{font-size:21px;font-weight:600}
+  .progress-value{float:right;font-size:17px}
+  .hero-bar{height:9px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden;margin-top:16px}
+  .hero-bar div{height:100%;width:0;border-radius:inherit;background:var(--accent,#efc36f)}
+  .section-card{background:rgba(255,250,243,.86);border:1px solid #eadac6;border-radius:18px;padding:24px;box-shadow:0 10px 28px rgba(70,48,24,.05)}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
+  .section-title-row{display:flex;align-items:center;gap:16px}
+  .section-icon{width:52px;height:52px;border-radius:11px;background:var(--green);color:#fff6e8;display:grid;place-items:center}
+  .section-icon svg{width:31px;height:31px;stroke:#fff6e8;stroke-width:1.8;fill:none}
+  .section-card h2{font-size:22px;text-transform:uppercase;font-weight:650;letter-spacing:.2px}
+  .icon-btn{width:48px;height:48px;border:1px solid #eadac6;border-radius:13px;background:#fffaf3;color:#1e211d;font-size:30px;line-height:1;display:grid;place-items:center}
+  .hq-two{display:grid;grid-template-columns:1.18fr .92fr;gap:22px}
+  .event-row{display:grid;grid-template-columns:16px 142px 1fr 54px 28px;gap:18px;align-items:start;margin:22px 0}
+  .event-dot{width:16px;height:16px;border-radius:50%;margin-top:5px;background:var(--cat,#6d98b8)}
+  .event-time{font-size:19px;white-space:nowrap}
+  .event-title{font-size:19px;font-weight:520}
+  .event-meta{margin-top:8px;color:#756a5f;font-size:16px}
+  .duration{color:#5e6460;text-align:right;font-size:17px}
+  .menu-btn{border:0;background:transparent;color:#74736c;font-size:24px;line-height:1}
+  .add-line{border:0;background:transparent;color:#9f6c20;font-size:18px;display:inline-flex;align-items:center;gap:12px;margin-top:12px}
+  .goal-step-row,.task-row{display:grid;grid-template-columns:24px 1fr auto;gap:16px;align-items:center;margin:21px 0;font-size:18px}
+  .os-check{width:22px;height:22px;border:2px solid #90938f;border-radius:4px;background:#fff;display:grid;place-items:center}
+  .done .os-check{background:#a77d3d;border-color:#a77d3d}
+  .done .os-check:after{content:"";width:10px;height:6px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg);margin-top:-2px}
+  .done .task-title{text-decoration:line-through;color:#777}
+  .task-title span{display:block;color:var(--muted);font-size:13px;margin-top:4px;font-weight:500}
+  .task-card{min-height:260px}
+  .task-list{max-width:720px}
+  .wide-card{grid-column:1/-1}
+  .habits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .habit-period{border:1px solid #eadac6;border-radius:16px;padding:20px;background:rgba(255,253,248,.62)}
+  .habit-period h3{display:flex;align-items:center;gap:14px;font-size:18px;text-transform:uppercase;margin-bottom:18px}
+  .habit-row{display:grid;grid-template-columns:24px 1fr 22px;gap:12px;align-items:center;margin:14px 0;font-size:15px}
+  .habit-emoji{font-size:24px}
+  .muted-count{color:#64645d;font-size:18px}
+  .editable-form{display:none;grid-template-columns:1fr 120px 120px 110px;gap:8px;margin:10px 0 14px}
+  .editable-form.open{display:grid}
+  .editable-form input,.editable-form select{padding:9px;border-radius:8px}
+  .sr-actions{display:flex;gap:8px}
   .day-meta{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
   .day-date{font-family:Georgia,"Times New Roman",serif;font-size:24px;color:var(--green);font-weight:700}
   .day-weather{color:var(--muted);font-size:13px;font-weight:800}
@@ -199,7 +269,84 @@
   .summary-line .note span{color:var(--muted)}
   .goal-mini{display:grid;gap:7px}
   .goal-mini .note{background:var(--paper2);border-color:var(--line);color:var(--ink)}
+  .goals-page{display:grid;gap:18px}
+  .goals-hero{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:26px 10px 22px}
+  .goals-quote{font-family:Georgia,"Times New Roman",serif;color:#133f32;font-size:46px;line-height:1.08;font-weight:700}
+  .goal-create-btn{border:0;background:linear-gradient(145deg,#174437,#0d3027);color:#fff6e8;border-radius:10px;padding:17px 24px;font-size:18px;font-weight:850;display:inline-flex;align-items:center;gap:12px;box-shadow:0 8px 18px rgba(16,47,38,.18)}
+  .goal-create-btn span{font-size:28px;line-height:1}
+  .goals-stack{display:grid;gap:14px}
+  .goal-os-card{background:rgba(255,250,243,.92);border:1.5px solid #ead9c4;border-radius:16px;box-shadow:0 10px 26px rgba(76,50,22,.05);overflow:hidden}
+  .goal-os-main{display:grid;grid-template-columns:82px minmax(0,1fr) auto auto;gap:22px;align-items:center;padding:24px 30px}
+  .goal-icon{width:66px;height:66px;border-radius:50%;background:#f3e7d7;border:1px solid #ead9c4;display:grid;place-items:center;color:#174437}
+  .goal-icon svg{width:43px;height:43px;stroke:currentColor;stroke-width:1.8;fill:none}
+  .goal-title{font-size:24px;font-weight:850;line-height:1.08}
+  .goal-meter{display:grid;grid-template-columns:minmax(120px,340px) 54px;gap:14px;align-items:center;margin-top:16px}
+  .goal-track{height:10px;background:#e8dccb;border-radius:99px;overflow:hidden}
+  .goal-fill{height:100%;background:#2f8053;border-radius:inherit;transition:width .25s ease}
+  .goal-percent{color:#2e7a4f;font-size:18px;font-weight:850}
+  .step-count{border:1px solid #ead9c4;background:#fffaf3;color:#4d3d2e;border-radius:10px;min-width:148px;min-height:54px;padding:10px 16px;display:inline-flex;align-items:center;justify-content:center;gap:11px;font-size:15px}
+  .step-count svg{width:25px;height:25px;stroke:#4d3d2e;stroke-width:1.8;fill:none}
+  .expand-btn,.step-menu,.completed-toggle{border:0;background:transparent;color:#4c443a;min-width:44px;min-height:44px;border-radius:10px;font-size:28px;line-height:1;display:grid;place-items:center}
+  .expand-btn:hover,.step-menu:hover,.completed-toggle:hover{background:#f3eadf}
+  .goal-details{border-top:1px solid #ead9c4;padding:24px 30px 30px}
+  .goal-description{max-width:760px;color:#3f3a35;font-size:19px;line-height:1.36;margin-bottom:20px}
+  .steps-panel{border:1px solid #ead9c4;border-radius:12px;background:rgba(255,253,248,.7);padding:20px 20px 12px}
+  .steps-head{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid #ead9c4;padding-bottom:14px;margin-bottom:2px}
+  .steps-head h3{font-size:21px}
+  .add-step-btn{border:0;background:transparent;color:#a06d24;font-size:16px;font-weight:850;display:inline-flex;align-items:center;gap:10px;min-height:40px;padding:0 4px}
+  .add-step-btn .mini-plus{width:34px;height:34px;border:1px solid #d8b787;border-radius:8px;color:#173f32;display:grid;place-items:center;font-size:27px;font-weight:500}
+  .goal-step-line{display:grid;grid-template-columns:34px 34px minmax(0,1fr) auto 36px;gap:14px;align-items:center;min-height:70px;border-bottom:1px solid #ead9c4}
+  .goal-step-line:last-child{border-bottom:0}
+  .drag-handle{color:#594c3f;font-size:22px;cursor:grab;line-height:1;text-align:center;user-select:none}
+  .goal-check{width:28px;height:28px;border:2px solid #c99855;border-radius:6px;background:#fffaf3;display:grid;place-items:center;color:#fff;justify-self:center}
+  .goal-check.done{background:#35734e;border-color:#35734e}
+  .goal-check.done:after{content:"";width:12px;height:7px;border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg);margin-top:-2px}
+  .goal-step-title{font-size:18px;line-height:1.25}
+  .goal-step-line.done .goal-step-title{text-decoration:line-through;color:#655f58}
+  .today-step-btn{border:1px solid #c99855;background:#fffdf8;color:#143f32;border-radius:8px;min-height:44px;padding:0 18px;font-size:16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+  .today-step-btn.added{border-color:transparent;background:#e9efe6;color:#143f32}
+  .goal-complete-banner{margin:0 0 16px;padding:13px 15px;border-radius:10px;background:#e6efe9;color:#173f32;display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:800}
+  .goal-complete-banner button{border:0;background:#173f32;color:#fff6e8;border-radius:8px;padding:10px 12px;font-weight:850}
+  .completed-goals{padding:0 2px 4px}
+  .completed-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:16px 20px}
+  .completed-title{font-size:20px;font-weight:850;display:flex;align-items:center;gap:12px}
+  .completed-badge{background:#e6efe3;color:#234b3c;border-radius:10px;min-width:42px;text-align:center;padding:7px 11px}
+  .show-all-btn{border:0;background:transparent;color:#8f6120;font-size:17px;font-weight:750;display:inline-flex;align-items:center;gap:12px;min-height:44px}
+  .completed-list{border:1px solid #ead9c4;border-radius:14px;background:rgba(255,250,243,.9);overflow:hidden}
+  .completed-row{display:grid;grid-template-columns:36px minmax(0,1fr) auto 40px;gap:12px;align-items:center;min-height:56px;padding:0 20px;border-bottom:1px solid #ead9c4;font-size:18px}
+  .completed-row:last-child{border-bottom:0}
+  .completed-mark{width:26px;height:26px;border:2px solid #d1a253;border-radius:50%;display:grid;place-items:center;color:#d1a253}
+  .completed-mark:after{content:"";width:10px;height:6px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);margin-top:-2px}
+  .restore-btn{border:1px solid #ead9c4;background:#fffaf3;color:#174437;border-radius:8px;padding:8px 10px;font-weight:800}
+  .goal-modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:rgba(20,26,22,.42);padding:18px}
+  .goal-modal.open{display:grid}
+  .goal-modal-card{width:min(520px,100%);background:#fffaf3;border:1px solid #ead9c4;border-radius:16px;padding:20px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+  .goal-modal-card h3{font-size:23px;margin-bottom:12px}
+  .goal-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
+  .empty-goals{border:1px solid #ead9c4;border-radius:14px;background:#fffaf3;padding:26px;color:var(--muted);font-weight:800}
   @media (max-width:900px){
+    .topbar .shell{padding:10px 14px;grid-template-columns:1fr}
+    .hero{grid-template-columns:auto 1fr;gap:12px}
+    .avatar{width:60px;height:60px}
+    h1{font-size:35px}
+    .nav{grid-column:1/-1;justify-content:space-between;gap:6px;overflow-x:auto;padding-top:8px}
+    .nav-btn{min-width:76px;font-size:12px;padding:8px 9px}
+    .nav-btn svg{width:28px;height:28px}
+    main.shell{padding:16px 14px}
+    .hq-hero{padding:24px 18px;border-radius:20px}
+    .command-grid{grid-template-columns:1fr;gap:24px}
+    .metric-stack{grid-template-columns:repeat(3,1fr);gap:12px}
+    .hero-metric{grid-template-columns:1fr;text-align:center;border:0;padding:0;gap:8px}
+    .hero-metric strong{font-size:22px}
+    .hero-metric span{font-size:13px}
+    .day-ring{width:min(340px,100%)}
+    .progress-stack{border-left:0;padding-left:0;grid-template-columns:repeat(3,1fr);gap:12px}
+    .progress-card{grid-template-columns:1fr;border:0;padding:14px;background:rgba(255,255,255,.06);border-radius:14px}
+    .progress-card svg{width:34px;height:34px}
+    .progress-card b{font-size:15px}
+    .progress-value{float:none;display:block;margin-top:4px}
+    .hq-two{grid-template-columns:1fr}
+    .habits-grid{grid-template-columns:1fr}
     .today-command{grid-template-columns:1fr}
     .hq-grid{grid-template-columns:1fr}
     .dashboard,.split{grid-template-columns:1fr}
@@ -207,23 +354,57 @@
     .project-grid{grid-template-columns:repeat(2,1fr)}
     .wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:repeat(2,1fr)}
     .boxes{grid-template-columns:repeat(32,1fr)}
+    .goals-quote{font-size:38px}
+    .goal-os-main{grid-template-columns:70px minmax(0,1fr);gap:16px;padding:20px}
+    .goal-os-main .step-count{grid-column:2;justify-self:start}
+    .goal-os-main .expand-btn{grid-column:1;grid-row:2;justify-self:center}
+    .goal-details{padding:20px}
+    .goal-step-line{grid-template-columns:28px 34px minmax(0,1fr) 36px;gap:10px;padding:10px 0}
+    .today-step-btn{grid-column:3 / 5;justify-self:start}
   }
   @media (max-width:560px){
-    body{padding-bottom:40px}
-    .hero{grid-template-columns:30px 1fr 78px;padding:6px 9px 5px;gap:7px}
-    .avatar{width:34px;height:34px;border-radius:10px;font-size:18px}
-    h1{font-size:19px}
+    body{padding-bottom:18px}
+    .topbar .shell{padding:9px 8px}
+    .hero{grid-template-columns:42px 1fr;padding:0 0 9px;gap:9px}
+    .avatar{width:42px;height:42px;border-radius:12px;font-size:22px}
+    h1{font-size:26px}
     .subtitle{display:none}
     .year-ring{display:none}
     .pulse{display:contents}
+    .nav{padding:5px 0 0;gap:4px}
+    .nav-btn{min-width:64px;font-size:11px;padding:7px 5px;border-radius:12px}
+    .nav-btn svg{width:25px;height:25px}
+    main.shell{padding:10px 8px}
+    .hq{gap:12px}
+    .hq-hero{padding:18px 12px;border-radius:18px}
+    .metric-stack{grid-template-columns:1fr;gap:14px}
+    .hero-metric{grid-template-columns:42px 1fr;text-align:left}
+    .hero-icon{font-size:33px}
+    .day-number{font-size:72px}
+    .weekday,.month-label{font-size:18px}
+    .time-pill{font-size:18px}
+    .ring-hour{font-size:15px}
+    .progress-stack{grid-template-columns:1fr}
+    .section-card{padding:16px;border-radius:14px}
+    .section-icon{width:42px;height:42px}
+    .section-card h2{font-size:17px}
+    .icon-btn{width:42px;height:42px}
+    .event-row{grid-template-columns:13px 104px 1fr 30px;gap:10px;margin:18px 0}
+    .event-row .duration{display:none}
+    .event-time,.event-title{font-size:16px}
+    .event-meta{font-size:13px}
+    .goal-step-row,.task-row{font-size:16px;gap:12px}
+    .editable-form{grid-template-columns:1fr}
     .pulse-item:not(.top-progress){display:none}
     .top-progress{grid-column:3;grid-row:1;align-self:center;background:rgba(0,0,0,.17);border-radius:8px;padding:5px}
     .pulse-label{font-size:8px;letter-spacing:.8px}
     .pulse-value,.top-progress-value{font-size:11px}
     .top-progress-row{gap:5px}
     .top-progress-track{height:4px}
-    .nav{padding:5px 8px;gap:4px}
-    .nav-btn{font-size:10px;padding:5px 8px}
+    .nav{display:flex;padding:5px 0;gap:4px;overflow-x:auto;justify-content:flex-start}
+    .nav-btn{flex:0 0 64px;min-width:64px;font-size:9px;padding:5px 2px;gap:3px}
+    .nav-btn span{white-space:nowrap}
+    .nav-btn svg{width:22px;height:22px}
     main{padding:8px 8px}
     .card{padding:13px;border-radius:8px}
     .section-title{font-size:20px}
@@ -242,6 +423,33 @@
     .bottom-label{display:none}
     .bottom-value{font-size:12px;margin-top:0}
     .bottom button{padding:5px 8px;font-size:10px}
+    .pulse{display:none}
+    .card.hq-hero{padding:18px 12px;border-radius:18px}
+    .goals-page{gap:10px}
+    .goals-hero{grid-template-columns:1fr;padding:18px 0 12px}
+    .goals-quote{font-size:34px}
+    .goal-create-btn{width:100%;justify-content:center;min-height:56px;padding:13px 18px}
+    .goal-os-card{border-radius:14px}
+    .goal-os-main{grid-template-columns:58px minmax(0,1fr);gap:12px;padding:16px 14px}
+    .goal-icon{width:54px;height:54px}
+    .goal-icon svg{width:34px;height:34px}
+    .goal-title{font-size:20px}
+    .goal-meter{grid-template-columns:1fr 48px;gap:10px;margin-top:12px}
+    .goal-percent{font-size:16px}
+    .step-count{min-width:0;min-height:46px;font-size:14px;padding:8px 12px}
+    .goal-details{padding:16px 14px 18px}
+    .goal-description{font-size:16px}
+    .steps-panel{padding:14px 12px 8px}
+    .steps-head h3{font-size:18px}
+    .add-step-btn{font-size:14px}
+    .goal-step-title{font-size:16px}
+    .today-step-btn{min-height:42px;padding:0 14px;font-size:14px}
+    .completed-head{margin:12px 6px}
+    .completed-title,.show-all-btn{font-size:16px}
+    .completed-row{grid-template-columns:32px minmax(0,1fr) auto 32px;padding:0 12px;font-size:15px}
+    .restore-btn{font-size:12px;padding:7px 8px}
+    .goal-modal{align-items:end;padding:0}
+    .goal-modal-card{border-radius:16px 16px 0 0}
   }
 </style>
 </head>
@@ -275,65 +483,149 @@
   <section class="view active" id="home">
     <div class="hq">
       <div class="card hq-hero">
-        <div class="day-meta">
-          <div>
-            <div class="section-kicker">Сегодня</div>
-            <div class="day-date" id="todayDateLabel">10 июня, среда</div>
+        <div class="command-grid">
+          <div class="metric-stack">
+            <div class="hero-metric">
+              <div class="hero-icon">☀️</div>
+              <div><strong id="weatherTemp">30°C</strong><span id="weatherLabel">Рязань, ясно</span></div>
+            </div>
+            <div class="hero-metric">
+              <div class="hero-icon">▣</div>
+              <div><strong id="balanceLabel">+8 270 ₽</strong><span>Баланс дня</span></div>
+            </div>
+            <div class="hero-metric">
+              <div class="hero-icon">🔥</div>
+              <div><strong><span id="caloriesLabel">1 750</span> <span style="font-weight:400">/ 2 300</span></strong><span>Калории</span></div>
+            </div>
           </div>
-          <div class="day-weather" id="weatherLabel">Рязань · погода загружается...</div>
-        </div>
-        <div class="progress-text">Прогресс дня</div>
-        <div class="progress-big"><div id="dayProgressFill" style="width:0%"></div></div>
-        <div class="goal-progress-line">
-          <div class="progress-text">Цели</div>
-          <div class="progress-big"><div id="goalProgressFill" style="width:0%"></div></div>
+
+          <div class="day-ring-wrap">
+            <div class="day-ring" id="dayRing">
+              <svg viewBox="0 0 360 360" aria-label="Круговая карта дня">
+                <circle cx="180" cy="180" r="125" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="26"></circle>
+                <g id="ringSegments"></g>
+                <g id="ringTicks"></g>
+                <circle id="nowDot" cx="180" cy="55" r="7" fill="#f8f1e7" stroke="#b88b52" stroke-width="3"></circle>
+              </svg>
+              <div id="ringHours"></div>
+              <div class="ring-center">
+                <div>
+                  <div class="weekday" id="weekdayLabel">СРЕДА</div>
+                  <div class="day-number" id="dayNumberLabel">10</div>
+                  <div class="month-label" id="monthLabel">ИЮНЯ</div>
+                  <div class="time-pill" id="timeLabel">14:49</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="progress-stack">
+            <div class="progress-card" style="--accent:#efbd63">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="m15 9 4-4M18 5h1v1M12 8v4l3 2"></path></svg>
+              <div><b>Цель дня <span class="progress-value" id="dailyGoalPct">75%</span></b><div class="hero-bar"><div id="dailyGoalFill"></div></div></div>
+            </div>
+            <div class="progress-card" style="--accent:#4e94cb">
+              <svg viewBox="0 0 24 24"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11Z"></path></svg>
+              <div><b>Привычки <span class="progress-value" id="habitPct">71%</span></b><div class="hero-bar"><div id="habitFill"></div></div></div>
+            </div>
+            <div class="progress-card" style="--accent:#7ec596">
+              <svg viewBox="0 0 24 24"><path d="M9 6h12M9 12h12M9 18h12M4 6h1M4 12h1M4 18h1"></path></svg>
+              <div><b>Дела на сегодня <span class="progress-value" id="taskPct">60%</span></b><div class="hero-bar"><div id="taskFill"></div></div></div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="hq-grid">
-        <div class="grid">
-          <details class="hq-panel" id="panelTasks" open ontoggle="savePanelState('tasks',this.open)">
-            <summary>Дела</summary>
-            <div class="panel-body">
-              <div class="hq-actions">
-                <button class="plus-btn" onclick="addTask()" aria-label="Добавить дело">+</button>
-              </div>
-              <div id="homeTasks"></div>
-            </div>
-          </details>
+      <div class="hq-two">
+        <section class="section-card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path></svg></div><h2>Расписание на сегодня</h2></div>
+            <button class="icon-btn" onclick="addCalendarEvent()" aria-label="Добавить событие">+</button>
+          </div>
+          <div class="editable-form" id="eventForm">
+            <input id="eventTitleInput" placeholder="Название">
+            <input id="eventStartInput" placeholder="10:00">
+            <input id="eventEndInput" placeholder="14:00">
+            <select id="eventCategoryInput"><option>Работа</option><option>Личное</option><option>Здоровье</option><option>Отдых</option><option>Обучение</option><option>Проекты</option></select>
+          </div>
+          <div id="homeCalendar"></div>
+          <button class="add-line" onclick="addCalendarEvent()">+ Добавить событие</button>
+        </section>
 
-          <details class="hq-panel" id="panelEvents" open ontoggle="savePanelState('events',this.open)">
-            <summary>Расписание</summary>
-            <div class="panel-body">
-              <div class="hq-actions">
-                <button class="plus-btn" onclick="addCalendarEvent()" aria-label="Добавить в расписание">+</button>
-              </div>
-              <div id="homeCalendar"></div>
-            </div>
-          </details>
-        </div>
+        <section class="section-card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="m15 9 4-4M18 5h1v1M12 8v4l3 2"></path></svg></div><h2>Шаги к цели</h2></div>
+            <button class="icon-btn" onclick="showView('goals')" aria-label="Выбрать шаг из целей">+</button>
+          </div>
+          <div id="homeGoals"></div>
+          <button class="add-line" onclick="showView('goals')">+ Выбрать в целях</button>
+        </section>
       </div>
+
+      <section class="section-card wide-card task-card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"></path></svg></div><h2>Дела на сегодня</h2></div>
+          <div class="section-title-row"><span class="muted-count" id="taskCountLabel">2/5</span><button class="icon-btn" onclick="addTask()" aria-label="Добавить дело">+</button></div>
+        </div>
+        <div class="task-list" id="homeTasks"></div>
+        <button class="add-line" onclick="addTask()">+ Добавить дело</button>
+      </section>
+
+      <section class="section-card wide-card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="hero-icon" style="font-size:40px">💧</div><h2>Привычки</h2></div>
+          <div class="section-title-row"><span class="muted-count" id="habitCountLabel">5/7</span><button class="icon-btn" onclick="addHabit()" aria-label="Добавить привычку">+</button></div>
+        </div>
+        <div class="habits-grid" id="homeHabits"></div>
+      </section>
     </div>
   </section>
 
   <section class="view" id="goals">
-    <div class="grid split">
-      <div class="card">
-        <div class="section-kicker">Цели</div>
-        <div class="section-title">Цель без плана что лодка без весел.</div>
-        <div class="mini-form">
-          <input id="goalInput" placeholder="Сложная цель">
-          <input id="goalStepInput" placeholder="Первый понятный шаг">
-          <button class="primary" onclick="addGoal()">Добавить цель</button>
+    <div class="goals-page">
+      <div class="goals-hero">
+        <div class="goals-quote">Цель без плана<br>что лодка без весел.</div>
+        <button class="goal-create-btn" onclick="openGoalModal()"><span>+</span> Новая цель</button>
+      </div>
+      <div class="goals-stack" id="goalsList"></div>
+      <section class="completed-goals">
+        <div class="completed-head">
+          <div class="completed-title">Завершённые цели <span class="completed-badge" id="completedGoalCount">0</span></div>
+          <button class="show-all-btn" onclick="toggleCompletedGoals()">Показать все⌄</button>
         </div>
-      </div>
-      <div class="card">
-        <div class="section-kicker">Планы</div>
-        <div class="section-title">Главные направления</div>
-        <div id="goalsList"></div>
-      </div>
+        <div class="completed-list" id="completedGoalsList"></div>
+      </section>
     </div>
   </section>
+
+  <div class="goal-modal" id="goalModal" role="dialog" aria-modal="true" aria-labelledby="goalModalTitle">
+    <div class="goal-modal-card">
+      <h3 id="goalModalTitle">Новая цель</h3>
+      <label>Название цели</label>
+      <input id="goalInput" placeholder="Например: Запустить Life OS">
+      <label>Описание цели</label>
+      <textarea id="goalDescriptionInput" placeholder="Что должно измениться, когда цель будет достигнута"></textarea>
+      <label>Первый шаг</label>
+      <input id="goalStepInput" placeholder="Первый понятный шаг">
+      <div class="goal-modal-actions">
+        <button class="ghost" onclick="closeGoalModal()">Отмена</button>
+        <button class="primary" onclick="addGoal()">Создать</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="goal-modal" id="stepModal" role="dialog" aria-modal="true" aria-labelledby="stepModalTitle">
+    <div class="goal-modal-card">
+      <h3 id="stepModalTitle">Добавить шаг</h3>
+      <input type="hidden" id="stepGoalId">
+      <label>Название шага</label>
+      <input id="newStepInput" placeholder="Следующий шаг к цели">
+      <div class="goal-modal-actions">
+        <button class="ghost" onclick="closeStepModal()">Отмена</button>
+        <button class="primary" onclick="addGoalStepFromModal()">Добавить</button>
+      </div>
+    </div>
+  </div>
 
   <section class="view" id="habits">
     <div class="grid split">
@@ -574,11 +866,18 @@ window.LIFE_OS_FIREBASE_CONFIG={
 const stateKey="ilya_life_os_v1";
 const todayKey=new Date().toISOString().slice(0,10);
 let notificationTimers=[];
+let cloudUserId=null;
 const morningHabits=[
-  {id:"tan",name:"Загар по погоде",meta:"если есть солнце и время"},
-  {id:"breath",name:"Дыхательная практика",meta:"5-10 минут"},
-  {id:"vitamins",name:"Витамины",meta:"после воды / завтрака"},
-  {id:"care",name:"Уход за собой",meta:"лицо, волосы, парфюм, одежда"}
+  {id:"cold",title:"Холодный душ",note:"утро",period:"Утро",icon:"💧",done:true},
+  {id:"breath",title:"Дыхательная практика",note:"5-10 минут",period:"Утро",icon:"〰",done:true},
+  {id:"charge",title:"Зарядка",note:"утро",period:"Утро",icon:"☀️",done:false},
+  {id:"read",title:"Чтение 20 мин",note:"утро",period:"Утро",icon:"📘",done:true},
+  {id:"water",title:"Вода 2л",note:"день",period:"День",icon:"💧",done:true},
+  {id:"food",title:"Полезное питание",note:"день",period:"День",icon:"🍏",done:true},
+  {id:"walk",title:"Прогулка",note:"день",period:"День",icon:"🚶",done:false},
+  {id:"train",title:"Тренировка",note:"вечер",period:"Вечер",icon:"🏃",done:true},
+  {id:"stretch",title:"Растяжка",note:"вечер",period:"Вечер",icon:"♨",done:false},
+  {id:"sleep",title:"Сон 7-8 часов",note:"вечер",period:"Вечер",icon:"🌙",done:true}
 ];
 const views=[
   ["home","Штаб"],
@@ -586,13 +885,7 @@ const views=[
   ["habits","Привычки"],
   ["projects","Проекты"],
   ["library","Знания"],
-  ["cabinet","Кабинет"],
-  ["finance","Финансы"],
-  ["resume","Резюме"],
-  ["auto","Авто"],
-  ["health","Здоровье"],
-  ["integrations","Связи"],
-  ["legacy","Наследие"]
+  ["cabinet","Кабинет"]
 ];
 const traits=[
   ["health","Здоровье",67],
@@ -618,17 +911,64 @@ const today=[
   {title:"День",items:[["Работа","reputation",1],["Обучение","intellect",1],["Спорт","power",1],["Финансы","money",1]]},
   {title:"Вечер",items:[["Чтение","intellect",1],["Дневник","discipline",1],["Подготовка к завтра","discipline",1],["Люди","relations",1]]}
 ];
-const defaultTasks=[];
-const defaultCalendar=[];
+const defaultTasks=[
+  {id:"task-plan",title:"Утренний план на день",note:"",done:true},
+  {id:"task-mail",title:"Ответить на письма",note:"",done:true},
+  {id:"task-presentation",title:"Подготовить презентацию",note:"",done:false},
+  {id:"task-slow",title:"Позвонить по проекту Slow",note:"",done:false},
+  {id:"task-zap",title:"Разобрать задачи ZapFormat",note:"",done:false}
+];
+const defaultCalendar=[
+  {id:"event-work",start:"10:00",end:"14:00",time:"10:00",title:"Встреча с командой",category:"Работа",place:"Работа",comment:"",done:true},
+  {id:"event-lunch",start:"14:30",end:"15:30",time:"14:30",title:"Обед с партнером",category:"Личное",place:"Личное",comment:"",done:false},
+  {id:"event-gym",start:"16:30",end:"17:30",time:"16:30",title:"Тренировка",category:"Здоровье",place:"Здоровье",comment:"",done:false},
+  {id:"event-rest",start:"19:00",end:"20:30",time:"19:00",title:"Свободное время",category:"Отдых",place:"Отдых",comment:"",done:false}
+];
+const makeStep=(title,order,completed=false)=>({
+  id:`step-${Date.now()}-${Math.random().toString(36).slice(2,8)}-${order}`,
+  title,
+  completed,
+  addedToToday:false,
+  todayDate:null,
+  createdAt:new Date().toISOString(),
+  updatedAt:new Date().toISOString(),
+  completedAt:completed?new Date().toISOString():null,
+  order
+});
 const defaultGoals=[
-  {id:"life-os",title:"Сделать Life OS живой системой",steps:["Firebase синхронизация","Apple календарь и напоминания","Главный экран Сегодня"]},
-  {id:"body",title:"Вернуть сильную физическую форму",steps:["Утренние привычки","Тренировки","Контроль веса и сна"]}
+  {
+    id:"life-os",
+    title:"Запустить Life OS",
+    description:"Life OS - система для управления жизнью, целями, привычками, проектами и финансами в одном приложении.",
+    icon:"rocket",
+    status:"active",
+    createdAt:"2026-06-01T09:00:00.000Z",
+    updatedAt:"2026-06-11T09:00:00.000Z",
+    completedAt:null,
+    order:1,
+    steps:[
+      {id:"life-os-firebase",title:"Подключить Firebase",completed:true,addedToToday:true,todayDate:todayKey,createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:"2026-06-10T09:00:00.000Z",order:1},
+      {id:"life-os-hq",title:"Сделать экран Штаб",completed:true,addedToToday:true,todayDate:todayKey,createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:"2026-06-10T09:00:00.000Z",order:2},
+      {id:"life-os-goals",title:"Сделать экран Цели",completed:false,addedToToday:false,todayDate:null,createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:3},
+      {id:"life-os-finance",title:"Реализовать Финансы",completed:false,addedToToday:false,todayDate:null,createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:4},
+      {id:"life-os-ai",title:"Подключить ИИ",completed:false,addedToToday:false,todayDate:null,createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:5}
+    ]
+  },
+  {id:"body",title:"Вернуть сильную физическую форму",description:"Вернуть энергию, силу и спокойную дисциплину тела.",icon:"dumbbell",status:"active",createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:2,steps:["Утренние привычки","Тренировки","Контроль веса и сна","Растяжка","Прогулки","Контроль веса","Сон","Вода","Питание"].map((title,i)=>Object.assign(makeStep(title,i+1,i<3),{id:`body-${i+1}`}))},
+  {id:"relations",title:"Построить крепкие отношения",description:"Больше внимания, разговоров и общих ритуалов.",icon:"heart",status:"active",createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:3,steps:["Еженедельное свидание","Совместный план","Разговор без телефона","Подарок без повода","Общий бюджет"].map((title,i)=>Object.assign(makeStep(title,i+1,i<1),{id:`relations-${i+1}`}))},
+  {id:"finance-freedom",title:"Финансовая свобода",description:"Собрать капитал, закрыть хвосты и управлять деньгами без суеты.",icon:"wallet",status:"active",createdAt:"2026-06-01T09:00:00.000Z",updatedAt:"2026-06-11T09:00:00.000Z",completedAt:null,order:4,steps:["Учет расходов","Финансовый план","Подушка безопасности","Инвестиционный счет","Закрыть мелкие долги"].map((title,i)=>Object.assign(makeStep(title,i+1,i<2),{id:`finance-${i+1}`}))},
+  {id:"bmw-x5",title:"Купить BMW X5",description:"",icon:"wallet",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:5,steps:[Object.assign(makeStep("Выбрать комплектацию",1,true),{id:"bmw-1"})]},
+  {id:"debts",title:"Погасить все долги",description:"",icon:"wallet",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:6,steps:[Object.assign(makeStep("Закрыть последний платеж",1,true),{id:"debt-1"})]},
+  {id:"home-move",title:"Переехать в дом",description:"",icon:"heart",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:7,steps:[Object.assign(makeStep("Забрать ключи",1,true),{id:"home-1"})]}
 ];
 const defaultDay=()=>({
-  tasks:[],
-  habits:morningHabits.map(h=>({id:h.id,title:h.name,note:h.meta,done:false})),
-  events:[],
-  finance:{income:"",expense:"",balance:"",comment:""},
+  tasks:defaultTasks.map(item=>Object.assign({},item)),
+  habits:morningHabits.map(item=>Object.assign({},item)),
+  events:defaultCalendar.map(item=>Object.assign({},item)),
+  goalSteps:[],
+  dailyGoal:{title:"Фокус на работе",progress:75},
+  nutrition:{calories:1750,target:2300},
+  finance:{income:"8270",expense:"0",balance:"8270",comment:""},
   panels:{tasks:true,events:true,habits:true,goals:true}
 });
 const state=loadState();
@@ -652,10 +992,48 @@ const wardrobe=[
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(stateKey))||{};
-    return Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved)
+    return normalizeState(Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved))
   }catch(e){
-    return{checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]}
+    return normalizeState({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]})
   }
+}
+function normalizeState(data){
+  data.goals=(data.goals&&data.goals.length?data.goals:defaultGoals).map((goal,goalIndex)=>{
+    const now=goal.createdAt||new Date().toISOString();
+    const normalized=Object.assign({
+      id:goal.id||`goal-${Date.now()}-${goalIndex}`,
+      title:goal.title||"Цель без названия",
+      description:goal.description||"",
+      icon:goal.icon||["rocket","dumbbell","heart","wallet"][goalIndex%4],
+      status:goal.status||"active",
+      createdAt:now,
+      updatedAt:goal.updatedAt||now,
+      completedAt:goal.completedAt||null,
+      order:Number.isFinite(Number(goal.order))?Number(goal.order):goalIndex+1
+    },goal);
+    normalized.steps=(goal.steps||[]).map((step,stepIndex)=>{
+      if(typeof step==="string"){
+        const completed=!!(data.goalDone&&data.goalDone[`${goalIndex}-${stepIndex}`]);
+        return Object.assign(makeStep(step,stepIndex+1,completed),{id:`${normalized.id}-step-${stepIndex+1}`});
+      }
+      return Object.assign(makeStep(step.title||"Шаг",stepIndex+1,!!step.completed),step,{
+        id:step.id||`${normalized.id}-step-${stepIndex+1}`,
+        completed:!!(step.completed||step.done),
+        order:Number.isFinite(Number(step.order))?Number(step.order):stepIndex+1
+      });
+    }).sort((a,b)=>(a.order||0)-(b.order||0));
+    return normalized;
+  }).sort((a,b)=>(a.order||0)-(b.order||0));
+  data.days=data.days||{};
+  Object.keys(data.days).forEach(date=>{
+    const day=data.days[date];
+    day.goalSteps=(day.goalSteps||[]).filter(item=>item&&item.stepId&&item.goalId);
+  });
+  if(!data.openGoalId){
+    const first=data.goals.find(goal=>goal.status==="active");
+    data.openGoalId=first&&first.id;
+  }
+  return data;
 }
 function todayDay(){
   state.days=state.days||{};
@@ -663,9 +1041,14 @@ function todayDay(){
   const day=state.days[todayKey];
   day.tasks=day.tasks||[];
   day.events=day.events||[];
+  if(!day.tasks.length)day.tasks=defaultTasks.map(item=>Object.assign({},item));
+  if(!day.events.length)day.events=defaultCalendar.map(item=>Object.assign({},item));
   day.tasks=day.tasks.filter(item=>!["reminders-placeholder","plan-day"].includes(item.id));
   day.events=day.events.filter(item=>item.id!=="calendar-placeholder");
   day.habits=day.habits&&day.habits.length?day.habits:defaultDay().habits;
+  day.goalSteps=day.goalSteps||[];
+  day.dailyGoal=day.dailyGoal||defaultDay().dailyGoal;
+  day.nutrition=day.nutrition||defaultDay().nutrition;
   day.finance=day.finance||{income:"",expense:"",balance:"",comment:""};
   day.panels=Object.assign(defaultDay().panels,day.panels||{});
   syncAppleIntoDay(day);
@@ -694,10 +1077,19 @@ function save(){
 }
 function buildNav(){
   const nav=document.getElementById("nav");
+  const icons={
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"></path><path d="M5 10v10h5v-6h4v6h5V10"></path></svg>',
+    goals:'<svg viewBox="0 0 24 24"><path d="M5 4v16"></path><path d="m5 5 11-2-2 5 5 2-14 3"></path></svg>',
+    habits:'<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M8 2v4M16 2v4M5 9h14"></path></svg>',
+    projects:'<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"></rect><path d="M9 7V5h6v2M4 12h16"></path></svg>',
+    library:'<svg viewBox="0 0 24 24"><path d="m3 8 9-5 9 5-9 5-9-5Z"></path><path d="M7 10.5v5L12 18l5-2.5v-5"></path></svg>',
+    cabinet:'<svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1.6-4 14.4-4 16 0"></path></svg>',
+    finance:'<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg>'
+  };
   views.forEach(([id,label],i)=>{
     const b=document.createElement("button");
     b.className="nav-btn"+(i===0?" active":"");
-    b.textContent=label;
+    b.innerHTML=`${icons[id]||icons.home}<span>${label}</span>`;
     b.onclick=()=>showView(id);
     nav.appendChild(b);
   });
@@ -748,23 +1140,172 @@ function renderHome(){
   const taskRoot=document.getElementById("homeTasks");
   const calendarRoot=document.getElementById("homeCalendar");
   if(!taskRoot||!calendarRoot)return;
-  document.getElementById("todayDateLabel").textContent=formatTodayLabel();
-  applyPanelState(day);
-  taskRoot.innerHTML=day.tasks.length?day.tasks.map((task,i)=>hqItem("task",i,task.title,task.note||"")).join(""):'<div class="hq-item"><div class="day-text"><b>Дел нет</b><span>Добавь первое дело на сегодня</span></div></div>';
-  calendarRoot.innerHTML=day.events.length?day.events.map((event,i)=>hqItem("event",i,`${event.time||"--:--"} · ${event.title}`,`${event.place||""}${event.comment?" · "+event.comment:""}`)).join(""):'<div class="hq-item"><div class="day-text"><b>Расписание пустое</b><span>Добавь время, место и комментарий</span></div></div>';
-  if(habitRoot)habitRoot.innerHTML=day.habits.map((habit,i)=>hqItem("habit",i,habit.title,habit.note||"")).join("");
+  updateDateLabels();
+  renderDayRing(day);
+  renderHeroMetrics(day);
+  calendarRoot.innerHTML=day.events.length?day.events.map((event,i)=>eventRow(event,i)).join(""):'<div class="event-row"><div></div><div></div><div class="event-title">Расписание пустое</div></div>';
+  taskRoot.innerHTML=day.tasks.length?day.tasks.map((task,i)=>taskRow(task,i)).join(""):'<div class="task-row"><div></div><div class="task-title">Добавь первое дело на сегодня</div></div>';
+  const goalRoot=document.getElementById("homeGoals");
+  if(goalRoot)goalRoot.innerHTML=(day.goalSteps||[]).map((step,i)=>goalStepRow(step,i)).join("");
+  if(habitRoot)habitRoot.innerHTML=habitPeriods(day);
   renderFinanceInputs(day);
   renderHealthSummary();
   renderGoalsList();
-  const total=day.tasks.length+day.habits.length+day.events.length;
-  const done=[...day.tasks,...day.habits,...day.events].filter(item=>item.done).length;
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById("dayProgressFill").style.width=pct+"%";
-  document.getElementById("topDayFill").style.width=pct+"%";
-  const goalPct=goalProgressPercent();
-  const goalFill=document.getElementById("goalProgressFill");
-  if(goalFill)goalFill.style.width=goalPct+"%";
+  const progress=progressStats(day);
+  const topFill=document.getElementById("topDayFill");
+  if(topFill)topFill.style.width=progress.day+"%";
   scheduleNotifications();
+}
+function updateDateLabels(){
+  const now=new Date();
+  const months=["ЯНВАРЯ","ФЕВРАЛЯ","МАРТА","АПРЕЛЯ","МАЯ","ИЮНЯ","ИЮЛЯ","АВГУСТА","СЕНТЯБРЯ","ОКТЯБРЯ","НОЯБРЯ","ДЕКАБРЯ"];
+  const weekdays=["ВОСКРЕСЕНЬЕ","ПОНЕДЕЛЬНИК","ВТОРНИК","СРЕДА","ЧЕТВЕРГ","ПЯТНИЦА","СУББОТА"];
+  const weekday=document.getElementById("weekdayLabel");
+  const dayNumber=document.getElementById("dayNumberLabel");
+  const month=document.getElementById("monthLabel");
+  const time=document.getElementById("timeLabel");
+  if(weekday)weekday.textContent=weekdays[now.getDay()];
+  if(dayNumber)dayNumber.textContent=String(now.getDate());
+  if(month)month.textContent=months[now.getMonth()];
+  if(time)time.textContent=now.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});
+}
+function categoryColor(category){
+  return {
+    "Работа":"#5f7f86",
+    "Личное":"#d9b56f",
+    "Здоровье":"#88bd91",
+    "Отдых":"#9188c5",
+    "Обучение":"#86aebe",
+    "Проекты":"#c99a4f"
+  }[category]||"#bd9657";
+}
+function parseMinutes(value){
+  const match=String(value||"").match(/(\d{1,2}):(\d{2})/);
+  if(!match)return null;
+  return Number(match[1])*60+Number(match[2]);
+}
+function eventStart(event){return parseMinutes(event.start||event.time)}
+function eventEnd(event){
+  const explicit=parseMinutes(event.end);
+  if(explicit!==null)return explicit;
+  const start=eventStart(event);
+  return start===null?null:start+60;
+}
+function eventDuration(event){
+  const start=eventStart(event),end=eventEnd(event);
+  if(start===null||end===null)return "";
+  const hours=(end-start)/60;
+  return Number.isInteger(hours)?`${hours} ч`:`${hours.toFixed(1)} ч`;
+}
+function polar(cx,cy,r,angle){
+  const rad=(angle-90)*Math.PI/180;
+  return {x:cx+r*Math.cos(rad),y:cy+r*Math.sin(rad)};
+}
+function arcPath(cx,cy,r,startAngle,endAngle){
+  const start=polar(cx,cy,r,endAngle);
+  const end=polar(cx,cy,r,startAngle);
+  const large=endAngle-startAngle<=180?0:1;
+  return `M ${start.x} ${start.y} A ${r} ${r} 0 ${large} 0 ${end.x} ${end.y}`;
+}
+function angleForMinutes(minutes){
+  const start=7*60,end=23*60;
+  const clamped=Math.max(start,Math.min(end,minutes));
+  return ((clamped-start)/(end-start))*360;
+}
+function renderDayRing(day){
+  const segments=document.getElementById("ringSegments");
+  const ticks=document.getElementById("ringTicks");
+  const hours=document.getElementById("ringHours");
+  if(!segments||!ticks||!hours)return;
+  const nowMinutes=new Date().getHours()*60+new Date().getMinutes();
+  segments.innerHTML="";
+  ticks.innerHTML="";
+  hours.innerHTML="";
+  for(let hour=7;hour<=23;hour++){
+    const angle=angleForMinutes(hour*60);
+    const p1=polar(180,180,138,angle);
+    const p2=polar(180,180,151,angle);
+    ticks.insertAdjacentHTML("beforeend",`<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="rgba(255,246,230,.35)" stroke-width="1"/>`);
+    const label=polar(180,180,169,angle);
+    hours.insertAdjacentHTML("beforeend",`<span class="ring-hour" style="transform:translate(-50%,-50%) translate(${label.x-180}px,${label.y-180}px)">${String(hour).padStart(2,"0")}</span>`);
+  }
+  day.events.forEach(event=>{
+    const start=eventStart(event),end=eventEnd(event);
+    if(start===null||end===null)return;
+    const isPast=end<nowMinutes;
+    const isCurrent=start<=nowMinutes&&end>=nowMinutes;
+    const color=categoryColor(event.category||event.place);
+    const opacity=isPast?".46":"1";
+    segments.insertAdjacentHTML("beforeend",`<path d="${arcPath(180,180,125,angleForMinutes(start),angleForMinutes(end))}" fill="none" stroke="${color}" stroke-width="${isCurrent?31:27}" opacity="${opacity}" stroke-linecap="butt"/>`);
+  });
+  const dot=polar(180,180,125,angleForMinutes(nowMinutes));
+  const nowDot=document.getElementById("nowDot");
+  if(nowDot){
+    nowDot.setAttribute("cx",dot.x);
+    nowDot.setAttribute("cy",dot.y);
+  }
+}
+function renderHeroMetrics(day){
+  const progress=progressStats(day);
+  const balance=Number(day.finance&&day.finance.balance||8270);
+  const calories=day.nutrition||{calories:1750,target:2300};
+  const balanceLabel=document.getElementById("balanceLabel");
+  const caloriesLabel=document.getElementById("caloriesLabel");
+  if(balanceLabel)balanceLabel.textContent=`${balance>=0?"+":""}${balance.toLocaleString("ru-RU")} ₽`;
+  if(caloriesLabel)caloriesLabel.textContent=Number(calories.calories||1750).toLocaleString("ru-RU");
+  setProgress("dailyGoal",day.dailyGoal&&Number.isFinite(Number(day.dailyGoal.progress))?Number(day.dailyGoal.progress):progress.day);
+  setProgress("habit",progress.habits);
+  setProgress("task",progress.tasks);
+  const taskCount=document.getElementById("taskCountLabel");
+  const habitCount=document.getElementById("habitCountLabel");
+  if(taskCount)taskCount.textContent=`${progress.taskDone}/${progress.taskTotal}`;
+  if(habitCount)habitCount.textContent=`${progress.habitDone}/${progress.habitTotal}`;
+}
+function setProgress(prefix,pct){
+  const value=Math.max(0,Math.min(100,Math.round(pct||0)));
+  const label=document.getElementById(`${prefix}Pct`);
+  const fill=document.getElementById(`${prefix}Fill`);
+  if(label)label.textContent=value+"%";
+  if(fill)fill.style.width=value+"%";
+}
+function progressStats(day){
+  const taskTotal=day.tasks.length;
+  const taskDone=day.tasks.filter(item=>item.done).length;
+  const habitTotal=day.habits.length;
+  const habitDone=day.habits.filter(item=>item.done).length;
+  const stepTotal=(day.goalSteps||[]).length;
+  const stepDone=(day.goalSteps||[]).filter(item=>item.done).length;
+  const nowMinutes=new Date().getHours()*60+new Date().getMinutes();
+  const eventTotal=day.events.length;
+  const eventDone=day.events.filter(item=>item.done||eventEnd(item)<nowMinutes).length;
+  const total=taskTotal+habitTotal+stepTotal+eventTotal;
+  const done=taskDone+habitDone+stepDone+eventDone;
+  return {
+    day:total?done/total*100:0,
+    tasks:taskTotal?taskDone/taskTotal*100:0,
+    habits:habitTotal?habitDone/habitTotal*100:0,
+    taskTotal,taskDone,habitTotal,habitDone
+  };
+}
+function eventRow(event,index){
+  const color=categoryColor(event.category||event.place);
+  const start=event.start||event.time||"--:--";
+  const end=event.end||"";
+  return `<div class="event-row"><div class="event-dot" style="--cat:${color}"></div><div class="event-time">${escapeHtml(start)}${end?` - ${escapeHtml(end)}`:""}</div><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category||event.place||"")}</div></div><div class="duration">${eventDuration(event)}</div><button class="menu-btn" onclick="editEvent(${index})">⋮</button></div>`;
+}
+function taskRow(task,index){
+  return `<div class="task-row${task.done?" done":""}"><button class="os-check" onclick="toggleDayItem('task',${index})" aria-label="Отметить дело"></button><div class="task-title" onclick="toggleDayItem('task',${index})">${escapeHtml(task.title)}</div><button class="menu-btn" onclick="editTask(${index})">⋮</button></div>`;
+}
+function goalStepRow(step,index){
+  return `<div class="goal-step-row${step.completed||step.done?" done":""}"><button class="os-check" onclick="toggleGoalToday(${index})" aria-label="Отметить шаг"></button><div class="task-title" onclick="toggleGoalToday(${index})"><b>${escapeHtml(step.title)}</b><span>${escapeHtml(step.goalTitle||"Цель")}</span></div><button class="menu-btn" onclick="deleteGoalToday(${index})" aria-label="Убрать из сегодня">×</button></div>`;
+}
+function habitPeriods(day){
+  const groups=["Утро","День","Вечер"];
+  const icons={Утро:"☀️",День:"☀️",Вечер:"🌙"};
+  return groups.map(period=>{
+    const items=day.habits.map((habit,i)=>Object.assign({index:i},habit)).filter(h=>(h.period||"Утро")===period);
+    return `<div class="habit-period"><h3><span class="habit-emoji">${icons[period]}</span>${period}</h3>${items.map(h=>`<div class="habit-row${h.done?" done":""}"><span class="habit-emoji" style="font-size:18px">${h.icon||"•"}</span><span onclick="toggleDayItem('habit',${h.index})">${escapeHtml(h.title)}</span><button class="os-check" onclick="toggleDayItem('habit',${h.index})" aria-label="Отметить привычку"></button></div>`).join("")}<button class="add-line" onclick="addHabit()">+ Добавить привычку</button></div>`;
+  }).join("");
 }
 function formatTodayLabel(){
   const value=new Date().toLocaleDateString("ru-RU",{weekday:"long",day:"numeric",month:"long"});
@@ -854,40 +1395,139 @@ function addTask(){
   renderAll();
 }
 function addCalendarEvent(){
-  const titleEl=document.getElementById("calendarInput");
-  const timeEl=document.getElementById("calendarTime");
-  const placeEl=document.getElementById("eventPlaceInput");
-  const commentEl=document.getElementById("eventCommentInput");
+  const titleEl=document.getElementById("eventTitleInput");
+  const startEl=document.getElementById("eventStartInput");
+  const endEl=document.getElementById("eventEndInput");
+  const categoryEl=document.getElementById("eventCategoryInput");
+  if(titleEl&&!titleEl.value.trim()){
+    toggleForm("eventForm",true);
+    titleEl.focus();
+    return;
+  }
   const title=(titleEl&&titleEl.value.trim())||prompt("Что добавить в расписание?")||"";
-  const time=(timeEl&&timeEl.value)||prompt("Время, например 14:00")||"";
-  const place=(placeEl&&placeEl.value.trim())||prompt("Место")||"";
-  const comment=(commentEl&&commentEl.value.trim())||prompt("Комментарий")||"";
+  const start=(startEl&&startEl.value.trim())||prompt("Начало, например 14:00")||"";
+  const end=(endEl&&endEl.value.trim())||prompt("Конец, например 15:30")||"";
+  const category=(categoryEl&&categoryEl.value)||prompt("Категория: Работа, Личное, Здоровье, Отдых, Обучение, Проекты")||"Работа";
   if(!title)return;
-  todayDay().events.push({id:"event-"+Date.now(),time,title,place,comment,done:false});
+  todayDay().events.push({id:"event-"+Date.now(),start,end,time:start,title,category,place:category,comment:"",done:false});
   if(titleEl)titleEl.value="";
-  if(timeEl)timeEl.value="";
-  if(placeEl)placeEl.value="";
-  if(commentEl)commentEl.value="";
+  if(startEl)startEl.value="";
+  if(endEl)endEl.value="";
+  toggleForm("eventForm",false);
   save();
   renderAll();
 }
+function toggleForm(id,force){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.toggle("open",typeof force==="boolean"?force:!el.classList.contains("open"));
+}
+function editTask(index){
+  const day=todayDay();
+  const current=day.tasks[index];
+  const next=prompt("Редактировать дело",current.title);
+  if(next===null)return;
+  if(next.trim())current.title=next.trim();
+  else day.tasks.splice(index,1);
+  save();
+  renderAll();
+}
+function editEvent(index){
+  const day=todayDay();
+  const event=day.events[index];
+  const action=prompt("Событие: название | начало | конец | категория. Пусто - удалить",`${event.title} | ${event.start||event.time||""} | ${event.end||""} | ${event.category||event.place||"Работа"}`);
+  if(action===null)return;
+  if(!action.trim()){
+    day.events.splice(index,1);
+  }else{
+    const [title,start,end,category]=action.split("|").map(part=>part.trim());
+    event.title=title||event.title;
+    event.start=start||event.start||event.time;
+    event.time=event.start;
+    event.end=end||event.end;
+    event.category=category||event.category||event.place||"Работа";
+    event.place=event.category;
+  }
+  save();
+  renderAll();
+}
+function toggleGoalToday(index){
+  const day=todayDay();
+  const todayStep=day.goalSteps[index];
+  if(!todayStep)return;
+  const next=!(todayStep.completed||todayStep.done);
+  todayStep.completed=next;
+  todayStep.done=next;
+  todayStep.completedAt=next?new Date().toISOString():null;
+  const refs=findGoalAndStep(todayStep.goalId,todayStep.stepId);
+  if(refs.step){
+    refs.step.completed=next;
+    refs.step.completedAt=next?todayStep.completedAt:null;
+    refs.step.updatedAt=new Date().toISOString();
+    maybeOfferGoalCompletion(refs.goal);
+  }
+  save();
+  renderAll();
+}
+function deleteGoalToday(index){
+  const [removed]=todayDay().goalSteps.splice(index,1);
+  if(removed){
+    const refs=findGoalAndStep(removed.goalId,removed.stepId);
+    if(refs.step){
+      refs.step.addedToToday=false;
+      refs.step.todayDate=null;
+      refs.step.updatedAt=new Date().toISOString();
+    }
+  }
+  save();
+  renderAll();
+}
+function addGoalStepToday(){
+  showView("goals");
+}
 function addGoal(){
   const title=document.getElementById("goalInput").value.trim();
+  const description=document.getElementById("goalDescriptionInput").value.trim();
   const step=document.getElementById("goalStepInput").value.trim();
   if(!title)return;
-  state.goals.unshift({id:"goal-"+Date.now(),title,steps:step?[step]:[]});
+  const now=new Date().toISOString();
+  const goal={
+    id:"goal-"+Date.now(),
+    title,
+    description,
+    icon:"rocket",
+    status:"active",
+    createdAt:now,
+    updatedAt:now,
+    completedAt:null,
+    order:Math.max(0,...(state.goals||[]).map(item=>Number(item.order)||0))+1,
+    steps:step?[Object.assign(makeStep(step,1,false),{id:"step-"+Date.now()})]:[]
+  };
+  state.goals.unshift(goal);
+  state.openGoalId=goal.id;
   document.getElementById("goalInput").value="";
+  document.getElementById("goalDescriptionInput").value="";
   document.getElementById("goalStepInput").value="";
+  closeGoalModal();
   save();
   renderAll();
 }
 function addGoalStep(i){
-  const input=document.getElementById(`step-${i}`);
+  openStepModal(state.goals[i]&&state.goals[i].id);
+}
+function addGoalStepFromModal(){
+  const goalId=document.getElementById("stepGoalId").value;
+  const goal=(state.goals||[]).find(item=>item.id===goalId);
+  const input=document.getElementById("newStepInput");
   const step=input.value.trim();
-  if(!step)return;
-  state.goals[i].steps=state.goals[i].steps||[];
-  state.goals[i].steps.push(step);
+  if(!goal||!step)return;
+  goal.steps=goal.steps||[];
+  goal.steps.push(makeStep(step,goal.steps.length+1,false));
+  goal.status="active";
+  goal.completedAt=null;
+  goal.updatedAt=new Date().toISOString();
   input.value="";
+  closeStepModal();
   save();
   renderAll();
 }
@@ -938,28 +1578,221 @@ function renderHealthSummary(){
 function renderGoalMini(){
   const root=document.getElementById("homeGoals");
   if(!root)return;
-  root.innerHTML=(state.goals||[]).slice(0,3).map(goal=>`<div class="note"><b>${escapeHtml(goal.title)}</b><span class="badge">${(goal.steps||[]).length} шагов</span></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">добавь</span></div>';
+  root.innerHTML=(todayDay().goalSteps||[]).map((step,i)=>goalStepRow(step,i)).join("")||'<div class="note"><b>Шагов к цели на сегодня нет</b><span class="badge">выбери в целях</span></div>';
 }
 function renderGoalsList(){
   const root=document.getElementById("goalsList");
   if(!root)return;
-  root.innerHTML=(state.goals||[]).map((goal,i)=>`<div class="goal-card"><div class="goal-head"><b>${escapeHtml(goal.title)}</b><button class="ghost" onclick="removeItem('goals',${i})">Удалить</button></div><div class="day-list">${(goal.steps||[]).map((step,si)=>`<div class="check-item${goalStepDone(i,si)?" done":""}" onclick="toggleGoalStep(${i},${si})"><div class="box"></div><div class="check-name">${escapeHtml(step)}</div></div>`).join("")}</div><div class="save-row"><input id="step-${i}" placeholder="Следующий шаг"><button class="ghost" onclick="addGoalStep(${i})">Добавить шаг</button></div></div>`).join("")||'<div class="note"><b>Целей нет</b><span class="badge">пусто</span></div>';
+  const active=(state.goals||[]).filter(goal=>goal.status!=="completed"&&goal.status!=="archived");
+  root.innerHTML=active.length?active.map(goal=>goalCardMarkup(goal)).join(""):'<div class="empty-goals">Пока нет активных целей. Создай первую цель и добавь к ней первый шаг.</div>';
+  renderCompletedGoals();
 }
-function goalStepDone(goalIndex,stepIndex){
-  return !!(state.goalDone&&state.goalDone[`${goalIndex}-${stepIndex}`]);
+function renderCompletedGoals(){
+  const count=document.getElementById("completedGoalCount");
+  const list=document.getElementById("completedGoalsList");
+  if(!list)return;
+  const completed=(state.goals||[]).filter(goal=>goal.status==="completed");
+  if(count)count.textContent=completed.length;
+  const visible=state.completedGoalsOpen!==false?completed:completed.slice(0,3);
+  list.innerHTML=visible.length?visible.map(goal=>`<div class="completed-row"><span class="completed-mark"></span><span>${escapeHtml(goal.title)}</span><button class="restore-btn" onclick="restoreGoal('${goal.id}')">Вернуть</button><button class="completed-toggle" onclick="toggleGoal('${goal.id}')">⌄</button></div>`).join(""):'<div class="completed-row"><span></span><span>Завершенных целей пока нет</span><span></span><span></span></div>';
 }
-function toggleGoalStep(goalIndex,stepIndex){
-  state.goalDone=state.goalDone||{};
-  const key=`${goalIndex}-${stepIndex}`;
-  state.goalDone[key]=!state.goalDone[key];
+function goalCardMarkup(goal){
+  const open=state.openGoalId===goal.id;
+  const progress=goalProgress(goal);
+  const steps=(goal.steps||[]).sort((a,b)=>(a.order||0)-(b.order||0));
+  return `<article class="goal-os-card">
+    <div class="goal-os-main">
+      <div class="goal-icon">${goalIcon(goal.icon)}</div>
+      <div>
+        <div class="goal-title">${escapeHtml(goal.title)}</div>
+        <div class="goal-meter"><div class="goal-track"><div class="goal-fill" style="width:${progress}%"></div></div><div class="goal-percent">${progress}%</div></div>
+      </div>
+      <div class="step-count"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"></path></svg>${steps.length} ${pluralSteps(steps.length)}</div>
+      <button class="expand-btn" onclick="toggleGoal('${goal.id}')" aria-label="Раскрыть цель">${open?"⌃":"⌄"}</button>
+    </div>
+    ${open?goalDetailsMarkup(goal,steps,progress):""}
+  </article>`;
+}
+function goalDetailsMarkup(goal,steps,progress){
+  const completion=progress===100&&steps.length?`<div class="goal-complete-banner"><span>Все шаги выполнены. Завершить цель?</span><button onclick="completeGoal('${goal.id}')">Завершить</button></div>`:"";
+  return `<div class="goal-details">
+    ${completion}
+    ${goal.description?`<p class="goal-description">${escapeHtml(goal.description)}</p>`:""}
+    <div class="steps-panel">
+      <div class="steps-head"><h3>Шаги к цели</h3><button class="add-step-btn" onclick="openStepModal('${goal.id}')">Добавить шаг <span class="mini-plus">+</span></button></div>
+      ${steps.length?steps.map(step=>goalStepMarkup(goal,step)).join(""):'<div class="empty-goals">Добавь первый шаг, чтобы цель стала планом.</div>'}
+    </div>
+  </div>`;
+}
+function goalStepMarkup(goal,step){
+  const inToday=isStepInToday(step.id);
+  return `<div class="goal-step-line${step.completed?" done":""}" draggable="true" ondragstart="dragGoalStep(event,'${goal.id}','${step.id}')" ondragover="event.preventDefault()" ondrop="dropGoalStep(event,'${goal.id}','${step.id}')">
+    <div class="drag-handle" title="Перетащить">⠿</div>
+    <button class="goal-check ${step.completed?"done":""}" onclick="toggleGoalStep('${goal.id}','${step.id}')" aria-label="Отметить шаг"></button>
+    <div class="goal-step-title">${escapeHtml(step.title)}</div>
+    <button class="today-step-btn ${inToday?"added":""}" onclick="toggleStepToday('${goal.id}','${step.id}')">${inToday?"✓":"+"} Сегодня</button>
+    <button class="step-menu" onclick="editGoalStep('${goal.id}','${step.id}')" aria-label="Редактировать шаг">…</button>
+  </div>`;
+}
+function goalIcon(name){
+  const icons={
+    rocket:'<svg viewBox="0 0 24 24"><path d="M5 15c-1 1.5-1.5 3-1.5 5 2-.2 3.5-.7 5-1.7"></path><path d="M9 15 5 19"></path><path d="M14 4c2.5-1.2 5-1.1 6-1-0.1 1 0.2 4-1 6.2-1.4 2.8-4.5 5.5-8.5 7.8L7 13.5C9.4 9.5 11.2 5.4 14 4Z"></path><circle cx="15" cy="8" r="2"></circle></svg>',
+    dumbbell:'<svg viewBox="0 0 24 24"><path d="M5 8v8M2 10v4M19 8v8M22 10v4M5 12h14"></path></svg>',
+    heart:'<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-4 5 5 0 0 1 9 4c-2 4.6-9 9-9 9Z"></path></svg>',
+    wallet:'<svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 12h5M7 6l9-3"></path></svg>'
+  };
+  return icons[name]||icons.rocket;
+}
+function pluralSteps(count){
+  const mod10=count%10,mod100=count%100;
+  if(mod10===1&&mod100!==11)return "шаг";
+  if(mod10>=2&&mod10<=4&&(mod100<12||mod100>14))return "шага";
+  return "шагов";
+}
+function goalProgress(goal){
+  const steps=goal.steps||[];
+  if(!steps.length)return 0;
+  return Math.round(steps.filter(step=>step.completed).length/steps.length*100);
+}
+function findGoalAndStep(goalId,stepId){
+  const goal=(state.goals||[]).find(item=>item.id===goalId);
+  const step=goal&&(goal.steps||[]).find(item=>item.id===stepId);
+  return {goal,step};
+}
+function toggleGoal(goalId){
+  state.openGoalId=state.openGoalId===goalId?null:goalId;
   save();
   renderAll();
 }
-function goalProgressPercent(){
-  const steps=(state.goals||[]).flatMap((goal,gi)=>(goal.steps||[]).map((_,si)=>`${gi}-${si}`));
-  if(!steps.length)return 0;
-  const done=steps.filter(key=>state.goalDone&&state.goalDone[key]).length;
-  return Math.round(done/steps.length*100);
+function isStepInToday(stepId){
+  return (todayDay().goalSteps||[]).some(item=>item.stepId===stepId);
+}
+function toggleStepToday(goalId,stepId){
+  const day=todayDay();
+  const refs=findGoalAndStep(goalId,stepId);
+  if(!refs.goal||!refs.step)return;
+  const index=day.goalSteps.findIndex(item=>item.stepId===stepId);
+  if(index>=0){
+    day.goalSteps.splice(index,1);
+    refs.step.addedToToday=false;
+    refs.step.todayDate=null;
+  }else{
+    day.goalSteps.push({
+      id:`${todayKey}-${stepId}`,
+      goalId,
+      stepId,
+      goalTitle:refs.goal.title,
+      title:refs.step.title,
+      completed:!!refs.step.completed,
+      done:!!refs.step.completed,
+      addedAt:new Date().toISOString(),
+      completedAt:refs.step.completedAt||null
+    });
+    refs.step.addedToToday=true;
+    refs.step.todayDate=todayKey;
+  }
+  refs.step.updatedAt=new Date().toISOString();
+  save();
+  renderAll();
+}
+function toggleGoalStep(goalId,stepId){
+  const refs=findGoalAndStep(goalId,stepId);
+  if(!refs.step)return;
+  refs.step.completed=!refs.step.completed;
+  refs.step.completedAt=refs.step.completed?new Date().toISOString():null;
+  refs.step.updatedAt=new Date().toISOString();
+  const todayStep=(todayDay().goalSteps||[]).find(item=>item.stepId===stepId);
+  if(todayStep){
+    todayStep.completed=refs.step.completed;
+    todayStep.done=refs.step.completed;
+    todayStep.completedAt=refs.step.completedAt;
+  }
+  maybeOfferGoalCompletion(refs.goal);
+  save();
+  renderAll();
+}
+function maybeOfferGoalCompletion(goal){
+  if(!goal||goal.status==="completed")return;
+  if((goal.steps||[]).length&&goalProgress(goal)===100&&confirm("Все шаги выполнены. Завершить цель?"))completeGoal(goal.id);
+}
+function completeGoal(goalId){
+  const goal=(state.goals||[]).find(item=>item.id===goalId);
+  if(!goal)return;
+  goal.status="completed";
+  goal.completedAt=new Date().toISOString();
+  goal.updatedAt=goal.completedAt;
+  todayDay().goalSteps=(todayDay().goalSteps||[]).filter(item=>item.goalId!==goalId);
+  if(state.openGoalId===goalId)state.openGoalId=null;
+  save();
+  renderAll();
+}
+function restoreGoal(goalId){
+  const goal=(state.goals||[]).find(item=>item.id===goalId);
+  if(!goal)return;
+  goal.status="active";
+  goal.completedAt=null;
+  goal.updatedAt=new Date().toISOString();
+  state.openGoalId=goalId;
+  save();
+  renderAll();
+}
+function editGoalStep(goalId,stepId){
+  const refs=findGoalAndStep(goalId,stepId);
+  if(!refs.goal||!refs.step)return;
+  const next=prompt("Название шага. Пусто - удалить",refs.step.title);
+  if(next===null)return;
+  if(next.trim()){
+    refs.step.title=next.trim();
+    const todayStep=(todayDay().goalSteps||[]).find(item=>item.stepId===stepId);
+    if(todayStep)todayStep.title=refs.step.title;
+  }else{
+    refs.goal.steps=refs.goal.steps.filter(item=>item.id!==stepId);
+    todayDay().goalSteps=(todayDay().goalSteps||[]).filter(item=>item.stepId!==stepId);
+  }
+  refs.goal.updatedAt=new Date().toISOString();
+  save();
+  renderAll();
+}
+function dragGoalStep(event,goalId,stepId){
+  event.dataTransfer.setData("text/plain",JSON.stringify({goalId,stepId}));
+}
+function dropGoalStep(event,goalId,targetStepId){
+  const data=JSON.parse(event.dataTransfer.getData("text/plain")||"{}");
+  if(data.goalId!==goalId||data.stepId===targetStepId)return;
+  const goal=(state.goals||[]).find(item=>item.id===goalId);
+  if(!goal)return;
+  const steps=goal.steps||[];
+  const from=steps.findIndex(item=>item.id===data.stepId);
+  const to=steps.findIndex(item=>item.id===targetStepId);
+  if(from<0||to<0)return;
+  const [moved]=steps.splice(from,1);
+  steps.splice(to,0,moved);
+  steps.forEach((step,index)=>step.order=index+1);
+  goal.updatedAt=new Date().toISOString();
+  save();
+  renderAll();
+}
+function openGoalModal(){
+  document.getElementById("goalModal").classList.add("open");
+  setTimeout(()=>document.getElementById("goalInput").focus(),40);
+}
+function closeGoalModal(){
+  document.getElementById("goalModal").classList.remove("open");
+}
+function openStepModal(goalId){
+  if(!goalId)return;
+  document.getElementById("stepGoalId").value=goalId;
+  document.getElementById("newStepInput").value="";
+  document.getElementById("stepModal").classList.add("open");
+  setTimeout(()=>document.getElementById("newStepInput").focus(),40);
+}
+function closeStepModal(){
+  document.getElementById("stepModal").classList.remove("open");
+}
+function toggleCompletedGoals(){
+  state.completedGoalsOpen=state.completedGoalsOpen===false;
+  save();
+  renderAll();
 }
 function importAppleJson(){
   const input=document.getElementById("appleJsonInput");
@@ -1055,9 +1888,11 @@ function renderCustomHabits(){
 }
 function addHabit(){
   const name=prompt("Новая привычка")||"";
-  const time=prompt("Время, например 09:00")||"";
+  const period=prompt("Период: Утро, День или Вечер","Утро")||"Утро";
   if(!name)return;
-  state.habits.unshift({name,time});
+  const habit={id:"habit-"+Date.now(),title:name.trim(),name:name.trim(),note:"личная привычка",period:["Утро","День","Вечер"].includes(period)?period:"Утро",icon:"•",done:false};
+  todayDay().habits.push(habit);
+  state.habits.unshift({name:habit.title,time:habit.period});
   save();
   renderAll();
 }
@@ -1227,7 +2062,10 @@ function weatherText(code){
 }
 function setWeatherLabel(text){
   const el=document.getElementById("weatherLabel");
-  if(el)el.textContent=text;
+  const temp=document.getElementById("weatherTemp");
+  const match=String(text).match(/(-?\d+)°C/);
+  if(temp&&match)temp.textContent=`${match[1]}°C`;
+  if(el)el.textContent=String(text).replace("Рязань · ","Рязань, ").replace(/-?\d+°C,\s*/,"");
 }
 function fetchWeather(lat,lon){
   fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`)
@@ -1279,7 +2117,7 @@ function renderAll(){
 }
 window.applyCloudState=function(cloudState){
   if(!cloudState)return;
-  Object.assign(state,cloudState);
+  Object.assign(state,normalizeState(cloudState));
   localStorage.setItem(stateKey,JSON.stringify(state));
   renderAll();
 };
@@ -1313,8 +2151,9 @@ if(config&&config.apiKey){
     const db=getFirestore(app);
     const auth=getAuth(app);
     const credential=await signInAnonymously(auth);
+    window.cloudUserId=credential.user.uid;
     const stateRef=doc(db,"users",credential.user.uid,"lifeos","state");
-    const dayRef=doc(db,"users","default","days",todayKey);
+    const dayRef=doc(db,"users",credential.user.uid,"days",todayKey);
     const snap=await getDoc(stateRef);
     if(snap.exists())window.applyCloudState(snap.data().state);
     const daySnap=await getDoc(dayRef);
@@ -1328,7 +2167,7 @@ if(config&&config.apiKey){
       },
       saveDay(date,day){
         clearTimeout(dayTimer);
-        dayTimer=setTimeout(()=>setDoc(doc(db,"users","default","days",date),Object.assign({},day,{updatedAt:serverTimestamp()}),{merge:true}),450);
+        dayTimer=setTimeout(()=>setDoc(doc(db,"users",credential.user.uid,"days",date),Object.assign({},day,{updatedAt:serverTimestamp()}),{merge:true}),450);
       }
     };
     window.setFirebaseStatus("Firebase: синхронизация включена",true);
