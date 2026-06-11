@@ -377,7 +377,7 @@
   details.service-detail summary::-webkit-details-marker{display:none}
   .service-extra{grid-column:3 / -1;color:#5c4d3e;font-size:12px;line-height:1.45;padding:0 4px 8px}
   .insurance-list,.parts-list,.reminder-list,.expense-list{display:grid;gap:7px}
-  .auto-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #eadac6;background:#fffdf8;border-radius:9px;padding:10px}
+  .auto-line{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;border:1px solid #eadac6;background:#fffdf8;border-radius:9px;padding:10px}
   .auto-line b{font-size:14px}
   .auto-line span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
   .quick-auto{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
@@ -387,6 +387,61 @@
   .auto-modal.open{display:grid}
   .auto-modal-card{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fffaf3;border:1px solid #ead9c4;border-radius:16px;padding:17px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
   .auto-modal-card h3{font-size:21px;margin-bottom:10px}
+  .property-os{display:grid;gap:10px}
+  .property-hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:8px 0 4px}
+  .property-hero h2{font-family:Georgia,"Times New Roman",serif;font-size:30px;font-weight:700;color:#163f32}
+  .property-hero p{margin-top:4px;color:var(--muted);font-size:14px}
+  .property-list{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .property-tile{border:1px solid #eadac6;background:rgba(255,250,243,.9);border-radius:12px;padding:12px;display:grid;grid-template-columns:82px 1fr 22px;gap:12px;align-items:center;text-align:left;color:inherit}
+  .property-tile.active{border-color:#c69a55;box-shadow:0 8px 20px rgba(75,51,24,.08)}
+  .property-thumb,.property-photo{background:linear-gradient(145deg,#f6eee5,#d7c4ad);border:1px solid #eadac6;overflow:hidden}
+  .property-thumb{width:82px;aspect-ratio:1.25;border-radius:8px}
+  .property-thumb img,.property-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .property-tile b{display:block;font-size:16px}
+  .property-tile span{display:block;color:var(--muted);font-size:12px;margin-top:5px}
+  .property-passport{display:grid;grid-template-columns:190px 1fr;gap:22px;align-items:center}
+  .property-photo{width:100%;aspect-ratio:1;border-radius:10px}
+  .property-type{display:inline-flex;border-radius:8px;background:#f2e7d7;color:#74532c;padding:5px 10px;font-size:12px;font-weight:800;margin-bottom:10px}
+  .property-name{font-family:Georgia,"Times New Roman",serif;font-size:32px;line-height:1.05;font-weight:800}
+  .property-address{margin-top:8px;color:#5f5b55;font-size:16px}
+  .property-facts{grid-column:1/-1;display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid #eadac6;margin-top:14px;padding-top:14px}
+  .property-fact{border-right:1px solid #eadac6;padding:0 14px;min-width:0}
+  .property-fact:first-child{padding-left:0}
+  .property-fact:last-child{border-right:0}
+  .property-fact span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+  .property-fact b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .property-two{display:grid;grid-template-columns:.78fr 1.22fr;gap:12px}
+  .property-four{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .expense-donut{width:168px;aspect-ratio:1;border-radius:50%;background:conic-gradient(#2f8053 0 51%,#d78832 0 78%,#4d8b81 0 87%,#bfc1bd 0 100%);margin:14px auto;position:relative}
+  .expense-donut:after{content:"";position:absolute;inset:34px;background:#fffaf3;border-radius:50%;box-shadow:inset 0 0 0 1px #eadac6}
+  .property-legend{display:grid;gap:7px;margin-top:8px}
+  .legend-row{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;color:#5d564e;font-size:12px}
+  .legend-dot{width:10px;height:10px;border-radius:50%;background:var(--dot,#2f8053)}
+  .property-list-lines{display:grid;gap:0;border:1px solid #eadac6;border-radius:10px;background:#fffdf8;overflow:hidden}
+  .property-line{display:grid;grid-template-columns:32px 1fr auto 22px;gap:10px;align-items:center;padding:11px;border-bottom:1px solid #eadac6}
+  .property-line:last-child{border-bottom:0}
+  .property-line svg,.meter-card svg,.quick-property svg{width:23px;height:23px;stroke:var(--green);stroke-width:1.7;fill:none}
+  .property-line b{font-size:14px}
+  .property-line span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+  .meter-card{border:1px solid #eadac6;background:#fffdf8;border-radius:10px;padding:13px;display:grid;gap:10px}
+  .meter-head{display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:850}
+  .meter-values{display:grid;grid-template-columns:1fr 1fr;gap:8px;color:#5f554b;font-size:11px}
+  .meter-values b{display:block;color:#1e1b17;font-size:15px;margin-top:4px}
+  .property-docs,.photo-grid{display:grid;gap:8px}
+  .property-doc{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;border-bottom:1px solid #eadac6;padding:10px 0}
+  .property-doc:last-child{border-bottom:0}
+  .repair-plan-row{display:grid;grid-template-columns:22px 1fr auto;gap:10px;align-items:center;border-bottom:1px solid #eadac6;padding:10px 0}
+  .repair-plan-row:last-child{border-bottom:0}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .photo-tile{aspect-ratio:1.24;border-radius:8px;background:linear-gradient(145deg,#f4eadf,#cdbda9);border:1px solid #eadac6;overflow:hidden}
+  .photo-tile img{width:100%;height:100%;object-fit:cover}
+  .rent-card{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+  .property-actions{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .property-actions button{border:1px solid #eadac6;background:#fffdf8;color:#1f251f;border-radius:9px;padding:11px 7px;font-size:12px;font-weight:850;display:grid;gap:6px;place-items:center;min-height:70px}
+  .property-form{display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .property-form.open{display:grid}
+  .property-form .full{grid-column:1/-1}
+  .subtle-btn{border:1px solid #eadac6;background:#fffdf8;color:#174437;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:850}
   @media (max-width:1120px){
     .topbar .shell{grid-template-columns:1fr;gap:12px;padding:12px 18px}
     .hero{grid-template-columns:auto 1fr}
@@ -703,6 +758,63 @@
     .doc-grid{grid-template-columns:repeat(3,1fr)}
     .expense-strip{grid-template-columns:repeat(3,1fr)}
     .quick-auto{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (min-width:768px) and (max-width:1180px){
+    .topbar .shell{max-width:1024px;padding:14px 18px 12px;grid-template-columns:170px minmax(0,1fr);gap:14px}
+    .hero{min-width:0;gap:12px}
+    .avatar{width:52px;height:52px;border-radius:14px;font-size:27px}
+    h1{font-size:31px}
+    .nav{justify-content:flex-start;gap:5px;overflow-x:auto;min-width:0}
+    .nav-btn{flex:0 0 58px;min-width:58px;font-size:10px;padding:7px 4px;gap:4px}
+    .nav-btn svg{width:24px;height:24px}
+    main.shell{max-width:920px;padding:16px 18px}
+    .hq{gap:16px}
+    .hq-hero{padding:18px 28px;border-radius:18px}
+    .command-grid{grid-template-columns:220px 300px 230px;gap:22px}
+    .day-ring{width:300px}
+    .metric-stack{grid-template-columns:1fr;gap:0}
+    .hero-metric{grid-template-columns:45px 1fr;text-align:left;border-bottom:1px solid rgba(235,221,200,.18);padding:15px 0}
+    .hero-metric strong{font-size:24px}
+    .hero-metric span{font-size:14px}
+    .progress-stack{grid-template-columns:1fr;border-left:1px solid rgba(235,221,200,.22);padding-left:22px;gap:0}
+    .progress-card{grid-template-columns:38px 1fr;background:transparent;border-radius:0;border-bottom:1px solid rgba(235,221,200,.18);padding:16px 0}
+    .progress-card b{font-size:17px}
+    .hq-two{grid-template-columns:1fr 1fr;gap:16px}
+    .section-card{padding:20px;border-radius:14px}
+    .section-card h2{font-size:20px}
+    .section-icon{width:48px;height:48px}
+    .event-row{grid-template-columns:16px 150px 1fr 44px 24px;gap:14px;margin:18px 0}
+    .event-time,.event-title{font-size:18px}
+    .task-card{min-height:0}
+    .habits-grid{grid-template-columns:repeat(3,1fr)}
+    .goals-page{max-width:920px}
+    .goals-quote{font-size:42px}
+    .goal-os-main{grid-template-columns:76px minmax(0,1fr) auto auto}
+    .auto-os,.property-os{max-width:920px}
+    .vehicle-card{grid-template-columns:360px 1fr}
+    .property-list{grid-template-columns:repeat(3,1fr)}
+    .property-four{grid-template-columns:repeat(4,1fr)}
+    .property-actions{grid-template-columns:repeat(5,1fr)}
+  }
+  @media (max-width:760px){
+    .property-hero{grid-template-columns:1fr}
+    .property-hero h2{font-size:29px}
+    .property-list{grid-template-columns:1fr}
+    .property-tile{grid-template-columns:84px 1fr 20px}
+    .property-passport{grid-template-columns:1fr;gap:12px}
+    .property-photo{aspect-ratio:1.7}
+    .property-name{font-size:29px}
+    .property-address{font-size:15px}
+    .property-facts{grid-template-columns:repeat(2,1fr);border:1px solid #eadac6;border-radius:10px;padding:0;margin-top:8px;overflow:hidden}
+    .property-fact{padding:10px;border-bottom:1px solid #eadac6}
+    .property-fact:nth-child(2n){border-right:0}
+    .property-fact:nth-last-child(-n+2){border-bottom:0}
+    .property-two{grid-template-columns:1fr}
+    .property-four{grid-template-columns:1fr}
+    .property-actions{grid-template-columns:repeat(2,1fr)}
+    .property-actions button:last-child{grid-column:1/-1}
+    .property-form{grid-template-columns:1fr}
+    .rent-card{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -1054,6 +1166,124 @@
     </div>
   </section>
 
+  <section class="view" id="property">
+    <div class="property-os">
+      <div class="property-hero">
+        <div>
+          <h2>Недвижимость</h2>
+          <p>Все объекты под контролем</p>
+        </div>
+        <button class="goal-create-btn" onclick="openPropertyModal('object')"><span>+</span> Добавить объект</button>
+      </div>
+
+      <div class="property-list" id="propertyList"></div>
+
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"></path><path d="M5 10v10h14V10"></path></svg>Паспорт объекта</div>
+          <button class="ghost" onclick="togglePropertyForm()">Редактировать</button>
+        </div>
+        <div id="propertyPassport"></div>
+        <div class="property-form" id="propertyProfileForm">
+          <label>Фото<input id="propertyPhoto" type="file" accept="image/*"></label>
+          <label>Тип<select id="propertyType"><option>Квартира</option><option>Дом</option><option>Дача</option><option>Гараж</option><option>Коммерческое помещение</option></select></label>
+          <label>Название<input id="propertyNameInput" placeholder="Лесопарковая 7"></label>
+          <label class="full">Адрес<input id="propertyAddressInput" placeholder="ул. Лесопарковая, д. 7, кв. 45"></label>
+          <label>Площадь<input id="propertyAreaInput" placeholder="72,5 м²"></label>
+          <label>Комнат<input id="propertyRoomsInput" type="number" placeholder="3"></label>
+          <label>Этаж<input id="propertyFloorInput" placeholder="8 из 16"></label>
+          <label>Год<input id="propertyYearInput" type="number" placeholder="2015"></label>
+          <label>Кадастр<input id="propertyCadastreInput" placeholder="62:29:..."></label>
+          <label>Лицевой счет<input id="propertyAccountInput" placeholder="1234567890"></label>
+          <label class="full">УК / ТСЖ<input id="propertyManagerInput" placeholder="УК Лесной"></label>
+          <div class="save-row full">
+            <button class="primary" onclick="savePropertyProfile()">Сохранить</button>
+            <button class="ghost" onclick="togglePropertyForm(false)">Закрыть</button>
+            <button class="ghost" onclick="deleteCurrentProperty()">Удалить объект</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="property-two">
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title">Расходы за <span id="propertyExpensePeriodLabel">год</span></div>
+            <button class="subtle-btn" onclick="togglePropertyExpensePeriod()" id="propertyExpenseToggle">Месяц</button>
+          </div>
+          <div class="expense-total" style="text-align:left" id="propertyExpenseTotal">0 ₽</div>
+          <div class="expense-donut" id="propertyExpenseDonut"></div>
+          <div class="property-legend" id="propertyExpenseLegend"></div>
+          <button class="ghost" style="width:100%;margin-top:12px" onclick="openPropertyModal('expense')">Все расходы</button>
+        </section>
+
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title">Лицевые счета и оплата</div>
+            <button class="auto-link" onclick="openPropertyModal('utility')">Добавить</button>
+          </div>
+          <div class="property-list-lines" id="propertyUtilities"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title">Показания счетчиков</div>
+          <div class="save-row" style="margin:0"><button class="ghost" onclick="openPropertyModal('meterHistory')">История</button><button class="primary" onclick="openPropertyModal('meter')">Передать показания</button></div>
+        </div>
+        <div class="property-four" id="propertyMeters"></div>
+      </section>
+
+      <div class="property-four">
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Документы</div><button class="auto-link" onclick="openPropertyModal('document')">Добавить</button></div>
+          <div class="property-docs" id="propertyDocuments"></div>
+          <button class="auto-link" style="margin-top:10px" onclick="openPropertyModal('document')">Все документы ›</button>
+        </section>
+
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Ремонт и обслуживание</div><button class="auto-link" onclick="openPropertyModal('repair')">Добавить</button></div>
+          <div id="propertyRepairs"></div>
+          <button class="auto-link" style="margin-top:10px" onclick="openPropertyModal('repair')">Вся история ›</button>
+        </section>
+
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Планируемый ремонт</div><button class="auto-link" onclick="openPropertyModal('plan')">+</button></div>
+          <div id="propertyPlans"></div>
+          <button class="auto-link" style="margin-top:10px" onclick="openPropertyModal('plan')">Все задачи ›</button>
+        </section>
+
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Фотоархив</div><button class="auto-link" onclick="openPropertyModal('photo')">Добавить</button></div>
+          <div class="photo-grid" id="propertyPhotos"></div>
+          <button class="auto-link" style="margin-top:10px" onclick="openPropertyModal('photo')">Все фото ›</button>
+        </section>
+      </div>
+
+      <section class="card" id="propertyRentCard"></section>
+
+      <div class="grid split">
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Контакты объекта</div><button class="auto-link" onclick="openPropertyModal('contact')">Добавить</button></div>
+          <div class="property-list-lines" id="propertyContacts"></div>
+        </section>
+        <section class="card">
+          <div class="auto-head"><div class="auto-title">Напоминания</div><button class="auto-link" onclick="openPropertyModal('reminder')">Добавить</button></div>
+          <div class="property-list-lines" id="propertyReminders"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="property-actions">
+          <button onclick="openPropertyModal('expense')"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 12h5"></path></svg>Добавить расход</button>
+          <button onclick="openPropertyModal('repair')"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3"></path></svg>Добавить ремонт</button>
+          <button onclick="openPropertyModal('meter')"><svg viewBox="0 0 24 24"><path d="M4 18h16M7 18V8M12 18V4M17 18v-7"></path></svg>Передать показания</button>
+          <button onclick="openPropertyModal('reminder')"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18"></path></svg>Напоминание</button>
+          <button onclick="openPropertyModal('ai')"><svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"></path></svg>Импорт через ИИ</button>
+        </div>
+      </section>
+    </div>
+  </section>
+
   <div class="auto-modal" id="autoModal" role="dialog" aria-modal="true">
     <div class="auto-modal-card">
       <div class="auto-head">
@@ -1061,6 +1291,16 @@
         <button class="ghost" onclick="closeAutoModal()">Закрыть</button>
       </div>
       <div id="autoModalBody"></div>
+    </div>
+  </div>
+
+  <div class="auto-modal" id="propertyModal" role="dialog" aria-modal="true">
+    <div class="auto-modal-card">
+      <div class="auto-head">
+        <h3 id="propertyModalTitle">Недвижимость</h3>
+        <button class="ghost" onclick="closePropertyModal()">Закрыть</button>
+      </div>
+      <div id="propertyModalBody"></div>
     </div>
   </div>
 
@@ -1214,6 +1454,7 @@ const views=[
   ["finance","Финансы"],
   ["resume","Резюме"],
   ["auto","Авто"],
+  ["property","Недвижимость"],
   ["health","Здоровье"],
   ["cabinet","Кабинет"]
 ];
@@ -1292,6 +1533,78 @@ const defaultGoals=[
   {id:"home-move",title:"Переехать в дом",description:"",icon:"heart",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:7,steps:[Object.assign(makeStep("Забрать ключи",1,true),{id:"home-1"})]}
 ];
 const autoExpenseCategories=["Топливо","ТО и ремонт","Страховка","Парковки","Штрафы","Прочее"];
+const propertyExpenseCategories=["ЖКХ","Интернет","Ремонт","Страховка","Налоги","Домофон","Капремонт","Охрана","Прочее"];
+const defaultProperties=()=>({
+  selectedId:"lesopark",
+  expensePeriod:"year",
+  objects:[
+    {
+      id:"lesopark",
+      type:"Квартира",
+      name:"Лесопарковая 7",
+      address:"ул. Лесопарковая, д. 7, кв. 45",
+      area:"72,5 м²",
+      rooms:"3",
+      floor:"8 из 16",
+      year:"2015",
+      cadastre:"62:29:0123456:789",
+      account:"1234567890",
+      manager:"УК Лесной",
+      rented:true,
+      tenant:"Иван П.",
+      rentAmount:20000,
+      nextPayment:"2026-06-15",
+      deposit:20000,
+      photo:null,
+      utilityAccounts:[
+        {id:"ut-1",type:"УК Лесной",account:"1234567890",amount:4250},
+        {id:"ut-2",type:"Электричество",account:"9876543210",amount:1298},
+        {id:"ut-3",type:"Газ",account:"4567891230",amount:568},
+        {id:"ut-4",type:"Капремонт",account:"1122334455",amount:450}
+      ],
+      meters:[
+        {id:"m-1",type:"Электричество",unit:"кВт-ч",previous:1236,current:1298},
+        {id:"m-2",type:"Вода холодная",unit:"м³",previous:125,current:132},
+        {id:"m-3",type:"Вода горячая",unit:"м³",previous:78,current:84},
+        {id:"m-4",type:"Газ",unit:"м³",previous:256,current:268}
+      ],
+      documents:[
+        {id:"pd-1",title:"Выписка ЕГРН",added:"10.06.2026",size:"2.4 МБ",expires:""},
+        {id:"pd-2",title:"Договор купли-продажи",added:"10.06.2026",size:"1.1 МБ",expires:""},
+        {id:"pd-3",title:"Страховка квартиры",added:"12.05.2026",size:"820 КБ",expires:"2026-07-12"},
+        {id:"pd-4",title:"Платежки",added:"09.06.2026",size:"600 КБ",expires:""}
+      ],
+      repairs:[
+        {id:"rep-1",date:"2026-04-15",title:"Покраска стен в спальне",cost:28000,materials:"Tikkurila",contractor:"Иван",comment:"Спальня и откосы"},
+        {id:"rep-2",date:"2026-02-02",title:"Замена смесителя в ванной",cost:6500,materials:"Grohe",contractor:"Сантехник",comment:"Работа и расходники"}
+      ],
+      plannedRepairs:[
+        {id:"plan-1",title:"Покрасить балкон",planned:18000,actual:0,status:"План"},
+        {id:"plan-2",title:"Поменять люстру в зале",planned:9000,actual:0,status:"План"},
+        {id:"plan-3",title:"Установить фильтр воды",planned:12000,actual:0,status:"План"}
+      ],
+      contacts:[
+        {id:"c-1",role:"УК",name:"УК Лесной",phone:"+7 900 111-22-33",comment:"Диспетчерская"},
+        {id:"c-2",role:"Электрик",name:"Алексей",phone:"+7 900 222-44-55",comment:"Домовой мастер"},
+        {id:"c-3",role:"Сантехник",name:"Сергей",phone:"+7 900 333-55-66",comment:"Аварийные работы"}
+      ],
+      reminders:[
+        {id:"pr-1",date:"2026-06-25",text:"Передать показания счетчиков",status:"Активно",priority:"Высокий"},
+        {id:"pr-2",date:"2026-06-10",text:"Оплатить ЖКХ",status:"Активно",priority:"Средний"},
+        {id:"pr-3",date:"2026-07-12",text:"Продлить страховку квартиры",status:"Активно",priority:"Средний"}
+      ],
+      expenses:[
+        {id:"pe-1",date:"2026-05-12",category:"ЖКХ",amount:34500,comment:"Коммунальные платежи"},
+        {id:"pe-2",date:"2026-04-15",category:"Ремонт",amount:18300,comment:"Материалы"},
+        {id:"pe-3",date:"2026-02-15",category:"Страховка",amount:6200,comment:"Квартира"},
+        {id:"pe-4",date:"2026-05-10",category:"Капремонт",amount:8560,comment:"Фонд"}
+      ],
+      photos:[]
+    },
+    {id:"velikanova",type:"Квартира",name:"Великанова 10",address:"ул. Великанова, д. 10",area:"48,2 м²",rooms:"2",floor:"4 из 9",year:"2008",cadastre:"",account:"9876500012",manager:"ТСЖ Великанова",rented:false,tenant:"",rentAmount:0,nextPayment:"",deposit:0,photo:null,utilityAccounts:[],meters:[],documents:[],repairs:[],plannedRepairs:[],contacts:[],reminders:[],expenses:[],photos:[]},
+    {id:"garage",type:"Гараж",name:"Гараж",address:"ГСК Северный, бокс 24",area:"24 м²",rooms:"",floor:"1",year:"2012",cadastre:"",account:"",manager:"ГСК Северный",rented:false,tenant:"",rentAmount:0,nextPayment:"",deposit:0,photo:null,utilityAccounts:[],meters:[],documents:[],repairs:[],plannedRepairs:[],contacts:[],reminders:[],expenses:[],photos:[]}
+  ]
+});
 const defaultAuto=()=>({
   vehicleId:"primary",
   vehicleProfile:{
@@ -1379,9 +1692,9 @@ const wardrobe=[
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(stateKey))||{};
-    return normalizeState(Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved))
+    return normalizeState(Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),property:defaultProperties(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved))
   }catch(e){
-    return normalizeState({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]})
+    return normalizeState({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),property:defaultProperties(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]})
   }
 }
 function normalizeState(data){
@@ -1421,7 +1734,30 @@ function normalizeState(data){
     data.openGoalId=first&&first.id;
   }
   data.auto=normalizeAutoState(data);
+  data.property=normalizePropertyState(data.property);
   return data;
+}
+function normalizePropertyState(property){
+  const base=defaultProperties();
+  const normalized=Object.assign(base,property||{});
+  normalized.objects=(normalized.objects&&normalized.objects.length?normalized.objects:base.objects).map((item,i)=>{
+    const fallback=base.objects[i]||base.objects[0];
+    return Object.assign({},fallback,item,{
+      id:item.id||`property-${Date.now()}-${i}`,
+      utilityAccounts:item.utilityAccounts||[],
+      meters:item.meters||[],
+      documents:item.documents||[],
+      repairs:item.repairs||[],
+      plannedRepairs:item.plannedRepairs||[],
+      contacts:item.contacts||[],
+      reminders:item.reminders||[],
+      expenses:item.expenses||[],
+      photos:item.photos||[]
+    });
+  });
+  if(!normalized.objects.some(item=>item.id===normalized.selectedId))normalized.selectedId=normalized.objects[0]&&normalized.objects[0].id;
+  normalized.expensePeriod=normalized.expensePeriod||"year";
+  return normalized;
 }
 function normalizeAutoState(data){
   const base=defaultAuto();
@@ -1499,6 +1835,7 @@ function buildNav(){
     finance:'<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg>',
     resume:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg>',
     auto:'<svg viewBox="0 0 24 24"><path d="M5 16h14M7 16l1.4-5.2A3 3 0 0 1 11.3 8h1.4a3 3 0 0 1 2.9 2.8L17 16M6 16v3M18 16v3"></path></svg>',
+    property:'<svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>',
     health:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9-9a5 5 0 0 1 9-4 5 5 0 0 1 9 4c-2 4.6-9 9-9 9Z"></path></svg>'
   };
   views.forEach(([id,label],i)=>{
@@ -2433,6 +2770,7 @@ function renderAutoDocuments(){
       <span>${doc.expires?`до ${formatDate(doc.expires)}`:escapeHtml(doc.number||"без срока")}</span>
       <span class="status-pill ${status.type==="warning"?"warning":status.type==="expired"?"expired":""}">${status.label}</span>
       <button class="auto-link" onclick="openAutoDocument(${i})">${doc.file?"Просмотр":"Файл"}</button>
+      <button class="auto-link" onclick="deleteAutoItem('documents',${i})">Удалить</button>
     </div>`;
   }).join("");
 }
@@ -2523,13 +2861,15 @@ function openAutoModal(type,index){
   const titles={document:"Документ",maintenance:"Добавить ТО",expense:"Добавить расход",expenseList:"Все расходы",fuel:"Заправка",fine:"Штраф",reminder:"Напоминание",insurance:"Страховка",part:"Запчасть"};
   title.textContent=titles[type]||"Авто";
   if(type==="document"){
+    const doc=state.auto.documents[index]||{};
     body.innerHTML=`<div class="mini-form">
       <label>Тип документа</label><select id="modalDocIndex">${(state.auto.documents||[]).map((doc,i)=>`<option value="${i}" ${i===index?"selected":""}>${escapeHtml(doc.title)}</option>`).join("")}<option value="new">Новый документ</option></select>
-      <input id="modalDocTitle" placeholder="Название">
-      <input id="modalDocNumber" placeholder="Номер / компания">
-      <label>Дата окончания</label><input id="modalDocExpires" type="date">
+      <input id="modalDocTitle" placeholder="Название" value="${escapeAttr(doc.title||"")}">
+      <input id="modalDocNumber" placeholder="Номер / компания" value="${escapeAttr(doc.number||"")}">
+      <label>Дата окончания</label><input id="modalDocExpires" type="date" value="${escapeAttr(doc.expires||"")}">
       <label>PDF, JPG или PNG</label><input id="modalDocFile" type="file" accept="image/*,.pdf">
       <button class="primary" onclick="saveAutoDocument()">Сохранить документ</button>
+      ${Number.isFinite(index)?`<button class="ghost" onclick="deleteAutoItem('documents',${index})">Удалить документ</button>`:""}
       <button class="ghost" onclick="openAutoModal('ai')">Импорт через ИИ</button>
     </div>`;
   }else if(type==="maintenance"){
@@ -2555,7 +2895,7 @@ function openAutoModal(type,index){
       <button class="primary" onclick="saveAutoExpense('${type}')">Сохранить расход</button>
     </div>`;
   }else if(type==="expenseList"){
-    body.innerHTML=`<div class="expense-list">${(state.auto.expenses||[]).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).map(item=>`<div class="auto-line"><div><b>${formatDate(item.date)} · ${escapeHtml(item.category)}</b><span>${escapeHtml(item.comment||"")}</span></div><b>${formatMoney(item.amount)}</b></div>`).join("")||'<div class="note"><b>Расходов пока нет</b><span class="badge">пусто</span></div>'}</div>`;
+    body.innerHTML=`<div class="expense-list">${(state.auto.expenses||[]).map((item,i)=>({item,i})).sort((a,b)=>String(b.item.date||"").localeCompare(String(a.item.date||""))).map(({item,i})=>`<div class="auto-line"><div><b>${formatDate(item.date)} · ${escapeHtml(item.category)}</b><span>${escapeHtml(item.comment||"")}</span></div><b>${formatMoney(item.amount)}</b><button class="auto-link" onclick="deleteAutoItem('expenses',${i})">×</button></div>`).join("")||'<div class="note"><b>Расходов пока нет</b><span class="badge">пусто</span></div>'}</div>`;
   }else if(type==="reminder"){
     body.innerHTML=`<div class="mini-form"><label>Дата</label><input id="modalReminderDate" type="date" value="${today}"><input id="modalReminderText" placeholder="Например: заменить масло"><select id="modalReminderStatus"><option>Активно</option><option>Готово</option></select><button class="primary" onclick="saveAutoReminder()">Сохранить напоминание</button></div>`;
   }else if(type==="insurance"){
@@ -2568,6 +2908,13 @@ function openAutoModal(type,index){
   modal.classList.add("open");
 }
 function closeAutoModal(){document.getElementById("autoModal").classList.remove("open")}
+function deleteAutoItem(collection,index){
+  if(!state.auto||!state.auto[collection])return;
+  state.auto[collection].splice(index,1);
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
 async function saveAutoDocument(){
   const select=document.getElementById("modalDocIndex");
   const file=document.getElementById("modalDocFile").files[0];
@@ -2638,6 +2985,347 @@ async function uploadAutoFile(file,folder){
 }
 function saveCar(){saveVehicleProfile()}
 function addService(){openAutoModal("maintenance")}
+function propertyState(){
+  state.property=normalizePropertyState(state.property);
+  return state.property;
+}
+function currentProperty(){
+  const data=propertyState();
+  return data.objects.find(item=>item.id===data.selectedId)||data.objects[0];
+}
+function saveProperty(){
+  save();
+  if(window.lifeCloud&&window.lifeCloud.saveProperty)window.lifeCloud.saveProperty(state.property);
+}
+function propertyImage(item,cls="property-thumb"){
+  const src=item&&item.photo&&(item.photo.data||item.photo.url||item.photo);
+  return `<div class="${cls}">${src?`<img src="${escapeAttr(src)}" alt="${escapeAttr(item.name||"Объект")}">`:""}</div>`;
+}
+function renderProperty(){
+  if(!document.getElementById("propertyList"))return;
+  const data=propertyState();
+  const item=currentProperty();
+  renderPropertyList(data,item);
+  renderPropertyPassport(item);
+  renderPropertyExpenses(item);
+  renderPropertyUtilities(item);
+  renderPropertyMeters(item);
+  renderPropertyDocuments(item);
+  renderPropertyRepairs(item);
+  renderPropertyPlans(item);
+  renderPropertyPhotos(item);
+  renderPropertyRent(item);
+  renderPropertyContacts(item);
+  renderPropertyReminders(item);
+}
+function renderPropertyList(data,current){
+  const root=document.getElementById("propertyList");
+  root.innerHTML=data.objects.map(item=>`<button class="property-tile${item.id===current.id?" active":""}" onclick="selectProperty('${escapeAttr(item.id)}')">
+    ${propertyImage(item)}
+    <span><b>${escapeHtml(item.name)}</b><span>${escapeHtml(item.type||"Объект")}</span><span>${escapeHtml([item.area,item.rooms?item.rooms+" комнаты":""].filter(Boolean).join(" · "))}</span></span>
+    <b>›</b>
+  </button>`).join("");
+}
+function selectProperty(id){
+  propertyState().selectedId=id;
+  saveProperty();
+  renderProperty();
+}
+function renderPropertyPassport(item){
+  const root=document.getElementById("propertyPassport");
+  root.innerHTML=`<div class="property-passport">
+    ${propertyImage(item,"property-photo")}
+    <div>
+      <span class="property-type">${escapeHtml(item.type||"Объект")}</span>
+      <div class="property-name">${escapeHtml(item.name||"Недвижимость")}</div>
+      <div class="property-address">${escapeHtml(item.address||"Адрес не указан")}</div>
+    </div>
+    <div class="property-facts">
+      <div class="property-fact"><span>Площадь</span><b>${escapeHtml(item.area||"не указана")}</b></div>
+      <div class="property-fact"><span>Комнат</span><b>${escapeHtml(item.rooms||"-")}</b></div>
+      <div class="property-fact"><span>Этаж</span><b>${escapeHtml(item.floor||"-")}</b></div>
+      <div class="property-fact"><span>Год постройки</span><b>${escapeHtml(item.year||"-")}</b></div>
+      <div class="property-fact"><span>Лицевой счет</span><b>${escapeHtml(item.account||"-")}</b></div>
+      <div class="property-fact"><span>УК / ТСЖ</span><b>${escapeHtml(item.manager||"-")}</b></div>
+    </div>
+  </div>`;
+  fillPropertyForm(item);
+}
+function fillPropertyForm(item){
+  const fields={propertyType:"type",propertyNameInput:"name",propertyAddressInput:"address",propertyAreaInput:"area",propertyRoomsInput:"rooms",propertyFloorInput:"floor",propertyYearInput:"year",propertyCadastreInput:"cadastre",propertyAccountInput:"account",propertyManagerInput:"manager"};
+  Object.entries(fields).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.value=item[key]||""});
+}
+function togglePropertyForm(force){
+  const form=document.getElementById("propertyProfileForm");
+  if(!form)return;
+  form.classList.toggle("open",typeof force==="boolean"?force:!form.classList.contains("open"));
+}
+async function savePropertyProfile(){
+  const item=currentProperty();
+  const fields={propertyType:"type",propertyNameInput:"name",propertyAddressInput:"address",propertyAreaInput:"area",propertyRoomsInput:"rooms",propertyFloorInput:"floor",propertyYearInput:"year",propertyCadastreInput:"cadastre",propertyAccountInput:"account",propertyManagerInput:"manager"};
+  Object.entries(fields).forEach(([id,key])=>{const el=document.getElementById(id);if(el)item[key]=el.value.trim()});
+  const photo=document.getElementById("propertyPhoto");
+  if(photo&&photo.files[0])item.photo=await readFile(photo.files[0],photo.files[0].name);
+  togglePropertyForm(false);
+  saveProperty();
+  renderProperty();
+}
+function propertyExpenses(item){
+  const period=propertyState().expensePeriod;
+  const now=new Date();
+  return (item.expenses||[]).filter(exp=>{
+    const date=new Date((exp.date||"")+"T00:00:00");
+    if(Number.isNaN(date.getTime()))return true;
+    if(period==="month")return date.getFullYear()===now.getFullYear()&&date.getMonth()===now.getMonth();
+    return date.getFullYear()===now.getFullYear();
+  });
+}
+function renderPropertyExpenses(item){
+  const expenses=propertyExpenses(item);
+  const total=expenses.reduce((sum,exp)=>sum+Number(exp.amount||0),0);
+  document.getElementById("propertyExpenseTotal").textContent=formatMoney(total);
+  const period=propertyState().expensePeriod;
+  document.getElementById("propertyExpensePeriodLabel").textContent=period==="month"?"месяц":"год";
+  document.getElementById("propertyExpenseToggle").textContent=period==="month"?"Год":"Месяц";
+  const colors=["#2f8053","#d78832","#4d8b81","#bfc1bd","#8a6d3b","#d0a253","#7d9c8f","#a7aba8","#9b6a42"];
+  const parts=propertyExpenseCategories.map((cat,i)=>({cat,color:colors[i],amount:expenses.filter(exp=>exp.category===cat).reduce((sum,exp)=>sum+Number(exp.amount||0),0)})).filter(item=>item.amount);
+  let start=0;
+  const gradient=parts.length?parts.map(part=>{const pct=part.amount/Math.max(total,1)*100;const seg=`${part.color} ${start}% ${start+pct}%`;start+=pct;return seg}).join(","):"#eadcc9 0 100%";
+  document.getElementById("propertyExpenseDonut").style.background=`conic-gradient(${gradient})`;
+  document.getElementById("propertyExpenseLegend").innerHTML=(parts.length?parts:propertyExpenseCategories.slice(0,4).map((cat,i)=>({cat,color:colors[i],amount:0}))).map(part=>`<div class="legend-row"><span class="legend-dot" style="--dot:${part.color}"></span><span>${escapeHtml(part.cat)}</span><b>${formatMoney(part.amount)}</b></div>`).join("");
+}
+function togglePropertyExpensePeriod(){
+  const data=propertyState();
+  data.expensePeriod=data.expensePeriod==="month"?"year":"month";
+  saveProperty();
+  renderPropertyExpenses(currentProperty());
+}
+function propertyIcon(type){
+  const icons={
+    "Электричество":'<path d="m13 2-8 12h6l-1 8 8-12h-6l1-8Z"></path>',
+    "Вода холодная":'<path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11Z"></path>',
+    "Вода горячая":'<path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11Z"></path>',
+    "Газ":'<path d="M12 21c4-2 6-5 6-8 0-4-4-6-4-10-4 3-8 7-8 12a6 6 0 0 0 6 6Z"></path>'
+  };
+  return `<svg viewBox="0 0 24 24">${icons[type]||'<rect x="4" y="6" width="16" height="13" rx="2"></rect>'}</svg>`;
+}
+function renderPropertyUtilities(item){
+  const root=document.getElementById("propertyUtilities");
+  root.innerHTML=(item.utilityAccounts||[]).map((acc,i)=>`<div class="property-line">
+    ${propertyIcon(acc.type)}
+    <div><b>${escapeHtml(acc.type)}</b><span>Лицевой счет: ${escapeHtml(acc.account||"-")}</span></div>
+    <div><span>К оплате</span><b>${formatMoney(acc.amount)}</b></div>
+    <button class="auto-link" onclick="openPropertyModal('utility',${i})">›</button>
+  </div>`).join("")||'<div class="property-line"><div></div><div><b>Счета не добавлены</b><span>добавь первый лицевой счет</span></div><div></div><div></div></div>';
+}
+function renderPropertyMeters(item){
+  const root=document.getElementById("propertyMeters");
+  root.innerHTML=(item.meters||[]).map((meter,i)=>{
+    const usage=(Number(meter.current)||0)-(Number(meter.previous)||0);
+    return `<div class="meter-card">
+      <div class="meter-head"><span>${propertyIcon(meter.type)} ${escapeHtml(meter.type)}</span><button class="auto-link" onclick="openPropertyModal('meter',${i})">›</button></div>
+      <div class="meter-values"><span>Пред.<b>${formatNumber(meter.previous)} ${escapeHtml(meter.unit||"")}</b></span><span>Текущие<b>${formatNumber(meter.current)} ${escapeHtml(meter.unit||"")}</b></span></div>
+      <div class="meter-values"><span>Расход<b>${formatNumber(usage)} ${escapeHtml(meter.unit||"")}</b></span><span>ИИ<b>готов</b></span></div>
+    </div>`;
+  }).join("")||'<div class="note"><b>Счетчики не добавлены</b><span class="badge">учет</span></div>';
+}
+function renderPropertyDocuments(item){
+  document.getElementById("propertyDocuments").innerHTML=(item.documents||[]).map((doc,i)=>{
+    const status=docStatus(doc);
+    return `<div class="property-doc"><div><b>${escapeHtml(doc.title)}</b><br><span style="color:var(--muted);font-size:12px">${escapeHtml(doc.added||"")} · ${escapeHtml(doc.size||"")}</span></div><button class="auto-link" onclick="openPropertyModal('document',${i})">${status.label}</button></div>`;
+  }).join("")||'<div class="note"><b>Документы не добавлены</b><span class="badge">пусто</span></div>';
+}
+function renderPropertyRepairs(item){
+  const root=document.getElementById("propertyRepairs");
+  root.innerHTML=(item.repairs||[]).slice(0,3).map((rep,i)=>`<div class="property-doc"><div><b>${formatDate(rep.date)} · ${escapeHtml(rep.title)}</b><br><span style="color:var(--muted);font-size:12px">${escapeHtml(rep.materials||"")} ${rep.contractor?`· ${escapeHtml(rep.contractor)}`:""}</span></div><b>${formatMoney(rep.cost)}</b></div>`).join("")||'<div class="note"><b>История ремонта пустая</b><span class="badge">ремонт</span></div>';
+}
+function renderPropertyPlans(item){
+  document.getElementById("propertyPlans").innerHTML=(item.plannedRepairs||[]).slice(0,4).map((plan,i)=>`<div class="repair-plan-row"><button class="goal-check${plan.status==="Готово"?" done":""}" onclick="togglePropertyPlan(${i})"></button><span>${escapeHtml(plan.title)}</span><b>${formatMoney(plan.planned)}</b></div>`).join("")||'<div class="note"><b>План ремонта пуст</b><span class="badge">задачи</span></div>';
+}
+function togglePropertyPlan(index){
+  const plan=currentProperty().plannedRepairs[index];
+  if(!plan)return;
+  plan.status=plan.status==="Готово"?"План":"Готово";
+  saveProperty();
+  renderPropertyPlans(currentProperty());
+}
+function renderPropertyPhotos(item){
+  const samples=(item.photos||[]).slice(0,4);
+  const root=document.getElementById("propertyPhotos");
+  root.innerHTML=(samples.length?samples:[null,null,null,null]).map(photo=>`<div class="photo-tile">${photo&&(photo.data||photo.url)?`<img src="${escapeAttr(photo.data||photo.url)}" alt="${escapeAttr(photo.name||"Фото")}">`:""}</div>`).join("");
+}
+function renderPropertyRent(item){
+  const root=document.getElementById("propertyRentCard");
+  if(!item.rented){root.style.display="none";root.innerHTML="";return}
+  root.style.display="";
+  root.innerHTML=`<div class="rent-card"><div><div class="auto-title">Аренда <span class="status-pill">Сдается</span></div><div class="auto-metrics" style="margin-top:14px"><div class="auto-metric"><span>Арендатор</span><b>${escapeHtml(item.tenant||"-")}</b></div><div class="auto-metric"><span>Аренда</span><b>${formatMoney(item.rentAmount)} / мес</b></div><div class="auto-metric"><span>Следующая оплата</span><b>${formatDate(item.nextPayment)}</b></div></div></div><button class="ghost" onclick="openPropertyModal('rent')">Подробнее</button></div>`;
+}
+function renderPropertyContacts(item){
+  document.getElementById("propertyContacts").innerHTML=(item.contacts||[]).map((contact,i)=>`<div class="property-line"><svg viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.4 19.4 0 0 1 3.2 10.8 19.8 19.8 0 0 1 .1 2.2 2 2 0 0 1 2.1 0h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.4 2.1L6.1 8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 1.9Z"></path></svg><div><b>${escapeHtml(contact.role)} · ${escapeHtml(contact.name)}</b><span>${escapeHtml(contact.phone)} ${contact.comment?`· ${escapeHtml(contact.comment)}`:""}</span></div><a class="auto-link" href="tel:${escapeAttr(contact.phone)}">Позвонить</a><button class="auto-link" onclick="removePropertyItem('contacts',${i})">×</button></div>`).join("")||'<div class="property-line"><div></div><div><b>Контакты не добавлены</b><span>УК, мастер, службы</span></div><div></div><div></div></div>';
+}
+function renderPropertyReminders(item){
+  document.getElementById("propertyReminders").innerHTML=(item.reminders||[]).map((rem,i)=>`<div class="property-line"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg><div><b>${escapeHtml(rem.text)}</b><span>${formatDate(rem.date)} · ${escapeHtml(rem.priority||"")}</span></div><span class="status-pill">${escapeHtml(rem.status||"Активно")}</span><button class="auto-link" onclick="removePropertyItem('reminders',${i})">×</button></div>`).join("")||'<div class="property-line"><div></div><div><b>Напоминаний нет</b><span>добавь первое</span></div><div></div><div></div></div>';
+}
+function removePropertyItem(collection,index){
+  const item=currentProperty();
+  if(item[collection])item[collection].splice(index,1);
+  saveProperty();
+  renderProperty();
+}
+function deleteCurrentProperty(){
+  const data=propertyState();
+  if(data.objects.length<=1){alert("Нельзя удалить последний объект.");return}
+  const item=currentProperty();
+  if(!confirm(`Удалить объект "${item.name}"?`))return;
+  data.objects=data.objects.filter(object=>object.id!==item.id);
+  data.selectedId=data.objects[0].id;
+  togglePropertyForm(false);
+  saveProperty();
+  renderProperty();
+}
+function openPropertyModal(type,index){
+  const modal=document.getElementById("propertyModal");
+  const title=document.getElementById("propertyModalTitle");
+  const body=document.getElementById("propertyModalBody");
+  const item=currentProperty();
+  const today=new Date().toISOString().slice(0,10);
+  const titles={object:"Добавить объект",expense:"Добавить расход",utility:"Лицевой счет",meter:"Передать показания",meterHistory:"История показаний",document:"Документ",repair:"Добавить ремонт",plan:"Планируемый ремонт",photo:"Фото",rent:"Аренда",contact:"Контакт",reminder:"Напоминание",ai:"Импорт через ИИ"};
+  title.textContent=titles[type]||"Недвижимость";
+  if(type==="object"){
+    body.innerHTML=`<div class="mini-form"><label>Тип</label><select id="propNewType"><option>Квартира</option><option>Дом</option><option>Дача</option><option>Гараж</option><option>Коммерческое помещение</option></select><input id="propNewName" placeholder="Название"><input id="propNewAddress" placeholder="Адрес"><input id="propNewArea" placeholder="Площадь"><input id="propNewRooms" type="number" placeholder="Комнат"><label>Фото</label><input id="propNewPhoto" type="file" accept="image/*"><button class="primary" onclick="savePropertyObject()">Создать объект</button></div>`;
+  }else if(type==="expense"){
+    body.innerHTML=`<div class="mini-form"><label>Дата</label><input id="propExpenseDate" type="date" value="${today}"><label>Категория</label><select id="propExpenseCategory">${propertyExpenseCategories.map(cat=>`<option>${cat}</option>`).join("")}</select><input id="propExpenseAmount" type="number" placeholder="Сумма"><textarea id="propExpenseComment" placeholder="Комментарий"></textarea><button class="primary" onclick="savePropertyExpense()">Сохранить расход</button></div>`;
+  }else if(type==="utility"){
+    const acc=item.utilityAccounts[index]||{};
+    body.innerHTML=`<div class="mini-form"><input id="propUtilityType" placeholder="Электричество" value="${escapeAttr(acc.type||"")}"><input id="propUtilityAccount" placeholder="Лицевой счет" value="${escapeAttr(acc.account||"")}"><input id="propUtilityAmount" type="number" placeholder="К оплате" value="${escapeAttr(acc.amount||"")}"><button class="primary" onclick="savePropertyUtility(${Number.isFinite(index)?index:"null"})">Сохранить счет</button>${Number.isFinite(index)?`<button class="ghost" onclick="deletePropertyUtility(${index})">Удалить</button>`:""}</div>`;
+  }else if(type==="meter"){
+    const meter=item.meters[index]||{};
+    body.innerHTML=`<div class="mini-form"><input id="propMeterType" placeholder="Электричество" value="${escapeAttr(meter.type||"")}"><input id="propMeterUnit" placeholder="кВт-ч / м³" value="${escapeAttr(meter.unit||"")}"><input id="propMeterPrevious" type="number" placeholder="Предыдущее" value="${escapeAttr(meter.previous||"")}"><input id="propMeterCurrent" type="number" placeholder="Текущее" value="${escapeAttr(meter.current||"")}"><button class="primary" onclick="savePropertyMeter(${Number.isFinite(index)?index:"null"})">Сохранить показания</button><button class="ghost" onclick="openPropertyModal('ai')">Импорт через ИИ</button></div>`;
+  }else if(type==="meterHistory"){
+    body.innerHTML=`<div class="property-list-lines">${(item.meters||[]).map(m=>`<div class="property-line">${propertyIcon(m.type)}<div><b>${escapeHtml(m.type)}</b><span>${formatNumber(m.previous)} → ${formatNumber(m.current)} ${escapeHtml(m.unit||"")}</span></div><b>${formatNumber((Number(m.current)||0)-(Number(m.previous)||0))}</b><span></span></div>`).join("")}</div>`;
+  }else if(type==="document"){
+    body.innerHTML=`<div class="mini-form"><input id="propDocTitle" placeholder="Название документа"><label>Срок действия</label><input id="propDocExpires" type="date"><label>PDF, JPG или PNG</label><input id="propDocFile" type="file" accept="image/*,.pdf"><button class="primary" onclick="savePropertyDocument()">Сохранить документ</button><button class="ghost" onclick="openPropertyModal('ai')">Импорт через ИИ</button></div>`;
+  }else if(type==="repair"){
+    body.innerHTML=`<div class="mini-form"><label>Дата</label><input id="propRepairDate" type="date" value="${today}"><input id="propRepairTitle" placeholder="Что сделано"><input id="propRepairCost" type="number" placeholder="Стоимость"><input id="propRepairMaterials" placeholder="Материалы"><input id="propRepairContractor" placeholder="Исполнитель"><textarea id="propRepairComment" placeholder="Комментарий"></textarea><button class="primary" onclick="savePropertyRepair()">Сохранить ремонт</button></div>`;
+  }else if(type==="plan"){
+    body.innerHTML=`<div class="mini-form"><input id="propPlanTitle" placeholder="Задача"><input id="propPlanPlanned" type="number" placeholder="Планируемая стоимость"><input id="propPlanActual" type="number" placeholder="Фактическая стоимость"><select id="propPlanStatus"><option>План</option><option>В работе</option><option>Готово</option></select><button class="primary" onclick="savePropertyPlan()">Сохранить задачу</button></div>`;
+  }else if(type==="photo"){
+    body.innerHTML=`<div class="mini-form"><input id="propPhotoName" placeholder="Папка / название"><input id="propPhotoFile" type="file" accept="image/*"><button class="primary" onclick="savePropertyPhoto()">Загрузить фото</button></div>`;
+  }else if(type==="rent"){
+    body.innerHTML=`<div class="mini-form"><label><input id="propRentEnabled" type="checkbox" ${item.rented?"checked":""} style="width:auto"> Объект сдается</label><input id="propTenant" placeholder="Арендатор" value="${escapeAttr(item.tenant||"")}"><input id="propRentAmount" type="number" placeholder="Аренда в месяц" value="${escapeAttr(item.rentAmount||"")}"><label>Следующая оплата</label><input id="propNextPayment" type="date" value="${escapeAttr(item.nextPayment||"")}"><input id="propDeposit" type="number" placeholder="Залог" value="${escapeAttr(item.deposit||"")}"><button class="primary" onclick="savePropertyRent()">Сохранить аренду</button></div>`;
+  }else if(type==="contact"){
+    body.innerHTML=`<div class="mini-form"><input id="propContactRole" placeholder="УК / Электрик / Сантехник"><input id="propContactName" placeholder="Имя"><input id="propContactPhone" placeholder="Телефон"><textarea id="propContactComment" placeholder="Комментарий"></textarea><button class="primary" onclick="savePropertyContact()">Сохранить контакт</button></div>`;
+  }else if(type==="reminder"){
+    body.innerHTML=`<div class="mini-form"><label>Дата</label><input id="propReminderDate" type="date" value="${today}"><input id="propReminderText" placeholder="Например: оплатить ЖКХ"><select id="propReminderPriority"><option>Средний</option><option>Высокий</option><option>Низкий</option></select><select id="propReminderStatus"><option>Активно</option><option>Готово</option></select><button class="primary" onclick="savePropertyReminder()">Сохранить напоминание</button></div>`;
+  }else{
+    body.innerHTML='<div class="note"><b>Импорт через ИИ подготовлен</b><span>Позже здесь будет камера, распознавание счетчиков, квитанций, документов и автоматическое сохранение после подтверждения.</span></div>';
+  }
+  modal.classList.add("open");
+}
+function closePropertyModal(){document.getElementById("propertyModal").classList.remove("open")}
+async function savePropertyObject(){
+  const photo=document.getElementById("propNewPhoto");
+  const obj={id:"property-"+Date.now(),type:document.getElementById("propNewType").value,name:document.getElementById("propNewName").value.trim()||"Новый объект",address:document.getElementById("propNewAddress").value.trim(),area:document.getElementById("propNewArea").value.trim(),rooms:document.getElementById("propNewRooms").value.trim(),floor:"",year:"",cadastre:"",account:"",manager:"",rented:false,tenant:"",rentAmount:0,nextPayment:"",deposit:0,photo:null,utilityAccounts:[],meters:[],documents:[],repairs:[],plannedRepairs:[],contacts:[],reminders:[],expenses:[],photos:[]};
+  if(photo&&photo.files[0])obj.photo=await readFile(photo.files[0],photo.files[0].name);
+  propertyState().objects.unshift(obj);
+  propertyState().selectedId=obj.id;
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyExpense(){
+  const item=currentProperty();
+  const expense={id:"pe-"+Date.now(),date:document.getElementById("propExpenseDate").value,category:document.getElementById("propExpenseCategory").value,amount:Number(document.getElementById("propExpenseAmount").value)||0,comment:document.getElementById("propExpenseComment").value.trim(),source:"property",propertyId:item.id};
+  if(!expense.amount)return;
+  item.expenses.unshift(expense);
+  state.financeOperations=state.financeOperations||[];
+  state.financeOperations.unshift(Object.assign({},expense,{type:"Недвижимость",object:item.name}));
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyUtility(index){
+  const item=currentProperty();
+  const payload={id:index!==null&&item.utilityAccounts[index]?item.utilityAccounts[index].id:"ut-"+Date.now(),type:document.getElementById("propUtilityType").value.trim()||"Счет",account:document.getElementById("propUtilityAccount").value.trim(),amount:Number(document.getElementById("propUtilityAmount").value)||0};
+  if(index!==null&&item.utilityAccounts[index])item.utilityAccounts[index]=payload;else item.utilityAccounts.unshift(payload);
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function deletePropertyUtility(index){
+  currentProperty().utilityAccounts.splice(index,1);
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyMeter(index){
+  const item=currentProperty();
+  const payload={id:index!==null&&item.meters[index]?item.meters[index].id:"m-"+Date.now(),type:document.getElementById("propMeterType").value.trim()||"Счетчик",unit:document.getElementById("propMeterUnit").value.trim(),previous:Number(document.getElementById("propMeterPrevious").value)||0,current:Number(document.getElementById("propMeterCurrent").value)||0,updatedAt:new Date().toISOString()};
+  if(index!==null&&item.meters[index])item.meters[index]=payload;else item.meters.unshift(payload);
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+async function savePropertyDocument(){
+  const file=document.getElementById("propDocFile").files[0];
+  const doc={id:"pd-"+Date.now(),title:document.getElementById("propDocTitle").value.trim()||file&&file.name||"Документ",added:new Date().toLocaleDateString("ru-RU"),size:file?`${Math.max(1,Math.round(file.size/1024))} КБ`:"",expires:document.getElementById("propDocExpires").value,file:null};
+  if(file)doc.file=await readFile(file,doc.title);
+  currentProperty().documents.unshift(doc);
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyRepair(){
+  const rep={id:"rep-"+Date.now(),date:document.getElementById("propRepairDate").value,title:document.getElementById("propRepairTitle").value.trim()||"Ремонт",cost:Number(document.getElementById("propRepairCost").value)||0,materials:document.getElementById("propRepairMaterials").value.trim(),contractor:document.getElementById("propRepairContractor").value.trim(),comment:document.getElementById("propRepairComment").value.trim()};
+  currentProperty().repairs.unshift(rep);
+  if(rep.cost)currentProperty().expenses.unshift({id:"pe-"+Date.now(),date:rep.date,category:"Ремонт",amount:rep.cost,comment:rep.title,source:"property",propertyId:currentProperty().id});
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyPlan(){
+  currentProperty().plannedRepairs.unshift({id:"plan-"+Date.now(),title:document.getElementById("propPlanTitle").value.trim()||"Задача ремонта",planned:Number(document.getElementById("propPlanPlanned").value)||0,actual:Number(document.getElementById("propPlanActual").value)||0,status:document.getElementById("propPlanStatus").value});
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+async function savePropertyPhoto(){
+  const file=document.getElementById("propPhotoFile").files[0];
+  if(!file)return;
+  const photo=await readFile(file,document.getElementById("propPhotoName").value.trim()||file.name);
+  currentProperty().photos.unshift(photo);
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyRent(){
+  const item=currentProperty();
+  item.rented=document.getElementById("propRentEnabled").checked;
+  item.tenant=document.getElementById("propTenant").value.trim();
+  item.rentAmount=Number(document.getElementById("propRentAmount").value)||0;
+  item.nextPayment=document.getElementById("propNextPayment").value;
+  item.deposit=Number(document.getElementById("propDeposit").value)||0;
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyContact(){
+  const role=document.getElementById("propContactRole").value.trim();
+  const name=document.getElementById("propContactName").value.trim();
+  if(!role&&!name)return;
+  currentProperty().contacts.unshift({id:"c-"+Date.now(),role:role||"Контакт",name:name||"Без имени",phone:document.getElementById("propContactPhone").value.trim(),comment:document.getElementById("propContactComment").value.trim()});
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
+function savePropertyReminder(){
+  const text=document.getElementById("propReminderText").value.trim();
+  if(!text)return;
+  currentProperty().reminders.unshift({id:"pr-"+Date.now(),date:document.getElementById("propReminderDate").value,text,status:document.getElementById("propReminderStatus").value,priority:document.getElementById("propReminderPriority").value});
+  closePropertyModal();
+  saveProperty();
+  renderProperty();
+}
 function renderHealth(){
   if(!document.getElementById("healthLog"))return;
   renderTimeline("healthLog",state.healthEvents,"История здоровья пока пустая");
@@ -2824,6 +3512,7 @@ function renderAll(){
   renderWardrobe();
   renderResume();
   renderCar();
+  renderProperty();
   renderHealth();
   renderAppleSync();
   renderTotals();
