@@ -167,42 +167,42 @@
   .sync-strip button{flex:1 1 140px}
   .hq{display:grid;gap:18px}
   .topbar{position:relative;background:linear-gradient(145deg,#18382d,#0e2a22);box-shadow:none;border-bottom:0}
-  .topbar .shell{max-width:1280px;padding:14px 22px;display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+  .topbar .shell{max-width:1680px;padding:14px 28px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:28px;align-items:center}
   .hero{padding:0;grid-template-columns:auto auto;gap:18px}
   .avatar{width:72px;height:72px;border-radius:18px;font-size:34px;background:linear-gradient(145deg,#eccb8b,#9f7a43);box-shadow:inset 0 1px rgba(255,255,255,.35),0 10px 24px rgba(0,0,0,.2)}
   h1{font-size:42px;text-shadow:0 2px 0 rgba(0,0,0,.2)}
   .subtitle,.year-ring,.pulse{display:none}
-  .nav{background:transparent;border:0;padding:0;gap:24px;justify-content:flex-end;align-items:center;overflow:visible}
-  .nav-btn{display:grid;place-items:center;gap:7px;min-width:86px;border:0;background:transparent;color:#f7ead4;border-radius:14px;padding:10px 12px;font-size:14px;font-weight:600}
-  .nav-btn svg{width:34px;height:34px;stroke:#efc785;stroke-width:1.7;fill:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
+  .nav{background:transparent;border:0;padding:0;gap:14px;justify-content:flex-end;align-items:center;overflow:visible}
+  .nav-btn{display:grid;place-items:center;gap:7px;min-width:82px;border:0;background:transparent;color:#f7ead4;border-radius:14px;padding:10px 10px;font-size:13px;font-weight:600}
+  .nav-btn svg{width:31px;height:31px;stroke:#efc785;stroke-width:1.7;fill:none;filter:drop-shadow(0 1px 0 rgba(0,0,0,.2))}
   .nav-btn.active{background:rgba(8,31,25,.54);color:#fff7e9;box-shadow:inset 0 1px rgba(255,255,255,.04)}
-  main.shell{max-width:1280px;padding:18px 22px}
-  .hq-hero{background:radial-gradient(circle at 48% 50%,rgba(255,255,255,.08),transparent 32%),linear-gradient(145deg,#294f40,#14362c 72%);color:#fff5e5;border:1px solid rgba(255,255,255,.2);border-radius:24px;box-shadow:0 12px 30px rgba(29,42,31,.22);padding:34px 40px}
+  main.shell{max-width:1420px;padding:18px 24px}
+  .hq-hero{background:radial-gradient(circle at 48% 50%,rgba(255,255,255,.08),transparent 32%),linear-gradient(145deg,#294f40,#14362c 72%);color:#fff5e5;border:1px solid rgba(255,255,255,.2);border-radius:22px;box-shadow:0 12px 30px rgba(29,42,31,.22);padding:30px 36px}
   .hq-hero .section-kicker{color:#d8e7de}
   .hq-hero .section-title{color:#fff5e5}
-  .command-grid{display:grid;grid-template-columns:260px minmax(330px,1fr) 310px;gap:34px;align-items:center}
-  .metric-stack{display:grid;gap:22px}
-  .hero-metric{display:grid;grid-template-columns:54px 1fr;gap:18px;align-items:center;padding-bottom:22px;border-bottom:1px solid rgba(235,221,200,.2)}
+  .command-grid{display:grid;grid-template-columns:minmax(210px,260px) minmax(300px,360px) minmax(260px,310px);gap:34px;align-items:center;justify-content:center}
+  .metric-stack{display:grid;gap:18px}
+  .hero-metric{display:grid;grid-template-columns:50px 1fr;gap:16px;align-items:center;padding-bottom:18px;border-bottom:1px solid rgba(235,221,200,.2)}
   .hero-metric:last-child{border-bottom:0;padding-bottom:0}
-  .hero-icon{font-size:42px;line-height:1;color:#efbd63}
-  .hero-metric strong{display:block;font-size:28px;color:#fff;letter-spacing:.2px}
-  .hero-metric span{display:block;margin-top:6px;color:#e5d8c5;font-size:16px}
+  .hero-icon{font-size:38px;line-height:1;color:#efbd63}
+  .hero-metric strong{display:block;font-size:26px;color:#fff;letter-spacing:.2px}
+  .hero-metric span{display:block;margin-top:6px;color:#e5d8c5;font-size:15px}
   .day-ring-wrap{display:grid;place-items:center;min-width:0}
-  .day-ring{position:relative;width:min(390px,100%);aspect-ratio:1}
+  .day-ring{position:relative;width:min(350px,100%);aspect-ratio:1}
   .day-ring svg{width:100%;height:100%;display:block;overflow:visible}
-  .ring-hour{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;color:#fff8ec;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+  .ring-hour{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:17px;color:#fff8ec;text-shadow:0 1px 2px rgba(0,0,0,.35)}
   .ring-center{position:absolute;inset:23%;display:grid;place-items:center;text-align:center;border-radius:50%;color:#fff7eb}
-  .weekday{font-size:23px;letter-spacing:.6px}
-  .day-number{font-family:Georgia,"Times New Roman",serif;font-size:92px;line-height:.88;font-weight:800;text-shadow:0 4px 8px rgba(0,0,0,.22)}
-  .month-label{font-size:23px;letter-spacing:.5px}
-  .time-pill{display:inline-block;margin-top:14px;border-radius:12px;background:linear-gradient(145deg,#d9ad6f,#ad834d);padding:9px 15px;color:#fff;font-weight:800;font-size:22px;box-shadow:0 4px 10px rgba(0,0,0,.18)}
-  .progress-stack{display:grid;gap:28px;border-left:1px solid rgba(235,221,200,.22);padding-left:28px}
-  .progress-card{display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:center;padding-bottom:26px;border-bottom:1px solid rgba(235,221,200,.18)}
+  .weekday{font-size:20px;letter-spacing:.6px}
+  .day-number{font-family:Georgia,"Times New Roman",serif;font-size:78px;line-height:.88;font-weight:800;text-shadow:0 4px 8px rgba(0,0,0,.22)}
+  .month-label{font-size:20px;letter-spacing:.5px}
+  .time-pill{display:inline-block;margin-top:12px;border-radius:11px;background:linear-gradient(145deg,#d9ad6f,#ad834d);padding:8px 14px;color:#fff;font-weight:800;font-size:20px;box-shadow:0 4px 10px rgba(0,0,0,.18)}
+  .progress-stack{display:grid;gap:22px;border-left:1px solid rgba(235,221,200,.22);padding-left:26px}
+  .progress-card{display:grid;grid-template-columns:44px 1fr;gap:15px;align-items:center;padding-bottom:22px;border-bottom:1px solid rgba(235,221,200,.18)}
   .progress-card:last-child{border-bottom:0;padding-bottom:0}
-  .progress-card svg{width:42px;height:42px;stroke:var(--accent,#efc36f);stroke-width:1.8;fill:none}
-  .progress-card b{font-size:21px;font-weight:600}
-  .progress-value{float:right;font-size:17px}
-  .hero-bar{height:9px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden;margin-top:16px}
+  .progress-card svg{width:38px;height:38px;stroke:var(--accent,#efc36f);stroke-width:1.8;fill:none}
+  .progress-card b{font-size:19px;font-weight:600}
+  .progress-value{float:right;font-size:16px}
+  .hero-bar{height:8px;background:rgba(255,255,255,.14);border-radius:99px;overflow:hidden;margin-top:14px}
   .hero-bar div{height:100%;width:0;border-radius:inherit;background:var(--accent,#efc36f)}
   .section-card{background:rgba(255,250,243,.86);border:1px solid #eadac6;border-radius:18px;padding:24px;box-shadow:0 10px 28px rgba(70,48,24,.05)}
   .section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
@@ -324,6 +324,75 @@
   .goal-modal-card h3{font-size:23px;margin-bottom:12px}
   .goal-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}
   .empty-goals{border:1px solid #ead9c4;border-radius:14px;background:#fffaf3;padding:26px;color:var(--muted);font-weight:800}
+  .auto-os{display:grid;gap:10px}
+  .auto-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .auto-title{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:900}
+  .auto-title svg,.auto-icon svg{width:25px;height:25px;stroke:var(--green);stroke-width:1.8;fill:none}
+  .auto-link{border:0;background:transparent;color:#7b5524;font-size:12px;font-weight:850;white-space:nowrap}
+  .vehicle-card{display:grid;grid-template-columns:minmax(190px,.82fr) 1fr;gap:20px;align-items:center}
+  .vehicle-photo{width:100%;aspect-ratio:1.65;border-radius:9px;object-fit:contain;background:linear-gradient(145deg,#fffdf8,#f0e4d2);border:1px solid #eadac6}
+  .vehicle-name{font-family:Georgia,"Times New Roman",serif;font-size:32px;line-height:1.05;font-weight:800}
+  .vehicle-sub{margin-top:6px;color:#7d786f;font-size:18px}
+  .vehicle-tags{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+  .vehicle-tag{border:1px solid #eadac6;background:#fffdf8;border-radius:8px;padding:7px 11px;font-size:13px;font-weight:750}
+  .vehicle-facts{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #eadac6;border-radius:12px;background:rgba(255,253,248,.72);overflow:hidden}
+  .vehicle-fact{padding:12px;border-right:1px solid #eadac6;min-width:0}
+  .vehicle-fact:last-child{border-right:0}
+  .vehicle-fact span{display:block;color:var(--muted);font-size:11px;margin-bottom:7px}
+  .vehicle-fact b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .auto-form{display:none;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .auto-form.open{display:grid}
+  .auto-form .full{grid-column:1/-1}
+  .doc-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:9px}
+  .doc-tile{border:1px solid #eadac6;background:#fffdf8;border-radius:9px;padding:12px 8px;text-align:center;min-height:104px;display:grid;align-content:center;gap:6px}
+  .doc-tile svg{width:34px;height:34px;margin:0 auto;stroke:var(--green);stroke-width:1.7;fill:none}
+  .doc-tile b{font-size:13px}
+  .doc-tile span{font-size:11px;color:var(--muted)}
+  .status-pill{justify-self:center;border-radius:8px;padding:5px 8px;font-size:10px;font-weight:900;background:#e9f1ea;color:#2d7650}
+  .status-pill.warning{background:#fff0ce;color:#8a5f13}
+  .status-pill.expired{background:#f3dfd8;color:#9b4a3d}
+  .auto-progress{height:9px;border-radius:99px;background:#e8dccb;overflow:hidden;margin:13px 0 16px}
+  .auto-progress div{height:100%;background:linear-gradient(90deg,#2e8a61,var(--gold));border-radius:inherit}
+  .auto-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .auto-metric{border-left:1px solid #eadac6;padding-left:12px}
+  .auto-metric span{display:block;color:var(--muted);font-size:11px;margin-bottom:6px}
+  .auto-metric b{font-size:16px}
+  .expense-total{font-size:25px;font-weight:900;text-align:right}
+  .expense-strip{display:grid;grid-template-columns:repeat(6,1fr);border:1px solid #eadac6;border-radius:9px;overflow:hidden;background:#fffdf8}
+  .expense-cell{padding:10px;border-right:1px solid #eadac6}
+  .expense-cell:last-child{border-right:0}
+  .expense-cell span{display:block;color:var(--muted);font-size:11px}
+  .expense-cell b{display:block;margin-top:5px;font-size:13px}
+  .service-feed{border:1px solid #eadac6;border-radius:12px;overflow:hidden;background:rgba(255,253,248,.7)}
+  .service-row{display:grid;grid-template-columns:96px 10px 1fr auto 26px;gap:12px;align-items:center;border-bottom:1px solid #eadac6;padding:10px}
+  .service-row:last-child{border-bottom:0}
+  .service-date{background:#f6efe6;border-radius:8px;text-align:center;padding:7px 4px}
+  .service-date b{display:block;font-size:20px}
+  .service-date span{font-size:10px;color:#6f6256}
+  .service-dot{width:10px;height:10px;border-radius:50%;background:#a5814a}
+  .service-main b{font-size:14px}
+  .service-main span{display:block;margin-top:5px;color:var(--muted);font-size:12px}
+  .service-cost{font-weight:900;white-space:nowrap}
+  details.service-detail summary{list-style:none}
+  details.service-detail summary::-webkit-details-marker{display:none}
+  .service-extra{grid-column:3 / -1;color:#5c4d3e;font-size:12px;line-height:1.45;padding:0 4px 8px}
+  .insurance-list,.parts-list,.reminder-list,.expense-list{display:grid;gap:7px}
+  .auto-line{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;border:1px solid #eadac6;background:#fffdf8;border-radius:9px;padding:10px}
+  .auto-line b{font-size:14px}
+  .auto-line span{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+  .quick-auto{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+  .quick-auto button{border:1px solid #eadac6;background:#fffdf8;color:#1f251f;border-radius:9px;padding:11px 7px;font-size:12px;font-weight:850;display:grid;gap:6px;place-items:center;min-height:76px}
+  .quick-auto svg{width:28px;height:28px;stroke:var(--green);stroke-width:1.7;fill:none}
+  .auto-modal{position:fixed;inset:0;z-index:120;display:none;place-items:end center;background:rgba(20,26,22,.42);padding:14px}
+  .auto-modal.open{display:grid}
+  .auto-modal-card{width:min(560px,100%);max-height:88vh;overflow:auto;background:#fffaf3;border:1px solid #ead9c4;border-radius:16px;padding:17px;box-shadow:0 24px 70px rgba(0,0,0,.28)}
+  .auto-modal-card h3{font-size:21px;margin-bottom:10px}
+  @media (max-width:1120px){
+    .topbar .shell{grid-template-columns:1fr;gap:12px;padding:12px 18px}
+    .hero{grid-template-columns:auto 1fr}
+    .nav{justify-content:flex-start;overflow-x:auto;gap:10px;padding-bottom:2px}
+    .nav-btn{flex:0 0 86px;min-width:86px}
+  }
   @media (max-width:900px){
     .topbar .shell{padding:10px 14px;grid-template-columns:1fr}
     .hero{grid-template-columns:auto 1fr;gap:12px}
@@ -380,10 +449,11 @@
     .metric-stack{grid-template-columns:1fr;gap:14px}
     .hero-metric{grid-template-columns:42px 1fr;text-align:left}
     .hero-icon{font-size:33px}
-    .day-number{font-size:72px}
-    .weekday,.month-label{font-size:18px}
-    .time-pill{font-size:18px}
-    .ring-hour{font-size:15px}
+    .day-ring{width:min(252px,100%)}
+    .day-number{font-size:56px}
+    .weekday,.month-label{font-size:16px}
+    .time-pill{font-size:16px;padding:7px 12px}
+    .ring-hour{font-size:13px}
     .progress-stack{grid-template-columns:1fr}
     .section-card{padding:16px;border-radius:14px}
     .section-icon{width:42px;height:42px}
@@ -450,6 +520,34 @@
     .restore-btn{font-size:12px;padding:7px 8px}
     .goal-modal{align-items:end;padding:0}
     .goal-modal-card{border-radius:16px 16px 0 0}
+    .auto-os{gap:8px}
+    .auto-head{margin-bottom:10px;gap:8px}
+    .auto-title{min-width:0;font-size:16px;line-height:1.15}
+    .auto-head .ghost,.auto-head .primary,.auto-head .auto-link{font-size:11px;padding:8px 9px;max-width:128px;white-space:normal;text-align:center}
+    .vehicle-card{grid-template-columns:1fr;gap:10px}
+    .vehicle-photo{aspect-ratio:1.82}
+    .vehicle-name{font-size:27px}
+    .vehicle-sub{font-size:15px}
+    .vehicle-facts{grid-template-columns:repeat(2,1fr)}
+    .vehicle-fact{border-bottom:1px solid #eadac6}
+    .vehicle-fact:nth-child(2n){border-right:0}
+    .vehicle-fact:nth-last-child(-n+2){border-bottom:0}
+    .auto-form{grid-template-columns:1fr}
+    .doc-grid{grid-template-columns:repeat(2,1fr)}
+    .auto-metrics{grid-template-columns:1fr}
+    .expense-total{text-align:left;font-size:23px}
+    .expense-strip{grid-template-columns:repeat(2,1fr)}
+    .expense-cell:nth-child(2n){border-right:0}
+    .expense-cell{border-bottom:1px solid #eadac6}
+    .expense-cell:nth-last-child(-n+2){border-bottom:0}
+    .service-row{grid-template-columns:74px 8px 1fr auto;gap:8px;padding:9px}
+    .service-row .auto-link{grid-column:4}
+    .service-cost{font-size:13px}
+    .service-extra{grid-column:1 / -1}
+    .quick-auto{grid-template-columns:repeat(2,1fr)}
+    .quick-auto button:last-child{grid-column:1/-1}
+    .auto-modal{padding:0}
+    .auto-modal-card{border-radius:16px 16px 0 0;max-height:92vh}
   }
 </style>
 </head>
@@ -701,42 +799,115 @@
   </section>
 
   <section class="view" id="auto">
-    <div class="grid split">
-      <div class="card">
-        <div class="section-kicker">Авто</div>
-        <div class="section-title">Паспорт машины</div>
-        <div class="mini-form">
-          <input id="carName" placeholder="Марка, модель, год">
-          <input id="carMileage" placeholder="Пробег">
-          <input id="carVin" placeholder="VIN / номер кузова">
-          <button class="primary" onclick="saveCar()">Сохранить авто</button>
+    <div class="auto-os">
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M5 16h14M7 16l1.4-5.2A3 3 0 0 1 11.3 8h1.4a3 3 0 0 1 2.9 2.8L17 16M6 16v3M18 16v3M8 19h0M16 19h0"></path></svg>Паспорт машины</div>
+          <button class="ghost" onclick="toggleAutoProfileForm()">Редактировать</button>
         </div>
-        <div class="knowledge-list" id="carInfo" style="margin-top:10px"></div>
-      </div>
-      <div class="card">
-        <div class="section-kicker">ТО и ремонт</div>
-        <div class="section-title">История обслуживания</div>
-        <div class="mini-form">
-          <input id="serviceDate" type="date">
-          <input id="serviceTitle" placeholder="Что сделали">
-          <input id="serviceCost" placeholder="Стоимость">
-          <textarea id="serviceNote" placeholder="Детали, запчасти, сервис"></textarea>
-          <button class="primary" onclick="addService()">Добавить запись</button>
+        <div id="vehiclePassport"></div>
+        <div class="auto-form" id="autoProfileForm">
+          <label>Фото<input id="autoPhoto" type="file" accept="image/*"></label>
+          <label>Марка<input id="autoBrand" placeholder="BMW"></label>
+          <label>Модель<input id="autoModel" placeholder="X3"></label>
+          <label>Поколение<input id="autoGeneration" placeholder="F25"></label>
+          <label>Год<input id="autoYear" type="number" placeholder="2016"></label>
+          <label>Двигатель<input id="autoEngine" placeholder="2.0D"></label>
+          <label>Привод<input id="autoDrive" placeholder="xDrive"></label>
+          <label>Коробка<input id="autoTransmission" placeholder="Автомат"></label>
+          <label>Цвет<input id="autoColor" placeholder="Черный"></label>
+          <label>Госномер<input id="autoPlate" placeholder="А123АА62"></label>
+          <label>VIN<input id="autoVin" placeholder="WBAXXXXXXXX"></label>
+          <label>Пробег<input id="autoMileage" type="number" placeholder="186500"></label>
+          <label class="full">Владелец<input id="autoOwner" placeholder="Вы"></label>
+          <div class="save-row full">
+            <button class="primary" onclick="saveVehicleProfile()">Сохранить</button>
+            <button class="ghost" onclick="toggleAutoProfileForm(false)">Закрыть</button>
+          </div>
         </div>
-        <div class="timeline" id="serviceLog" style="margin-top:12px"></div>
+      </section>
+
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 7h8M8 11h8M8 15h5"></path></svg>Быстрый доступ к документам</div>
+          <button class="auto-link" onclick="openAutoModal('document')">Добавить документ</button>
+        </div>
+        <div class="doc-grid" id="autoDocuments"></div>
+      </section>
+
+      <div class="grid split">
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-3 3-3-3 3-3Z"></path></svg>Следующее ТО</div>
+            <button class="primary" onclick="openAutoModal('maintenance')">Добавить ТО</button>
+          </div>
+          <div id="maintenanceSummary"></div>
+        </section>
+
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 12h5M7 6l9-3"></path></svg>Расходы на авто</div>
+            <div class="expense-total" id="autoExpenseTotal">0 ₽</div>
+          </div>
+          <div class="expense-strip" id="autoExpenseBreakdown"></div>
+          <button class="auto-link" style="margin-top:12px" onclick="openAutoModal('expenseList')">Все расходы ›</button>
+        </section>
       </div>
-    </div>
-    <div class="card" style="margin-top:10px">
-      <div class="section-kicker">Сканы документов</div>
-      <div class="section-title">СТС, ПТС, страховка, чеки</div>
-      <label>Название документа</label>
-      <input id="autoDocName" placeholder="Например: ОСАГО 2026">
-      <label>Файл</label>
-      <input id="autoDocFile" type="file" accept="image/*,.pdf">
-      <button class="primary" style="margin-top:8px" onclick="saveFile('autoDocs','autoDocName','autoDocFile')">Загрузить документ</button>
-      <div class="grid three-grid" id="autoDocs" style="margin-top:10px"></div>
+
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2Z"></path></svg>История обслуживания и ремонта</div>
+          <button class="auto-link" onclick="openAutoModal('maintenance')">Добавить запись</button>
+        </div>
+        <div id="maintenanceHistory"></div>
+      </section>
+
+      <div class="grid split">
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path><path d="m9 12 2 2 4-5"></path></svg>Страховки</div>
+            <button class="auto-link" onclick="openAutoModal('insurance')">Добавить</button>
+          </div>
+          <div class="insurance-list" id="insuranceList"></div>
+        </section>
+        <section class="card">
+          <div class="auto-head">
+            <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M4 7h16M7 7v13h10V7M9 7V4h6v3"></path></svg>Запчасти</div>
+            <button class="auto-link" onclick="openAutoModal('part')">Добавить</button>
+          </div>
+          <div class="parts-list" id="partsList"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="auto-head">
+          <div class="auto-title"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg>Напоминания</div>
+          <button class="auto-link" onclick="openAutoModal('reminder')">Добавить</button>
+        </div>
+        <div class="reminder-list" id="reminderList"></div>
+      </section>
+
+      <section class="card">
+        <div class="quick-auto">
+          <button onclick="openAutoModal('expense')"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"></rect><path d="M16 12h5"></path></svg>Добавить расход</button>
+          <button onclick="openAutoModal('maintenance')"><svg viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3"></path></svg>Добавить ТО</button>
+          <button onclick="openAutoModal('fuel')"><svg viewBox="0 0 24 24"><path d="M6 21V4h9v17M8 8h5M15 9h2l2 3v7a2 2 0 0 1-2 2"></path></svg>Заправка</button>
+          <button onclick="openAutoModal('fine')"><svg viewBox="0 0 24 24"><path d="M6 3h12l-1 18H7L6 3ZM9 8h6M9 13h6"></path></svg>Штраф</button>
+          <button onclick="openAutoModal('reminder')"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18"></path></svg>Напоминание</button>
+        </div>
+      </section>
     </div>
   </section>
+
+  <div class="auto-modal" id="autoModal" role="dialog" aria-modal="true">
+    <div class="auto-modal-card">
+      <div class="auto-head">
+        <h3 id="autoModalTitle">Авто</h3>
+        <button class="ghost" onclick="closeAutoModal()">Закрыть</button>
+      </div>
+      <div id="autoModalBody"></div>
+    </div>
+  </div>
 
   <section class="view" id="health">
     <div class="grid split">
@@ -885,6 +1056,10 @@ const views=[
   ["habits","Привычки"],
   ["projects","Проекты"],
   ["library","Знания"],
+  ["finance","Финансы"],
+  ["resume","Резюме"],
+  ["auto","Авто"],
+  ["health","Здоровье"],
   ["cabinet","Кабинет"]
 ];
 const traits=[
@@ -961,6 +1136,63 @@ const defaultGoals=[
   {id:"debts",title:"Погасить все долги",description:"",icon:"wallet",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:6,steps:[Object.assign(makeStep("Закрыть последний платеж",1,true),{id:"debt-1"})]},
   {id:"home-move",title:"Переехать в дом",description:"",icon:"heart",status:"completed",createdAt:"2026-01-01T09:00:00.000Z",updatedAt:"2026-05-01T09:00:00.000Z",completedAt:"2026-05-01T09:00:00.000Z",order:7,steps:[Object.assign(makeStep("Забрать ключи",1,true),{id:"home-1"})]}
 ];
+const autoExpenseCategories=["Топливо","ТО и ремонт","Страховка","Парковки","Штрафы","Прочее"];
+const defaultAuto=()=>({
+  vehicleId:"primary",
+  vehicleProfile:{
+    photo:"bmw-car.png",
+    brand:"BMW",
+    model:"X3",
+    generation:"F25",
+    year:"2016",
+    engine:"2.0D",
+    drive:"xDrive",
+    transmission:"Автомат",
+    color:"Черный",
+    plate:"А123АА62",
+    vin:"WBAXXXXXXXX",
+    mileage:186500,
+    owner:"Вы"
+  },
+  documents:[
+    {id:"doc-license",title:"Права",number:"A B C",expires:"2027-08-12",status:"active",file:null},
+    {id:"doc-sts",title:"СТС",number:"AA 123456",expires:"2028-01-12",status:"active",file:null},
+    {id:"doc-pts",title:"ПТС",number:"77 УТ 123456",expires:"",status:"active",file:null},
+    {id:"doc-osago",title:"ОСАГО",number:"РЕСО-Гарантия",expires:"2026-07-12",status:"active",file:null},
+    {id:"doc-kasko",title:"КАСКО",number:"Ингосстрах",expires:"2026-07-12",status:"active",file:null},
+    {id:"doc-diagnostic",title:"Диагностическая карта",number:"",expires:"2026-11-01",status:"active",file:null}
+  ],
+  maintenance:[
+    {id:"maint-1",date:"2026-01-03",mileage:90900,title:"ТО-9",works:"Замена масла, фильтров, диагностика ходовой части",cost:18450,parts:"Mann, Liqui Moly",service:"BMW Service",comment:"Плановое обслуживание",photos:[],receipts:[]},
+    {id:"maint-2",date:"2024-09-12",mileage:84300,title:"Замена передних тормозных колодок",works:"Колодки Brembo, работа",cost:9800,parts:"Brembo",service:"",comment:"",photos:[],receipts:[]},
+    {id:"maint-3",date:"2024-05-28",mileage:80200,title:"Замена масла в АКПП",works:"Масло ZF, замена поддона, фильтр",cost:15200,parts:"ZF",service:"",comment:"",photos:[],receipts:[]}
+  ],
+  serviceIntervalKm:10000,
+  serviceIntervalMonths:12,
+  expenses:[
+    {id:"exp-1",date:"2026-04-12",category:"Топливо",amount:3200,comment:"Заправка"},
+    {id:"exp-2",date:"2026-01-03",category:"ТО и ремонт",amount:18450,comment:"ТО-9"},
+    {id:"exp-3",date:"2026-02-15",category:"Страховка",amount:12500,comment:"ОСАГО"},
+    {id:"exp-4",date:"2026-03-10",category:"Парковки",amount:4600,comment:"Парковки"},
+    {id:"exp-5",date:"2026-05-18",category:"Прочее",amount:2400,comment:"Мойка и расходники"},
+    {id:"exp-6",date:"2026-05-22",category:"Топливо",amount:73050,comment:"Топливо за год"},
+    {id:"exp-7",date:"2026-04-20",category:"ТО и ремонт",amount:14450,comment:"Мелкий ремонт"}
+  ],
+  parts:[
+    {id:"part-1",name:"Масляный фильтр",brand:"Mann HU816X",date:"2026-01-03",mileage:90900,price:950},
+    {id:"part-2",name:"Моторное масло",brand:"Liqui Moly",date:"2026-01-03",mileage:90900,price:6200}
+  ],
+  reminders:[
+    {id:"rem-1",date:"2026-07-01",text:"Продлить ОСАГО",status:"Активно"},
+    {id:"rem-2",date:"2026-08-15",text:"Заменить масло",status:"Активно"},
+    {id:"rem-3",date:"2026-10-15",text:"Сезонная смена колес",status:"Активно"}
+  ],
+  insurance:[
+    {id:"ins-1",title:"ОСАГО",company:"РЕСО-Гарантия",expires:"2026-07-12"},
+    {id:"ins-2",title:"КАСКО",company:"Ингосстрах",expires:"2026-07-12"}
+  ],
+  fuel:[]
+});
 const defaultDay=()=>({
   tasks:defaultTasks.map(item=>Object.assign({},item)),
   habits:morningHabits.map(item=>Object.assign({},item)),
@@ -992,9 +1224,9 @@ const wardrobe=[
 function loadState(){
   try{
     const saved=JSON.parse(localStorage.getItem(stateKey))||{};
-    return normalizeState(Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved))
+    return normalizeState(Object.assign({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]},saved))
   }catch(e){
-    return normalizeState({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]})
+    return normalizeState({checks:{},todayDone:{},days:{},boosts:{},boxes:144,notes:[],habits:[],tasks:defaultTasks,calendar:defaultCalendar,appleSync:{date:"",tasks:[],calendar:[]},goals:defaultGoals,openGoalId:"life-os",completedGoalsOpen:true,resumeSlots:[null,null,null],auto:defaultAuto(),car:{},services:[],autoDocs:[],healthEvents:[],doctors:[],healthFiles:[]})
   }
 }
 function normalizeState(data){
@@ -1033,7 +1265,32 @@ function normalizeState(data){
     const first=data.goals.find(goal=>goal.status==="active");
     data.openGoalId=first&&first.id;
   }
+  data.auto=normalizeAutoState(data);
   return data;
+}
+function normalizeAutoState(data){
+  const base=defaultAuto();
+  const auto=Object.assign(base,data.auto||{});
+  auto.vehicleProfile=Object.assign(base.vehicleProfile,auto.vehicleProfile||{});
+  if(data.car&&(data.car.name||data.car.mileage||data.car.vin)){
+    const parts=String(data.car.name||"").split(" ");
+    auto.vehicleProfile.brand=auto.vehicleProfile.brand||parts[0]||"";
+    auto.vehicleProfile.model=auto.vehicleProfile.model||parts.slice(1,-1).join(" ")||parts[1]||"";
+    auto.vehicleProfile.year=auto.vehicleProfile.year||parts.at(-1)||"";
+    auto.vehicleProfile.mileage=auto.vehicleProfile.mileage||data.car.mileage||"";
+    auto.vehicleProfile.vin=auto.vehicleProfile.vin||data.car.vin||"";
+  }
+  if(data.services&&data.services.length&&!((data.auto||{}).maintenance||[]).length){
+    auto.maintenance=data.services.map((item,i)=>({id:`legacy-service-${i}`,date:item.date,title:item.title,works:item.note,cost:Number(String(item.cost||"").replace(/\D/g,""))||0,mileage:"",parts:"",service:"",comment:item.note||"",photos:[],receipts:[]}));
+  }
+  if(data.autoDocs&&data.autoDocs.length&&!((data.auto||{}).documents||[]).some(doc=>doc.file)){
+    data.autoDocs.forEach((file,i)=>auto.documents.push({id:`legacy-doc-${i}`,title:file.name||"Документ",number:"",expires:"",file,status:"active"}));
+  }
+  if(auto.vehicleProfile.photo==="bmw-xs.png")auto.vehicleProfile.photo="bmw-car.png";
+  ["documents","maintenance","expenses","parts","reminders","insurance","fuel"].forEach(key=>auto[key]=auto[key]||[]);
+  auto.serviceIntervalKm=Number(auto.serviceIntervalKm)||10000;
+  auto.serviceIntervalMonths=Number(auto.serviceIntervalMonths)||12;
+  return auto;
 }
 function todayDay(){
   state.days=state.days||{};
@@ -1084,22 +1341,27 @@ function buildNav(){
     projects:'<svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="2"></rect><path d="M9 7V5h6v2M4 12h16"></path></svg>',
     library:'<svg viewBox="0 0 24 24"><path d="m3 8 9-5 9 5-9 5-9-5Z"></path><path d="M7 10.5v5L12 18l5-2.5v-5"></path></svg>',
     cabinet:'<svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1.6-4 14.4-4 16 0"></path></svg>',
-    finance:'<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg>'
+    finance:'<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg>',
+    resume:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg>',
+    auto:'<svg viewBox="0 0 24 24"><path d="M5 16h14M7 16l1.4-5.2A3 3 0 0 1 11.3 8h1.4a3 3 0 0 1 2.9 2.8L17 16M6 16v3M18 16v3"></path></svg>',
+    health:'<svg viewBox="0 0 24 24"><path d="M12 21s-7-4.4-9-9a5 5 0 0 1 9-4 5 5 0 0 1 9 4c-2 4.6-9 9-9 9Z"></path></svg>'
   };
   views.forEach(([id,label],i)=>{
     const b=document.createElement("button");
     b.className="nav-btn"+(i===0?" active":"");
     b.innerHTML=`${icons[id]||icons.home}<span>${label}</span>`;
-    b.onclick=()=>showView(id);
+    b.onclick=()=>showView(id,true);
     nav.appendChild(b);
   });
 }
-function showView(id){
+function showView(id,updateHash=false){
+  if(!views.some(view=>view[0]===id))id="home";
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".nav-btn")[views.findIndex(v=>v[0]===id)].classList.add("active");
-  window.scrollTo({top:0,behavior:"smooth"});
+  if(updateHash)history.replaceState(null,"",`#${id}`);
+  window.scrollTo({top:0,behavior:"auto"});
 }
 function traitValue(id,base){
   return Math.min(100,base+(state.boosts[id]||0));
@@ -1207,8 +1469,10 @@ function arcPath(cx,cy,r,startAngle,endAngle){
   const large=endAngle-startAngle<=180?0:1;
   return `M ${start.x} ${start.y} A ${r} ${r} 0 ${large} 0 ${end.x} ${end.y}`;
 }
+const dayRingStart=7*60;
+const dayRingEnd=24*60;
 function angleForMinutes(minutes){
-  const start=7*60,end=23*60;
+  const start=dayRingStart,end=dayRingEnd;
   const clamped=Math.max(start,Math.min(end,minutes));
   return ((clamped-start)/(end-start))*360;
 }
@@ -1221,22 +1485,25 @@ function renderDayRing(day){
   segments.innerHTML="";
   ticks.innerHTML="";
   hours.innerHTML="";
-  for(let hour=7;hour<=23;hour++){
+  for(let hour=7;hour<24;hour++){
     const angle=angleForMinutes(hour*60);
     const p1=polar(180,180,138,angle);
     const p2=polar(180,180,151,angle);
     ticks.insertAdjacentHTML("beforeend",`<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="rgba(255,246,230,.35)" stroke-width="1"/>`);
     const label=polar(180,180,169,angle);
-    hours.insertAdjacentHTML("beforeend",`<span class="ring-hour" style="transform:translate(-50%,-50%) translate(${label.x-180}px,${label.y-180}px)">${String(hour).padStart(2,"0")}</span>`);
+    hours.insertAdjacentHTML("beforeend",`<span class="ring-hour" style="left:${(label.x/360*100).toFixed(2)}%;top:${(label.y/360*100).toFixed(2)}%">${String(hour).padStart(2,"0")}</span>`);
   }
   day.events.forEach(event=>{
     const start=eventStart(event),end=eventEnd(event);
     if(start===null||end===null)return;
+    const visibleStart=Math.max(dayRingStart,start);
+    const visibleEnd=Math.min(dayRingEnd,end);
+    if(visibleEnd<=dayRingStart||visibleStart>=dayRingEnd||visibleEnd<=visibleStart)return;
     const isPast=end<nowMinutes;
     const isCurrent=start<=nowMinutes&&end>=nowMinutes;
     const color=categoryColor(event.category||event.place);
     const opacity=isPast?".46":"1";
-    segments.insertAdjacentHTML("beforeend",`<path d="${arcPath(180,180,125,angleForMinutes(start),angleForMinutes(end))}" fill="none" stroke="${color}" stroke-width="${isCurrent?31:27}" opacity="${opacity}" stroke-linecap="butt"/>`);
+    segments.insertAdjacentHTML("beforeend",`<path d="${arcPath(180,180,125,angleForMinutes(visibleStart),angleForMinutes(visibleEnd))}" fill="none" stroke="${color}" stroke-width="${isCurrent?31:27}" opacity="${opacity}" stroke-linecap="butt"/>`);
   });
   const dot=polar(180,180,125,angleForMinutes(nowMinutes));
   const nowDot=document.getElementById("nowDot");
@@ -1932,28 +2199,290 @@ async function saveResume(i){
   renderResume();
 }
 function renderCar(){
-  const info=document.getElementById("carInfo");
-  if(!info)return;
-  document.getElementById("carName").value=state.car.name||"";
-  document.getElementById("carMileage").value=state.car.mileage||"";
-  document.getElementById("carVin").value=state.car.vin||"";
-  info.innerHTML=`<div class="note"><b>${state.car.name||"Авто не заполнено"}</b><span class="badge">${state.car.mileage||"пробег"}</span></div><div class="note"><b>${state.car.vin||"VIN не указан"}</b><span class="badge">VIN</span></div>`;
-  renderTimeline("serviceLog",state.services,"Записей ТО пока нет");
-  renderFiles("autoDocs",state.autoDocs,"autoDocs");
+  if(!document.getElementById("vehiclePassport"))return;
+  state.auto=normalizeAutoState(state);
+  renderVehiclePassport();
+  renderAutoDocuments();
+  renderMaintenanceSummary();
+  renderAutoExpenses();
+  renderMaintenanceHistory();
+  renderInsurance();
+  renderParts();
+  renderReminders();
 }
-function saveCar(){
-  state.car={name:document.getElementById("carName").value.trim(),mileage:document.getElementById("carMileage").value.trim(),vin:document.getElementById("carVin").value.trim()};
+function autoProfile(){
+  state.auto=state.auto||defaultAuto();
+  state.auto.vehicleProfile=state.auto.vehicleProfile||defaultAuto().vehicleProfile;
+  return state.auto.vehicleProfile;
+}
+function saveAuto(){
   save();
+  if(window.lifeCloud&&window.lifeCloud.saveVehicle)window.lifeCloud.saveVehicle(state.auto);
+}
+function renderVehiclePassport(){
+  const root=document.getElementById("vehiclePassport");
+  const car=autoProfile();
+  const title=[car.brand,car.model,car.generation].filter(Boolean).join(" ")||"Автомобиль";
+  root.innerHTML=`<div class="vehicle-card">
+    <img class="vehicle-photo" src="${escapeAttr(car.photo||"bmw-car.png")}" alt="${escapeAttr(title)}">
+    <div>
+      <div class="vehicle-name">${escapeHtml(title)}</div>
+      <div class="vehicle-sub">${escapeHtml([car.year,car.engine,car.drive,car.transmission].filter(Boolean).join(" · "))}</div>
+      <div class="vehicle-tags"><span class="vehicle-tag">${escapeHtml(car.color||"цвет")}</span><span class="vehicle-tag">${escapeHtml([car.engine,car.transmission].filter(Boolean).join(" · ")||"двигатель · коробка")}</span></div>
+    </div>
+    <div class="vehicle-facts">
+      <div class="vehicle-fact"><span>Пробег</span><b>${formatKm(car.mileage)}</b></div>
+      <div class="vehicle-fact"><span>VIN</span><b>${escapeHtml(car.vin||"не указан")}</b></div>
+      <div class="vehicle-fact"><span>Гос. номер</span><b>${escapeHtml(car.plate||"не указан")}</b></div>
+      <div class="vehicle-fact"><span>Владелец</span><b>${escapeHtml(car.owner||"Вы")}</b></div>
+    </div>
+  </div>`;
+  fillProfileForm(car);
+}
+function fillProfileForm(car){
+  const fields={autoBrand:"brand",autoModel:"model",autoGeneration:"generation",autoYear:"year",autoEngine:"engine",autoDrive:"drive",autoTransmission:"transmission",autoColor:"color",autoPlate:"plate",autoVin:"vin",autoMileage:"mileage",autoOwner:"owner"};
+  Object.entries(fields).forEach(([id,key])=>{const el=document.getElementById(id);if(el)el.value=car[key]||""});
+}
+function toggleAutoProfileForm(force){
+  const form=document.getElementById("autoProfileForm");
+  if(!form)return;
+  form.classList.toggle("open",typeof force==="boolean"?force:!form.classList.contains("open"));
+}
+async function saveVehicleProfile(){
+  const car=autoProfile();
+  const fields={autoBrand:"brand",autoModel:"model",autoGeneration:"generation",autoYear:"year",autoEngine:"engine",autoDrive:"drive",autoTransmission:"transmission",autoColor:"color",autoPlate:"plate",autoVin:"vin",autoMileage:"mileage",autoOwner:"owner"};
+  Object.entries(fields).forEach(([id,key])=>{const el=document.getElementById(id);if(el)car[key]=el.value.trim()});
+  const photo=document.getElementById("autoPhoto");
+  if(photo&&photo.files[0])car.photo=(await uploadAutoFile(photo.files[0],"photos")).data;
+  toggleAutoProfileForm(false);
+  saveAuto();
   renderCar();
 }
-function addService(){
-  const item={date:document.getElementById("serviceDate").value,title:document.getElementById("serviceTitle").value.trim(),cost:document.getElementById("serviceCost").value.trim(),note:document.getElementById("serviceNote").value.trim()};
-  if(!item.title)return;
-  state.services.unshift(item);
-  ["serviceDate","serviceTitle","serviceCost","serviceNote"].forEach(id=>document.getElementById(id).value="");
-  save();
+function docStatus(doc){
+  if(!doc.expires)return {label:"Активен",type:"active"};
+  const today=new Date(todayKey+"T00:00:00");
+  const end=new Date(doc.expires+"T00:00:00");
+  const days=Math.ceil((end-today)/86400000);
+  if(days<0)return {label:"Истек",type:"expired"};
+  if(days<30)return {label:"Скоро истекает",type:"warning"};
+  return {label:"Активен",type:"active"};
+}
+function renderAutoDocuments(){
+  const root=document.getElementById("autoDocuments");
+  const docs=state.auto.documents||[];
+  root.innerHTML=docs.map((doc,i)=>{
+    const status=docStatus(doc);
+    return `<div class="doc-tile">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg>
+      <b>${escapeHtml(doc.title)}</b>
+      <span>${doc.expires?`до ${formatDate(doc.expires)}`:escapeHtml(doc.number||"без срока")}</span>
+      <span class="status-pill ${status.type==="warning"?"warning":status.type==="expired"?"expired":""}">${status.label}</span>
+      <button class="auto-link" onclick="openAutoDocument(${i})">${doc.file?"Просмотр":"Файл"}</button>
+    </div>`;
+  }).join("");
+}
+function openAutoDocument(index){
+  const doc=state.auto.documents[index];
+  if(doc&&doc.file&&(doc.file.url||doc.file.data))window.open(doc.file.url||doc.file.data,"_blank");
+  else openAutoModal("document",index);
+}
+function lastMaintenance(){
+  return [...(state.auto.maintenance||[])].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")))[0]||null;
+}
+function nextServiceInfo(){
+  const car=autoProfile();
+  const last=lastMaintenance();
+  const intervalKm=Number(state.auto.serviceIntervalKm)||10000;
+  const intervalMonths=Number(state.auto.serviceIntervalMonths)||12;
+  const current=Number(car.mileage)||0;
+  const lastKm=Number(last&&last.mileage)||current;
+  const nextKm=lastKm+intervalKm;
+  const kmLeft=Math.max(0,nextKm-current);
+  let daysLeft=null;
+  if(last&&last.date){
+    const due=new Date(last.date+"T00:00:00");
+    due.setMonth(due.getMonth()+intervalMonths);
+    daysLeft=Math.max(0,Math.ceil((due-new Date(todayKey+"T00:00:00"))/86400000));
+  }
+  const progress=Math.max(0,Math.min(100,((current-lastKm)/intervalKm)*100));
+  return {last,intervalKm,intervalMonths,kmLeft,daysLeft,progress};
+}
+function renderMaintenanceSummary(){
+  const root=document.getElementById("maintenanceSummary");
+  const info=nextServiceInfo();
+  root.innerHTML=`<div class="section-title" style="font-size:20px;margin-bottom:3px">Следующее ТО через:</div>
+    <div style="color:var(--muted);font-weight:800">${formatKm(info.kmLeft)}${info.daysLeft!==null?` или ${info.daysLeft} дн.`:""}</div>
+    <div class="auto-progress"><div style="width:${info.progress}%"></div></div>
+    <div class="auto-metrics">
+      <div class="auto-metric"><span>Последнее ТО</span><b>${info.last?formatDate(info.last.date):"нет данных"}</b></div>
+      <div class="auto-metric"><span>Пробег при ТО</span><b>${info.last?formatKm(info.last.mileage):"нет данных"}</b></div>
+      <div class="auto-metric"><span>Периодичность</span><b>${formatNumber(info.intervalKm)} км / ${info.intervalMonths} мес.</b></div>
+    </div>`;
+}
+function renderAutoExpenses(){
+  const year=String(new Date().getFullYear());
+  const expenses=(state.auto.expenses||[]).filter(item=>String(item.date||"").startsWith(year));
+  const total=expenses.reduce((sum,item)=>sum+Number(item.amount||0),0);
+  document.getElementById("autoExpenseTotal").textContent=formatMoney(total);
+  const root=document.getElementById("autoExpenseBreakdown");
+  root.innerHTML=autoExpenseCategories.map(cat=>{
+    const amount=expenses.filter(item=>item.category===cat).reduce((sum,item)=>sum+Number(item.amount||0),0);
+    return `<div class="expense-cell"><span>${cat}</span><b>${formatMoney(amount)}</b></div>`;
+  }).join("");
+}
+function renderMaintenanceHistory(){
+  const root=document.getElementById("maintenanceHistory");
+  const items=[...(state.auto.maintenance||[])].sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+  if(!items.length){root.innerHTML='<div class="note"><b>История обслуживания пока пустая</b><span class="badge">ТО</span></div>';return}
+  root.innerHTML=`<div class="service-feed">${items.map(item=>`<details class="service-detail">
+    <summary class="service-row">
+      <div class="service-date"><b>${formatDay(item.date)}</b><span>${formatMonthYear(item.date)}</span></div>
+      <div class="service-dot"></div>
+      <div class="service-main"><b>${escapeHtml(item.title||"Запись обслуживания")} ${item.mileage?`(${formatKm(item.mileage)})`:""}</b><span>${escapeHtml(item.works||item.comment||"")}</span></div>
+      <div class="service-cost">${formatMoney(item.cost)}</div>
+      <button class="auto-link">›</button>
+    </summary>
+    <div class="service-extra"><b>Запчасти:</b> ${escapeHtml(item.parts||"не указаны")}<br><b>Сервис:</b> ${escapeHtml(item.service||"не указан")}<br>${escapeHtml(item.comment||"")}</div>
+  </details>`).join("")}</div>`;
+}
+function renderInsurance(){
+  const root=document.getElementById("insuranceList");
+  root.innerHTML=(state.auto.insurance||[]).map(item=>{
+    const status=docStatus(item);
+    return `<div class="auto-line"><div><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.company||"")} · до ${formatDate(item.expires)}</span></div><span class="status-pill ${status.type==="warning"?"warning":status.type==="expired"?"expired":""}">${status.label}</span></div>`;
+  }).join("")||'<div class="note"><b>Страховки не добавлены</b><span class="badge">пусто</span></div>';
+}
+function renderParts(){
+  const root=document.getElementById("partsList");
+  root.innerHTML=(state.auto.parts||[]).map(item=>`<div class="auto-line"><div><b>${escapeHtml(item.name)}</b><span>${escapeHtml(item.brand||"")} · ${formatDate(item.date)} · ${formatKm(item.mileage)}</span></div><b>${formatMoney(item.price)}</b></div>`).join("")||'<div class="note"><b>Запчасти пока не добавлены</b><span class="badge">ручной учет</span></div>';
+}
+function renderReminders(){
+  const root=document.getElementById("reminderList");
+  root.innerHTML=(state.auto.reminders||[]).map(item=>`<div class="auto-line"><div><b>${escapeHtml(item.text)}</b><span>${formatDate(item.date)}</span></div><span class="status-pill">${escapeHtml(item.status||"Активно")}</span></div>`).join("")||'<div class="note"><b>Напоминаний пока нет</b><span class="badge">события</span></div>';
+}
+function openAutoModal(type,index){
+  const modal=document.getElementById("autoModal");
+  const title=document.getElementById("autoModalTitle");
+  const body=document.getElementById("autoModalBody");
+  const today=new Date().toISOString().slice(0,10);
+  const titles={document:"Документ",maintenance:"Добавить ТО",expense:"Добавить расход",expenseList:"Все расходы",fuel:"Заправка",fine:"Штраф",reminder:"Напоминание",insurance:"Страховка",part:"Запчасть"};
+  title.textContent=titles[type]||"Авто";
+  if(type==="document"){
+    body.innerHTML=`<div class="mini-form">
+      <label>Тип документа</label><select id="modalDocIndex">${(state.auto.documents||[]).map((doc,i)=>`<option value="${i}" ${i===index?"selected":""}>${escapeHtml(doc.title)}</option>`).join("")}<option value="new">Новый документ</option></select>
+      <input id="modalDocTitle" placeholder="Название">
+      <input id="modalDocNumber" placeholder="Номер / компания">
+      <label>Дата окончания</label><input id="modalDocExpires" type="date">
+      <label>PDF, JPG или PNG</label><input id="modalDocFile" type="file" accept="image/*,.pdf">
+      <button class="primary" onclick="saveAutoDocument()">Сохранить документ</button>
+      <button class="ghost" onclick="openAutoModal('ai')">Импорт через ИИ</button>
+    </div>`;
+  }else if(type==="maintenance"){
+    body.innerHTML=`<div class="mini-form">
+      <label>Дата</label><input id="modalMaintDate" type="date" value="${today}">
+      <input id="modalMaintMileage" type="number" placeholder="Пробег">
+      <input id="modalMaintTitle" placeholder="ТО-9">
+      <textarea id="modalMaintWorks" placeholder="Работы"></textarea>
+      <input id="modalMaintCost" type="number" placeholder="Стоимость">
+      <input id="modalMaintParts" placeholder="Запчасти">
+      <input id="modalMaintService" placeholder="Сервис">
+      <textarea id="modalMaintComment" placeholder="Комментарий"></textarea>
+      <button class="primary" onclick="saveMaintenance()">Сохранить ТО</button>
+      <button class="ghost" onclick="openAutoModal('ai')">Импорт через ИИ</button>
+    </div>`;
+  }else if(type==="expense"||type==="fuel"||type==="fine"){
+    const category=type==="fuel"?"Топливо":type==="fine"?"Штрафы":"Топливо";
+    body.innerHTML=`<div class="mini-form">
+      <label>Дата</label><input id="modalExpenseDate" type="date" value="${today}">
+      <label>Категория</label><select id="modalExpenseCategory">${autoExpenseCategories.map(cat=>`<option ${cat===category?"selected":""}>${cat}</option>`).join("")}</select>
+      <input id="modalExpenseAmount" type="number" placeholder="Сумма">
+      <textarea id="modalExpenseComment" placeholder="Комментарий"></textarea>
+      <button class="primary" onclick="saveAutoExpense('${type}')">Сохранить расход</button>
+    </div>`;
+  }else if(type==="expenseList"){
+    body.innerHTML=`<div class="expense-list">${(state.auto.expenses||[]).sort((a,b)=>String(b.date||"").localeCompare(String(a.date||""))).map(item=>`<div class="auto-line"><div><b>${formatDate(item.date)} · ${escapeHtml(item.category)}</b><span>${escapeHtml(item.comment||"")}</span></div><b>${formatMoney(item.amount)}</b></div>`).join("")||'<div class="note"><b>Расходов пока нет</b><span class="badge">пусто</span></div>'}</div>`;
+  }else if(type==="reminder"){
+    body.innerHTML=`<div class="mini-form"><label>Дата</label><input id="modalReminderDate" type="date" value="${today}"><input id="modalReminderText" placeholder="Например: заменить масло"><select id="modalReminderStatus"><option>Активно</option><option>Готово</option></select><button class="primary" onclick="saveAutoReminder()">Сохранить напоминание</button></div>`;
+  }else if(type==="insurance"){
+    body.innerHTML=`<div class="mini-form"><input id="modalInsuranceTitle" placeholder="ОСАГО"><input id="modalInsuranceCompany" placeholder="Компания"><label>Дата окончания</label><input id="modalInsuranceExpires" type="date"><button class="primary" onclick="saveAutoInsurance()">Сохранить страховку</button></div>`;
+  }else if(type==="part"){
+    body.innerHTML=`<div class="mini-form"><input id="modalPartName" placeholder="Название детали"><input id="modalPartBrand" placeholder="Бренд / артикул"><label>Дата установки</label><input id="modalPartDate" type="date" value="${today}"><input id="modalPartMileage" type="number" placeholder="Пробег установки"><input id="modalPartPrice" type="number" placeholder="Цена"><button class="primary" onclick="saveAutoPart()">Сохранить запчасть</button></div>`;
+  }else{
+    body.innerHTML='<div class="note"><b>Импорт через ИИ подготовлен</b><span>Позже здесь будет распознавание чеков, заказ-нарядов, фото ремонта и документов.</span></div>';
+  }
+  modal.classList.add("open");
+}
+function closeAutoModal(){document.getElementById("autoModal").classList.remove("open")}
+async function saveAutoDocument(){
+  const select=document.getElementById("modalDocIndex");
+  const file=document.getElementById("modalDocFile").files[0];
+  const item={id:"doc-"+Date.now(),title:document.getElementById("modalDocTitle").value.trim(),number:document.getElementById("modalDocNumber").value.trim(),expires:document.getElementById("modalDocExpires").value,file:null};
+  if(file)item.file=await uploadAutoFile(file,"documents");
+  if(select.value==="new"||!state.auto.documents[Number(select.value)]){
+    item.title=item.title||file&&file.name||"Документ";
+    state.auto.documents.push(item);
+  }else{
+    const doc=state.auto.documents[Number(select.value)];
+    Object.assign(doc,{title:item.title||doc.title,number:item.number||doc.number,expires:item.expires||doc.expires});
+    if(item.file)doc.file=item.file;
+  }
+  closeAutoModal();
+  saveAuto();
   renderCar();
 }
+function saveMaintenance(){
+  const item={id:"maint-"+Date.now(),date:document.getElementById("modalMaintDate").value,mileage:Number(document.getElementById("modalMaintMileage").value)||"",title:document.getElementById("modalMaintTitle").value.trim()||"ТО",works:document.getElementById("modalMaintWorks").value.trim(),cost:Number(document.getElementById("modalMaintCost").value)||0,parts:document.getElementById("modalMaintParts").value.trim(),service:document.getElementById("modalMaintService").value.trim(),comment:document.getElementById("modalMaintComment").value.trim(),photos:[],receipts:[]};
+  state.auto.maintenance.unshift(item);
+  if(item.cost)state.auto.expenses.unshift({id:"exp-"+Date.now(),date:item.date,category:"ТО и ремонт",amount:item.cost,comment:item.title});
+  if(item.mileage)autoProfile().mileage=Math.max(Number(autoProfile().mileage)||0,Number(item.mileage));
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
+function saveAutoExpense(type){
+  const item={id:"exp-"+Date.now(),date:document.getElementById("modalExpenseDate").value,category:document.getElementById("modalExpenseCategory").value,amount:Number(document.getElementById("modalExpenseAmount").value)||0,comment:document.getElementById("modalExpenseComment").value.trim()};
+  if(!item.amount)return;
+  state.auto.expenses.unshift(item);
+  if(type==="fuel")state.auto.fuel.unshift(item);
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
+function saveAutoReminder(){
+  const text=document.getElementById("modalReminderText").value.trim();
+  if(!text)return;
+  state.auto.reminders.unshift({id:"rem-"+Date.now(),date:document.getElementById("modalReminderDate").value,text,status:document.getElementById("modalReminderStatus").value});
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
+function saveAutoInsurance(){
+  const title=document.getElementById("modalInsuranceTitle").value.trim();
+  if(!title)return;
+  const item={id:"ins-"+Date.now(),title,company:document.getElementById("modalInsuranceCompany").value.trim(),expires:document.getElementById("modalInsuranceExpires").value};
+  state.auto.insurance.unshift(item);
+  state.auto.documents.push({id:"doc-"+Date.now(),title:item.title,number:item.company,expires:item.expires,file:null});
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
+function saveAutoPart(){
+  const name=document.getElementById("modalPartName").value.trim();
+  if(!name)return;
+  state.auto.parts.unshift({id:"part-"+Date.now(),name,brand:document.getElementById("modalPartBrand").value.trim(),date:document.getElementById("modalPartDate").value,mileage:Number(document.getElementById("modalPartMileage").value)||"",price:Number(document.getElementById("modalPartPrice").value)||0});
+  closeAutoModal();
+  saveAuto();
+  renderCar();
+}
+async function uploadAutoFile(file,folder){
+  if(window.lifeCloud&&window.lifeCloud.uploadAutoFile){
+    try{return await window.lifeCloud.uploadAutoFile(file,folder)}
+    catch(error){console.warn("Storage upload failed, using local file",error)}
+  }
+  return readFile(file,file.name);
+}
+function saveCar(){saveVehicleProfile()}
+function addService(){openAutoModal("maintenance")}
 function renderHealth(){
   if(!document.getElementById("healthLog"))return;
   renderTimeline("healthLog",state.healthEvents,"История здоровья пока пустая");
@@ -2043,6 +2572,35 @@ function escapeAttr(value){
 }
 function escapeHtml(value){
   return String(value||"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+}
+function formatNumber(value){
+  const number=Number(value)||0;
+  return number.toLocaleString("ru-RU");
+}
+function formatMoney(value){
+  return `${formatNumber(value)} ₽`;
+}
+function formatKm(value){
+  const number=Number(String(value||"").replace(/\D/g,""))||0;
+  return number?`${number.toLocaleString("ru-RU")} км`:"не указан";
+}
+function formatDate(value){
+  if(!value)return "без даты";
+  const date=new Date(value+"T00:00:00");
+  if(Number.isNaN(date.getTime()))return value;
+  return date.toLocaleDateString("ru-RU");
+}
+function formatDay(value){
+  if(!value)return "--";
+  const date=new Date(value+"T00:00:00");
+  return Number.isNaN(date.getTime())?"--":String(date.getDate()).padStart(2,"0");
+}
+function formatMonthYear(value){
+  if(!value)return "";
+  const date=new Date(value+"T00:00:00");
+  if(Number.isNaN(date.getTime()))return "";
+  const months=["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+  return `${months[date.getMonth()]} ${date.getFullYear()}`;
 }
 function renderTotals(){
   const done=Object.values(state.checks).filter(Boolean).length;
@@ -2136,30 +2694,37 @@ window.setFirebaseStatus=function(text,connected){
 };
 buildNav();
 renderAll();
+if(location.hash)showView(location.hash.slice(1));
+window.addEventListener("hashchange",()=>showView(location.hash.slice(1)));
+window.addEventListener("load",()=>setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),30));
 loadWeather();
 </script>
 <script type="module">
 const config=window.LIFE_OS_FIREBASE_CONFIG;
 if(config&&config.apiKey){
   try{
-    const [{initializeApp},{getFirestore,doc,getDoc,setDoc,serverTimestamp},{getAuth,signInAnonymously}]=await Promise.all([
+    const [{initializeApp},{getFirestore,doc,getDoc,setDoc,serverTimestamp},{getAuth,signInAnonymously},{getStorage,ref,uploadBytes,getDownloadURL}]=await Promise.all([
       import("https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js"),
       import("https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js"),
-      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js")
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js")
     ]);
     const app=initializeApp(config);
     const db=getFirestore(app);
+    const storage=getStorage(app);
     const auth=getAuth(app);
     const credential=await signInAnonymously(auth);
-    window.cloudUserId=credential.user.uid;
-    const stateRef=doc(db,"users",credential.user.uid,"lifeos","state");
-    const dayRef=doc(db,"users",credential.user.uid,"days",todayKey);
+    const userId=credential.user&&credential.user.uid?credential.user.uid:"default";
+    window.cloudUserId=userId;
+    const stateRef=doc(db,"users",userId,"lifeos","state");
+    const dayRef=doc(db,"users",userId,"days",todayKey);
     const snap=await getDoc(stateRef);
     if(snap.exists())window.applyCloudState(snap.data().state);
     const daySnap=await getDoc(dayRef);
     if(daySnap.exists())window.applyCloudDay(todayKey,daySnap.data());
     let timer=null;
     let dayTimer=null;
+    let vehicleTimer=null;
     window.lifeCloud={
       saveState(data){
         clearTimeout(timer);
@@ -2167,7 +2732,33 @@ if(config&&config.apiKey){
       },
       saveDay(date,day){
         clearTimeout(dayTimer);
-        dayTimer=setTimeout(()=>setDoc(doc(db,"users",credential.user.uid,"days",date),Object.assign({},day,{updatedAt:serverTimestamp()}),{merge:true}),450);
+        dayTimer=setTimeout(()=>setDoc(doc(db,"users",userId,"days",date),Object.assign({},day,{updatedAt:serverTimestamp()}),{merge:true}),450);
+      },
+      saveVehicle(auto){
+        clearTimeout(vehicleTimer);
+        const vehicleId=auto&&auto.vehicleId?auto.vehicleId:"primary";
+        vehicleTimer=setTimeout(()=>setDoc(doc(db,"users",userId,"vehicles",vehicleId),{
+          vehicleProfile:auto.vehicleProfile||{},
+          documents:auto.documents||[],
+          maintenance:auto.maintenance||[],
+          expenses:auto.expenses||[],
+          parts:auto.parts||[],
+          reminders:auto.reminders||[],
+          insurance:auto.insurance||[],
+          fuel:auto.fuel||[],
+          serviceIntervalKm:auto.serviceIntervalKm||10000,
+          serviceIntervalMonths:auto.serviceIntervalMonths||12,
+          updatedAt:serverTimestamp()
+        },{merge:true}),550);
+      },
+      async uploadAutoFile(file,folder){
+        const vehicleId=(window.state&&window.state.auto&&window.state.auto.vehicleId)||"primary";
+        const cleanName=file.name.replace(/[^\w.\-а-яА-ЯёЁ]+/g,"_");
+        const path=`users/${userId}/vehicles/${vehicleId}/${folder}/${Date.now()}-${cleanName}`;
+        const fileRef=ref(storage,path);
+        await uploadBytes(fileRef,file);
+        const url=await getDownloadURL(fileRef);
+        return {name:file.name,type:file.type,size:file.size,url,path,added:new Date().toLocaleDateString("ru-RU")};
       }
     };
     window.setFirebaseStatus("Firebase: синхронизация включена",true);
