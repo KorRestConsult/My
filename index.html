@@ -549,6 +549,161 @@
     .auto-modal{padding:0}
     .auto-modal-card{border-radius:16px 16px 0 0;max-height:92vh}
   }
+  /* Responsive polish: desktop and iPad should feel like a composed app, not a blown-up phone UI. */
+  @media (min-width:901px){
+    body{font-size:14px}
+    .topbar{position:sticky}
+    .topbar .shell{max-width:1180px;padding:12px 22px;gap:22px}
+    .avatar{width:58px;height:58px;border-radius:15px;font-size:29px}
+    h1{font-size:36px}
+    .nav{gap:8px}
+    .nav-btn{min-width:72px;padding:8px 8px;border-radius:12px;font-size:12px;gap:5px}
+    .nav-btn svg{width:26px;height:26px}
+    main.shell{max-width:1100px;padding:16px 18px}
+    .hq{gap:14px}
+    .hq-hero{border-radius:18px;padding:24px 28px}
+    .command-grid{grid-template-columns:minmax(180px,220px) minmax(250px,300px) minmax(230px,270px);gap:28px}
+    .hero-metric{grid-template-columns:40px 1fr;gap:13px;padding-bottom:14px}
+    .hero-icon{font-size:30px}
+    .hero-metric strong{font-size:22px}
+    .hero-metric span{font-size:13px}
+    .day-ring{width:min(292px,100%)}
+    .ring-hour{font-size:14px}
+    .weekday,.month-label{font-size:17px}
+    .day-number{font-size:66px}
+    .time-pill{font-size:17px;padding:7px 13px;border-radius:10px}
+    .progress-stack{gap:18px;padding-left:24px}
+    .progress-card{grid-template-columns:36px 1fr;gap:13px;padding-bottom:18px}
+    .progress-card svg{width:32px;height:32px}
+    .progress-card b{font-size:17px}
+    .progress-value{font-size:14px}
+    .hero-bar{height:7px;margin-top:11px}
+    .section-card{border-radius:14px;padding:18px}
+    .section-head{margin-bottom:14px}
+    .section-title-row{gap:12px}
+    .section-icon{width:42px;height:42px;border-radius:9px}
+    .section-icon svg{width:25px;height:25px}
+    .section-card h2{font-size:18px}
+    .icon-btn{width:42px;height:42px;border-radius:10px;font-size:26px}
+    .hq-two{gap:18px}
+    .event-row{grid-template-columns:13px 116px 1fr 42px 24px;gap:14px;margin:16px 0}
+    .event-time,.event-title{font-size:16px}
+    .event-meta,.duration{font-size:13px}
+    .goal-step-row,.task-row{font-size:15px;margin:15px 0;gap:12px}
+    .add-line{font-size:15px;margin-top:8px}
+    .habits-grid{gap:14px}
+    .habit-period{border-radius:12px;padding:15px}
+    .habit-period h3{font-size:15px;margin-bottom:12px}
+    .habit-row{font-size:14px;margin:11px 0}
+
+    .goals-page{max-width:960px;margin:0 auto;gap:12px}
+    .goals-hero{padding:18px 8px 16px}
+    .goals-quote{font-size:38px}
+    .goal-create-btn{padding:14px 20px;font-size:16px;border-radius:9px}
+    .goal-os-card{border-radius:14px}
+    .goal-os-main{grid-template-columns:70px minmax(0,1fr) auto auto;gap:18px;padding:20px 24px}
+    .goal-icon{width:58px;height:58px}
+    .goal-icon svg{width:36px;height:36px}
+    .goal-title{font-size:21px}
+    .goal-meter{grid-template-columns:minmax(110px,280px) 48px;gap:12px;margin-top:12px}
+    .goal-track{height:8px}
+    .goal-percent{font-size:16px}
+    .step-count{min-width:128px;min-height:46px;padding:8px 14px;font-size:14px}
+    .step-count svg{width:21px;height:21px}
+    .expand-btn,.step-menu,.completed-toggle{min-width:38px;min-height:38px;font-size:24px}
+    .goal-details{padding:20px 24px 24px}
+    .goal-description{font-size:16px;margin-bottom:16px}
+    .steps-panel{padding:16px 18px 10px}
+    .steps-head h3{font-size:18px}
+    .goal-step-line{grid-template-columns:28px 28px minmax(0,1fr) auto 30px;min-height:58px;gap:12px}
+    .goal-check{width:24px;height:24px}
+    .goal-step-title{font-size:16px}
+    .today-step-btn{min-height:38px;padding:0 14px;font-size:14px}
+    .completed-head{margin:14px 18px}
+    .completed-title{font-size:17px}
+    .show-all-btn{font-size:15px}
+    .completed-row{min-height:48px;font-size:16px}
+
+    .auto-os{max-width:980px;margin:0 auto;gap:10px}
+    .card{padding:14px;border-radius:9px}
+    .auto-title{font-size:15px}
+    .auto-title svg,.auto-icon svg{width:22px;height:22px}
+    .vehicle-card{grid-template-columns:minmax(180px,.72fr) 1fr;gap:18px}
+    .vehicle-name{font-size:28px}
+    .vehicle-sub{font-size:16px}
+    .vehicle-tags{margin:10px 0}
+    .vehicle-tag{font-size:12px;padding:6px 10px}
+    .vehicle-fact{padding:10px}
+    .vehicle-fact b{font-size:14px}
+    .doc-grid{grid-template-columns:repeat(6,1fr);gap:8px}
+    .doc-tile{min-height:92px;padding:10px 7px}
+    .doc-tile svg{width:29px;height:29px}
+    .doc-tile b{font-size:12px}
+    .doc-tile span{font-size:10px}
+    .auto-progress{height:7px;margin:11px 0 13px}
+    .auto-metric b{font-size:14px}
+    .expense-total{font-size:22px}
+    .expense-cell{padding:8px}
+    .service-row{grid-template-columns:82px 9px 1fr auto 24px;padding:8px 10px}
+    .service-date b{font-size:18px}
+    .quick-auto button{min-height:68px;font-size:11px}
+    .quick-auto svg{width:24px;height:24px}
+  }
+  @media (min-width:901px) and (max-width:1180px){
+    .topbar .shell{max-width:1000px;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:10px 16px}
+    h1{font-size:30px}
+    .avatar{width:52px;height:52px;font-size:26px}
+    .nav{gap:5px}
+    .nav-btn{min-width:64px;font-size:11px;padding:7px 6px}
+    .nav-btn svg{width:23px;height:23px}
+    main.shell{max-width:960px;padding:14px}
+    .command-grid{grid-template-columns:minmax(160px,190px) minmax(230px,260px) minmax(210px,240px);gap:20px}
+    .hq-hero{padding:20px}
+    .day-ring{width:min(252px,100%)}
+    .day-number{font-size:58px}
+    .progress-card b{font-size:15px}
+    .hero-metric strong{font-size:20px}
+    .section-card{padding:16px}
+    .event-row{grid-template-columns:12px 104px 1fr 36px 22px;gap:12px}
+  }
+  @media (min-width:561px) and (max-width:900px){
+    body{font-size:14px}
+    .topbar .shell{padding:12px 18px;gap:10px}
+    .avatar{width:50px;height:50px;border-radius:14px;font-size:25px}
+    h1{font-size:31px}
+    .nav{gap:6px;justify-content:flex-start}
+    .nav-btn{flex:0 0 72px;min-width:72px;font-size:11px;padding:7px 6px;gap:4px}
+    .nav-btn svg{width:24px;height:24px}
+    main.shell{max-width:760px;padding:14px 18px}
+    .hq{gap:12px}
+    .hq-hero{padding:18px;border-radius:16px}
+    .command-grid{gap:18px}
+    .metric-stack{grid-template-columns:repeat(3,1fr);gap:10px}
+    .hero-metric strong{font-size:18px}
+    .hero-metric span{font-size:12px}
+    .hero-icon{font-size:28px}
+    .day-ring{width:min(258px,100%)}
+    .day-number{font-size:56px}
+    .weekday,.month-label{font-size:16px}
+    .time-pill{font-size:16px}
+    .progress-card{padding:12px;gap:8px}
+    .progress-card svg{width:28px;height:28px}
+    .progress-card b{font-size:13px}
+    .section-card{padding:16px;border-radius:14px}
+    .section-icon{width:40px;height:40px}
+    .section-card h2{font-size:17px}
+    .icon-btn{width:40px;height:40px;font-size:25px}
+    .goals-page,.auto-os{max-width:760px;margin:0 auto}
+    .goals-quote{font-size:34px}
+    .goal-create-btn{padding:13px 18px;font-size:15px}
+    .goal-title{font-size:20px}
+    .goal-description{font-size:15px}
+    .vehicle-name{font-size:27px}
+    .vehicle-sub{font-size:15px}
+    .doc-grid{grid-template-columns:repeat(3,1fr)}
+    .expense-strip{grid-template-columns:repeat(3,1fr)}
+    .quick-auto{grid-template-columns:repeat(3,1fr)}
+  }
 </style>
 </head>
 <body>
