@@ -145,19 +145,24 @@
   .finance-op b{font-size:12px}
   .finance-op span{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin-top:3px}
   .finance-op strong{font-size:12px;white-space:nowrap}
-  .finance-insights{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .finance-insights{display:grid;grid-template-columns:repeat(1,1fr);gap:8px}
   .finance-debt-card{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:10px;display:grid;gap:8px}
+  .finance-debt-card.receivable{border-color:rgba(126,197,150,.5);background:linear-gradient(145deg,rgba(126,197,150,.11),rgba(255,255,255,.025))}
+  .finance-debt-card.payable{border-color:rgba(217,139,125,.52);background:linear-gradient(145deg,rgba(217,139,125,.12),rgba(255,255,255,.025))}
   .finance-debt-top{display:flex;justify-content:space-between;gap:10px}
   .finance-debt-top b{font-size:12px;line-height:1.25;min-width:0}
   .finance-debt-top strong{color:var(--gold2);white-space:nowrap;text-align:right}
   .finance-debt-meta{color:var(--muted);font-size:10px;line-height:1.35}
   .finance-card-label{display:inline-flex;align-items:center;width:max-content;border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--gold2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+  .finance-debt-card.receivable .finance-card-label,.finance-debt-card.receivable .finance-debt-top strong{color:#7ec596}
+  .finance-debt-card.payable .finance-card-label,.finance-debt-card.payable .finance-debt-top strong{color:#d98b7d}
   .finance-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
   .finance-card-stat{border:1px solid var(--line);border-radius:7px;background:rgba(255,255,255,.025);padding:7px;min-width:0}
   .finance-card-stat span{display:block;color:var(--muted);font-size:9px;margin-bottom:3px}
   .finance-card-stat b{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .finance-debt-bar{height:7px;border-radius:99px;background:rgba(226,205,163,.13);overflow:hidden}
   .finance-debt-bar div{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ec596,var(--gold))}
+  .finance-debt-card.payable .finance-debt-bar div{background:linear-gradient(90deg,#d98b7d,var(--gold))}
   .finance-loading{min-height:420px;display:grid;place-items:center;text-align:center;border:1px solid var(--line);border-radius:8px;background:linear-gradient(145deg,rgba(185,138,79,.09),rgba(255,255,255,.025))}
   .finance-loading-inner{display:grid;gap:12px;justify-items:center;max-width:360px;padding:28px}
   .finance-loader-mark{width:42px;height:42px;border:1px solid var(--gold);border-radius:7px;display:grid;place-items:center;color:var(--gold2);font-family:Georgia,"Times New Roman",serif;font-size:22px;box-shadow:inset 0 0 20px rgba(185,138,79,.12)}
@@ -564,8 +569,9 @@
     .nav-btn svg{width:28px;height:28px}
     main.shell{padding:16px 14px}
     .hq-hero{padding:24px 18px;border-radius:20px}
-    .command-grid{grid-template-columns:1fr;gap:24px}
-    .metric-stack{grid-template-columns:repeat(3,1fr);gap:12px}
+    .command-grid{grid-template-columns:1fr;gap:18px}
+    .metric-stack{grid-template-columns:repeat(2,1fr);gap:12px}
+    .metric-stack .hero-metric:nth-child(3),.day-ring-wrap{display:none}
     .hero-metric{grid-template-columns:1fr;text-align:center;border:0;padding:0;gap:8px}
     .hero-metric strong{font-size:22px}
     .hero-metric span{font-size:13px}
@@ -656,6 +662,14 @@
     .finance-day-total{text-align:left}
     .finance-debt-top strong{text-align:left}
     .finance-card-grid{grid-template-columns:1fr 1fr}
+    .finance-days{gap:7px}
+    .finance-day-head{padding:8px}
+    .finance-day-title b{font-size:12px}
+    .finance-day-title span,.finance-day-total span{font-size:9px}
+    .finance-day-total{font-size:12px}
+    .finance-op{gap:6px;padding:7px 8px}
+    .finance-op b,.finance-op strong{font-size:11px}
+    .finance-op span{font-size:9px;margin-top:2px}
     .finance-row{grid-template-columns:1fr}
     .finance-row strong{text-align:left}
     .actions{grid-template-columns:1fr}
@@ -2693,12 +2707,8 @@ function renderFinanceOperations(rows){
 function renderFinanceInsights(operations,monthOps,debts,goals){
   const root=document.getElementById("financeInsights");
   if(!root)return;
-  const categories=topFinanceCategories(monthOps);
-  const debtLeft=debts.reduce((sum,row)=>sum+financeDebtData(row).left,0);
   const goalLeft=goals.reduce((sum,row)=>sum+financeGoalData(row).left,0);
   root.innerHTML=[
-    `<div class="finance-kpi"><span>Главные расходы</span><b>${categories.length?escapeHtml(categories.map(([name])=>name).join(" · ")):"—"}</b></div>`,
-    `<div class="finance-kpi"><span>Долги остаток</span><b class="${debtLeft>0?"finance-negative":""}">${moneyText(debtLeft)}</b></div>`,
     `<div class="finance-kpi"><span>До целей осталось</span><b>${goals.length?moneyText(goalLeft):"—"}</b></div>`
   ].join("");
 }
@@ -2714,11 +2724,12 @@ function renderFinanceDebts(rows){
     const debt=financeDebtData(row);
     const type=pick(row,["type","тип","direction","направление"]).toLowerCase();
     const direction=type.includes("дал")||type.includes("мне")||type.includes("должны")?"Мне должны":"Я должен";
+    const tone=direction==="Мне должны"?"receivable":"payable";
     const title=pick(row,["counterparty","контрагент","who","кто","title","название","debt","долг"])||"Контрагент не указан";
     const opened=pick(row,["date","дата","opened","дата_открытия"]);
     const due=pick(row,["deadline","срок","due_date","дата_возврата"]);
     const status=pick(row,["status","статус"]);
-    return `<div class="finance-debt-card"><div class="finance-card-label">${escapeHtml(direction)}</div><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${moneyText(debt.left)}</strong></div><div class="finance-card-grid"><div class="finance-card-stat"><span>Сумма</span><b>${moneyText(debt.total)}</b></div><div class="finance-card-stat"><span>Остаток</span><b>${moneyText(debt.left)}</b></div><div class="finance-card-stat"><span>Возврат</span><b>${escapeHtml(due||"не задан")}</b></div><div class="finance-card-stat"><span>Статус</span><b>${escapeHtml(status||"в работе")}</b></div></div><div class="finance-debt-bar" aria-label="Погашено ${debt.progress}%"><div style="width:${debt.progress}%"></div></div><div class="finance-debt-meta">Погашено ${debt.progress}%${opened?` · от ${escapeHtml(opened)}`:""}${debt.paid?` · оплачено ${moneyText(debt.paid)}`:""}</div></div>`;
+    return `<div class="finance-debt-card ${tone}"><div class="finance-card-label">${escapeHtml(direction)}</div><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${moneyText(debt.left)}</strong></div><div class="finance-card-grid"><div class="finance-card-stat"><span>Сумма</span><b>${moneyText(debt.total)}</b></div><div class="finance-card-stat"><span>Остаток</span><b>${moneyText(debt.left)}</b></div><div class="finance-card-stat"><span>Возврат</span><b>${escapeHtml(due||"не задан")}</b></div><div class="finance-card-stat"><span>Статус</span><b>${escapeHtml(status||"в работе")}</b></div></div><div class="finance-debt-bar" aria-label="Погашено ${debt.progress}%"><div style="width:${debt.progress}%"></div></div><div class="finance-debt-meta">Погашено ${debt.progress}%${opened?` · от ${escapeHtml(opened)}`:""}${debt.paid?` · оплачено ${moneyText(debt.paid)}`:""}</div></div>`;
   }).join("");
 }
 function renderFinanceGoals(rows){
