@@ -117,8 +117,8 @@
   .finance-row.expense{border-color:rgba(217,139,125,.35);background:linear-gradient(145deg,rgba(217,139,125,.09),rgba(255,255,255,.025))}
   .finance-row.debt{border-color:rgba(185,138,79,.45);background:linear-gradient(145deg,rgba(185,138,79,.11),rgba(255,255,255,.025))}
   .finance-row b{font-size:12px}
-  .finance-row span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-  .finance-row strong{color:var(--gold2);white-space:nowrap}
+  .finance-row span{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin-top:3px}
+  .finance-row strong{color:var(--gold2);white-space:nowrap;text-align:right}
   .finance-positive{color:#7ec596!important}
   .finance-negative{color:#d98b7d!important}
   .finance-status{color:var(--muted);font-size:11px;line-height:1.45}
@@ -649,6 +649,8 @@
     .finance-day-head,.finance-op,.finance-debt-top{grid-template-columns:1fr}
     .finance-day-head,.finance-debt-top{display:grid}
     .finance-day-total{text-align:left}
+    .finance-row{grid-template-columns:1fr}
+    .finance-row strong{text-align:left}
     .actions{grid-template-columns:1fr}
     .project-grid,.wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:1fr}
     .trait{grid-template-columns:70px 1fr 26px}
@@ -2518,10 +2520,34 @@ function financeDateLabel(key){
 function deriveAccountsFromOperations(operations){
   const map=new Map();
   operations.forEach(row=>{
-    const name=pick(row,["account","счет"])||"Не уточнен";
-    map.set(name,(map.get(name)||0)+financeOperationAmount(row));
+    const name=normalizeFinanceAccountName(pick(row,["account","счет"]));
+    const amount=name==="Золото"&&financeAccountAmount(row)?financeAccountAmount(row):financeOperationAmount(row);
+    map.set(name,(map.get(name)||0)+amount);
   });
-  return [...map.entries()].map(([account,balance])=>({account,balance}));
+  return sortFinanceAccounts([...map.entries()].map(([account,balance])=>({account,balance})));
+}
+function normalizeFinanceAccountName(value){
+  const raw=String(value||"").trim();
+  const normalized=raw.toLowerCase().replaceAll("ё","е");
+  if(!raw||normalized.includes("не уточ"))return "Кредитная карта / Т-Банк";
+  if(normalized.includes("налич"))return "Наличные";
+  if(normalized.includes("тинь")||normalized.includes("т-банк")||normalized.includes("t-bank")||normalized.includes("кредит"))return "Кредитная карта / Т-Банк";
+  if(normalized.includes("золот"))return "Золото";
+  return raw;
+}
+function financeAccountAmount(row){
+  const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
+  const price=parseMoney(pick(row,["gold_price_rub","цена_грамм","цена_за_грамм","руб_за_грамм","price_gram"]));
+  if(grams&&price)return grams*price;
+  return parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]));
+}
+function sortFinanceAccounts(accounts){
+  const order=["Наличные","Кредитная карта / Т-Банк","Золото"];
+  return [...accounts].sort((a,b)=>{
+    const ai=order.indexOf(normalizeFinanceAccountName(a.account||a.name||a["счет"]));
+    const bi=order.indexOf(normalizeFinanceAccountName(b.account||b.name||b["счет"]));
+    return (ai===-1?99:ai)-(bi===-1?99:bi);
+  });
 }
 function topFinanceCategories(rows){
   const map=new Map();
@@ -2550,7 +2576,7 @@ function renderFinanceDashboard(){
   }
   const day=todayDay();
   const operations=financeRows("operations");
-  const accounts=financeRows("accounts").length?financeRows("accounts"):deriveAccountsFromOperations(operations);
+  const accounts=financeRows("accounts").length?sortFinanceAccounts(financeRows("accounts")):deriveAccountsFromOperations(operations);
   const payments=financeRows("payments").length?financeRows("payments"):operations.filter(row=>{
     const status=pick(row,["status","статус"]).toLowerCase();
     const plan=pick(row,["plan_fact","план_факт","план/факт"]).toLowerCase();
@@ -2563,22 +2589,16 @@ function renderFinanceDashboard(){
   const income=financeSummaryValue(["income_today","доход_сегодня","доход"],todayOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),parseMoney(day.finance.income)));
   const expense=financeSummaryValue(["expense_today","spent_today","расход_сегодня","потратил"],Math.abs(todayOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),-parseMoney(day.finance.expense))));
   const balance=financeSummaryValue(["balance","баланс","остаток"],parseMoney(day.finance.balance));
-  const netWorth=accounts.length?accounts.reduce((sum,row)=>sum+parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"])),0):balance;
+  const netWorth=accounts.length?accounts.reduce((sum,row)=>sum+financeAccountAmount(row),0):balance;
   const monthIncome=financeSummaryValue(["month_income","доход_месяц","доход_за_месяц"],monthOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
   const monthExpense=financeSummaryValue(["month_expense","расход_месяц","расход_за_месяц"],Math.abs(monthOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0)));
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
   if(netWorthRoot)netWorthRoot.textContent=moneyText(netWorth);
-  if(metaRoot)metaRoot.innerHTML=[
-    `<span class="finance-pill">${escapeHtml(financeSheet.source)}</span>`,
-    `<span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`,
-    `<span class="finance-pill">операций: ${operations.length}</span>`
-  ].join("");
+  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
   if(statusRoot){
-    statusRoot.textContent=financeSheet.loaded
-      ? (financeSheet.failures&&financeSheet.failures.length?`Часть вкладок не загрузилась: ${financeSheet.failures.join(", ")}`:"Финансовые вкладки загружены из Google Sheets.")
-      : "Финансы работают локально. Подключи CSV export URL вкладок в data/secretary-config.js.";
+    statusRoot.textContent="";
   }
   root.innerHTML=[
     financeKpi("Доход сегодня",income,"finance-positive"),
@@ -2589,10 +2609,10 @@ function renderFinanceDashboard(){
   renderFinanceInsights(operations,monthOps,payments,debts);
   renderFinanceOperations(operations);
   renderFinanceCards("financeAccounts",accounts,row=>({
-    title:pick(row,["account","счет","name","название"])||"Счет",
-    meta:[pick(row,["type","тип"]),pick(row,["currency","валюта"])].filter(Boolean).join(" · "),
-    amount:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"])),
-    tone:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]))>=0?"income":"expense"
+    title:normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account),
+    meta:[pick(row,["type","тип"]),pick(row,["currency","валюта"]),pick(row,["grams","граммы","г"])&&pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])?`${pick(row,["grams","граммы","г"])} г × ${pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])} ₽/г`:""].filter(Boolean).join(" · "),
+    amount:financeAccountAmount(row),
+    tone:financeAccountAmount(row)>=0?"income":"expense"
   }),"Счета появятся после подключения вкладки accounts.");
   renderFinanceCards("financePayments",payments,row=>({
     title:pick(row,["subcategory","подкатегория","title","название","payment","платеж","counterparty","контрагент"])||"Обязательство",
@@ -2612,11 +2632,8 @@ function renderFinanceLoading(){
   const statusRoot=document.getElementById("financeStatus");
   const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financePayments","financeDebtsGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
-  if(metaRoot)metaRoot.innerHTML=[
-    `<span class="finance-pill">google-sheets</span>`,
-    `<span class="finance-pill">обновление</span>`
-  ].join("");
-  if(statusRoot)statusRoot.textContent="Подгружаю финансовый штаб из Google Sheets...";
+  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">обновляю таблицу</span>`;
+  if(statusRoot)statusRoot.textContent="";
   clearIds.forEach(id=>{
     const el=document.getElementById(id);
     if(!el)return;
