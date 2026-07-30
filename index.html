@@ -113,6 +113,9 @@
   .finance-table td:last-child,.finance-table th:last-child{text-align:right}
   .finance-list{display:grid;gap:7px}
   .finance-row{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:9px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+  .finance-row.income{border-color:rgba(126,197,150,.35);background:linear-gradient(145deg,rgba(126,197,150,.09),rgba(255,255,255,.025))}
+  .finance-row.expense{border-color:rgba(217,139,125,.35);background:linear-gradient(145deg,rgba(217,139,125,.09),rgba(255,255,255,.025))}
+  .finance-row.debt{border-color:rgba(185,138,79,.45);background:linear-gradient(145deg,rgba(185,138,79,.11),rgba(255,255,255,.025))}
   .finance-row b{font-size:12px}
   .finance-row span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
   .finance-row strong{color:var(--gold2);white-space:nowrap}
@@ -121,6 +124,9 @@
   .finance-status{color:var(--muted);font-size:11px;line-height:1.45}
   .finance-days{display:grid;gap:10px}
   .finance-day{border:1px solid var(--line);background:var(--paper2);border-radius:8px;overflow:hidden}
+  .finance-day.income{border-color:rgba(126,197,150,.42);background:linear-gradient(145deg,rgba(126,197,150,.12),rgba(255,255,255,.025))}
+  .finance-day.expense{border-color:rgba(217,139,125,.42);background:linear-gradient(145deg,rgba(217,139,125,.12),rgba(255,255,255,.025))}
+  .finance-day.mixed{border-color:rgba(185,138,79,.48);background:linear-gradient(145deg,rgba(185,138,79,.14),rgba(255,255,255,.025))}
   .finance-day summary{list-style:none;cursor:pointer}
   .finance-day summary::-webkit-details-marker{display:none}
   .finance-day-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;padding:10px;border-bottom:1px solid var(--line)}
@@ -132,6 +138,9 @@
   .finance-day-toggle{display:inline-block;color:var(--gold2);font-size:10px;font-weight:900;margin-right:7px;transition:transform .18s}
   .finance-day[open] .finance-day-toggle{transform:rotate(90deg)}
   .finance-op{display:grid;grid-template-columns:1fr auto;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .finance-op.income{box-shadow:inset 3px 0 0 rgba(126,197,150,.78)}
+  .finance-op.expense{box-shadow:inset 3px 0 0 rgba(217,139,125,.78)}
+  .finance-op.debt{box-shadow:inset 3px 0 0 rgba(185,138,79,.9)}
   .finance-op:last-child{border-bottom:0}
   .finance-op b{font-size:12px}
   .finance-op span{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin-top:3px}
@@ -144,6 +153,14 @@
   .finance-debt-meta{color:var(--muted);font-size:10px;line-height:1.35}
   .finance-debt-bar{height:7px;border-radius:99px;background:rgba(226,205,163,.13);overflow:hidden}
   .finance-debt-bar div{height:100%;border-radius:inherit;background:linear-gradient(90deg,#7ec596,var(--gold))}
+  .finance-loading{min-height:420px;display:grid;place-items:center;text-align:center;border:1px solid var(--line);border-radius:8px;background:linear-gradient(145deg,rgba(185,138,79,.09),rgba(255,255,255,.025))}
+  .finance-loading-inner{display:grid;gap:12px;justify-items:center;max-width:360px;padding:28px}
+  .finance-loader-mark{width:42px;height:42px;border:1px solid var(--gold);border-radius:7px;display:grid;place-items:center;color:var(--gold2);font-family:Georgia,"Times New Roman",serif;font-size:22px;box-shadow:inset 0 0 20px rgba(185,138,79,.12)}
+  .finance-loading b{font-family:Georgia,"Times New Roman",serif;font-size:22px;color:var(--ink)}
+  .finance-loading span{color:var(--muted);font-size:12px;line-height:1.45}
+  .finance-loading-line{width:220px;max-width:100%;height:5px;border-radius:99px;background:rgba(226,205,163,.13);overflow:hidden}
+  .finance-loading-line div{width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--gold2));animation:financeLoad 1.1s ease-in-out infinite alternate}
+  @keyframes financeLoad{from{transform:translateX(-70%)}to{transform:translateX(170%)}}
   .connectors{display:grid;gap:6px}
   .connector{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px}
   .connector span{font-size:11px;color:#dce9e2}
@@ -1235,7 +1252,7 @@
       <div class="finance-layout">
         <section class="card">
           <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2Z"></path></svg></div><h2>Платежи на контроле</h2></div>
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2Z"></path></svg></div><h2>Открытые обязательства</h2></div>
           </div>
           <div class="finance-list" id="financePayments"></div>
         </section>
@@ -1247,13 +1264,6 @@
           <div class="finance-list" id="financeDebtsGoals"></div>
         </section>
       </div>
-
-      <section class="card">
-        <div class="section-head">
-          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 18h16M7 18V8M12 18V4M17 18v-7"></path></svg></div><h2>Доход | Prima Life</h2></div>
-        </div>
-        <div class="finance-list" id="financePrimaIncome"></div>
-      </section>
     </div>
   </section>
 
@@ -1631,7 +1641,7 @@ const todayKey=new Date().toISOString().slice(0,10);
 const secretarySampleUrl="data/secretary-snapshot.sample.json";
 let secretarySnapshot=null;
 let secretaryLoadState={source:"offline",message:""};
-let financeSheet={loaded:false,source:"local",updatedAt:null,tabs:{}};
+let financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
 let notificationTimers=[];
 let cloudUserId=null;
 const morningHabits=[
@@ -2435,10 +2445,12 @@ async function loadFinanceSheet(){
   const headers=config.headers||window.LIFE_OS_SECRETARY_CONFIG.headers||{};
   const entries=Object.entries(tabs).filter(([,url])=>url);
   if(!entries.length){
-    financeSheet={loaded:false,source:"local",updatedAt:null,tabs:{}};
+    financeSheet={loaded:false,loading:false,source:"local",updatedAt:null,tabs:{}};
     renderFinanceDashboard();
     return;
   }
+  financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
+  renderFinanceDashboard();
   const loaded={};
   const failures=[];
   await Promise.all(entries.map(async([name,url])=>{
@@ -2449,7 +2461,7 @@ async function loadFinanceSheet(){
       loaded[name]=[];
     }
   }));
-  financeSheet={loaded:true,source:failures.length?"partial":"google-sheets",updatedAt:new Date().toISOString(),tabs:loaded,failures};
+  financeSheet={loaded:true,loading:false,source:failures.length?"partial":"google-sheets",updatedAt:new Date().toISOString(),tabs:loaded,failures};
   renderFinanceDashboard();
 }
 function refreshFinanceSheet(){
@@ -2532,6 +2544,10 @@ function financeDebtData(row){
 function renderFinanceDashboard(){
   const root=document.getElementById("financeKpis");
   if(!root)return;
+  if(financeSheet.loading){
+    renderFinanceLoading();
+    return;
+  }
   const day=todayDay();
   const operations=financeRows("operations");
   const accounts=financeRows("accounts").length?financeRows("accounts"):deriveAccountsFromOperations(operations);
@@ -2575,19 +2591,37 @@ function renderFinanceDashboard(){
   renderFinanceCards("financeAccounts",accounts,row=>({
     title:pick(row,["account","счет","name","название"])||"Счет",
     meta:[pick(row,["type","тип"]),pick(row,["currency","валюта"])].filter(Boolean).join(" · "),
-    amount:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]))
+    amount:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"])),
+    tone:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]))>=0?"income":"expense"
   }),"Счета появятся после подключения вкладки accounts.");
   renderFinanceCards("financePayments",payments,row=>({
-    title:pick(row,["title","название","payment","платеж"])||"Платеж",
-    meta:[pick(row,["due_date","дата","срок"]),pick(row,["status","статус"])].filter(Boolean).join(" · "),
-    amount:parseMoney(pick(row,["amount","сумма"]))
-  }),"Платежей на контроле нет.");
+    title:pick(row,["subcategory","подкатегория","title","название","payment","платеж","counterparty","контрагент"])||"Обязательство",
+    meta:[pick(row,["due_date","дата","срок"]),pick(row,["status","статус"]),pick(row,["project","проект/объект"])].filter(Boolean).join(" · "),
+    amount:parseMoney(pick(row,["amount","сумма"])),
+    tone:"debt"
+  }),"Открытых обязательств нет.");
   const debtGoalRows=[
     ...debts.map(row=>Object.assign({kind:"Долг"},row)),
     ...goals.map(row=>Object.assign({kind:"Цель"},row))
   ];
   renderFinanceDebts(debtGoalRows);
-  renderPrimaIncome(financeRows("primaIncome"));
+}
+function renderFinanceLoading(){
+  const netWorthRoot=document.getElementById("financeNetWorth");
+  const metaRoot=document.getElementById("financeMeta");
+  const statusRoot=document.getElementById("financeStatus");
+  const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financePayments","financeDebtsGoals"];
+  if(netWorthRoot)netWorthRoot.textContent="—";
+  if(metaRoot)metaRoot.innerHTML=[
+    `<span class="finance-pill">google-sheets</span>`,
+    `<span class="finance-pill">обновление</span>`
+  ].join("");
+  if(statusRoot)statusRoot.textContent="Подгружаю финансовый штаб из Google Sheets...";
+  clearIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.innerHTML=id==="financeOperations"?`<div class="finance-loading"><div class="finance-loading-inner"><div class="finance-loader-mark">И</div><b>Собираю финансы</b><span>Читаю вкладки Google Sheets, считаю дни, счета, долги и платежи.</span><div class="finance-loading-line"><div></div></div></div></div>`:"";
+  });
 }
 function financeKpi(label,value,className=""){
   return `<div class="finance-kpi"><span>${escapeHtml(label)}</span><b class="${className}">${moneyText(value)}</b></div>`;
@@ -2615,12 +2649,15 @@ function renderFinanceOperations(rows){
     const expense=Math.abs(items.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
     const net=income-expense;
     const label=financeDateLabel(key);
-    return `<details class="finance-day"><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span>${escapeHtml(label.day)}</b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${net>=0?"finance-positive":"finance-negative"}">${moneyText(net)}<span>+${formatNumber(income)} / -${formatNumber(expense)}</span></div></summary>${items.map(row=>{
+    const dayTone=income>0&&expense>0?"mixed":income>0?"income":"expense";
+    return `<details class="finance-day ${dayTone}"><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span>${escapeHtml(label.day)}</b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${net>=0?"finance-positive":"finance-negative"}">${moneyText(net)}<span>+${formatNumber(income)} / -${formatNumber(expense)}</span></div></summary>${items.map(row=>{
       const amount=financeOperationAmount(row);
+      const type=pick(row,["type","тип"]).toLowerCase();
+      const tone=type.includes("долг")?"debt":amount>=0?"income":"expense";
       const title=pick(row,["subcategory","подкатегория","category","категория"])||"Операция";
       const meta=[pick(row,["counterparty","контрагент"]),pick(row,["account","счет"]),pick(row,["status","статус"])].filter(Boolean).join(" · ");
       const comment=pick(row,["title","описание","comment","комментарий"]);
-      return `<div class="finance-op"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(meta)}</span>${comment?`<span>${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
+      return `<div class="finance-op ${tone}"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(meta)}</span>${comment?`<span>${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
     }).join("")}</details>`;
   }).join("")}</div>`;
 }
@@ -2633,7 +2670,7 @@ function renderFinanceInsights(operations,monthOps,payments,debts){
   root.innerHTML=[
     `<div class="finance-kpi"><span>Главные расходы</span><b>${categories.length?escapeHtml(categories.map(([name])=>name).join(" · ")):"—"}</b></div>`,
     `<div class="finance-kpi"><span>Долги остаток</span><b class="${debtLeft>0?"finance-negative":""}">${moneyText(debtLeft)}</b></div>`,
-    `<div class="finance-kpi"><span>Платежи на контроле</span><b>${moneyText(planned)}</b></div>`
+    `<div class="finance-kpi"><span>Открытые обязательства</span><b>${moneyText(planned)}</b></div>`
   ].join("");
 }
 function renderFinanceDebts(rows){
@@ -2661,23 +2698,7 @@ function renderFinanceCards(id,rows,mapper,empty){
     root.innerHTML=`<div class="finance-status">${escapeHtml(empty)}</div>`;
     return;
   }
-  root.innerHTML=list.map(item=>`<div class="finance-row"><div><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.meta)}</span></div><strong>${moneyText(item.amount)}</strong></div>`).join("");
-}
-function renderPrimaIncome(rows){
-  const root=document.getElementById("financePrimaIncome");
-  if(!root)return;
-  const list=(rows||[]).filter(row=>pick(row,["дата","date"])||pick(row,["клиент_/_организация","клиент","client"])).slice(0,10);
-  if(!list.length){
-    root.innerHTML=`<div class="finance-status">Продажи Prima Life появятся после заполнения строк под заголовком во вкладке.</div>`;
-    return;
-  }
-  root.innerHTML=list.map(row=>{
-    const title=pick(row,["клиент_/_организация","клиент","client"])||"Клиент";
-    const service=pick(row,["услуга","service"]);
-    const status=pick(row,["статус","status"]);
-    const amount=parseMoney(pick(row,["итого_клиенту","выручка","оплачено","amount"]));
-    return `<div class="finance-row"><div><b>${escapeHtml(title)}</b><span>${escapeHtml([service,status,pick(row,["дата","date"])].filter(Boolean).join(" · "))}</span></div><strong>${moneyText(amount)}</strong></div>`;
-  }).join("");
+  root.innerHTML=list.map(item=>`<div class="finance-row ${item.tone||""}"><div><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.meta)}</span></div><strong class="${item.amount>=0?"finance-positive":"finance-negative"}">${moneyText(item.amount)}</strong></div>`).join("");
 }
 function progressStats(day){
   const taskTotal=day.tasks.length;
