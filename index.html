@@ -96,6 +96,29 @@
   .three-grid{grid-template-columns:repeat(3,1fr)}
   .two-grid{grid-template-columns:repeat(2,1fr)}
   .finance-number{font-family:Georgia,"Times New Roman",serif;font-size:18px;color:var(--green);font-weight:700;margin-top:3px}
+  .finance-os{display:grid;gap:10px}
+  .finance-hero{display:grid;grid-template-columns:1.2fr .8fr;gap:10px;align-items:stretch}
+  .finance-total{font-family:Georgia,"Times New Roman",serif;font-size:38px;line-height:1;color:var(--gold2);margin-top:6px}
+  .finance-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .finance-pill{border:1px solid var(--line);background:var(--paper2);border-radius:7px;padding:5px 8px;color:var(--muted);font-size:10px;font-weight:800}
+  .finance-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+  .finance-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .finance-kpi{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:10px;min-width:0}
+  .finance-kpi span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
+  .finance-kpi b{display:block;margin-top:6px;font-size:18px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .finance-layout{display:grid;grid-template-columns:1.08fr .92fr;gap:10px}
+  .finance-table{width:100%;border-collapse:collapse;font-size:11px}
+  .finance-table th,.finance-table td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+  .finance-table th{color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+  .finance-table td:last-child,.finance-table th:last-child{text-align:right}
+  .finance-list{display:grid;gap:7px}
+  .finance-row{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:9px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+  .finance-row b{font-size:12px}
+  .finance-row span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+  .finance-row strong{color:var(--gold2);white-space:nowrap}
+  .finance-positive{color:#7ec596!important}
+  .finance-negative{color:#d98b7d!important}
+  .finance-status{color:var(--muted);font-size:11px;line-height:1.45}
   .connectors{display:grid;gap:6px}
   .connector{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px}
   .connector span{font-size:11px;color:#dce9e2}
@@ -510,6 +533,8 @@
     .today-command{grid-template-columns:1fr}
     .hq-grid{grid-template-columns:1fr}
     .dashboard,.split{grid-template-columns:1fr}
+    .finance-hero,.finance-layout{grid-template-columns:1fr}
+    .finance-kpis{grid-template-columns:repeat(2,1fr)}
     .today-grid{grid-template-columns:1fr}
     .project-grid{grid-template-columns:repeat(2,1fr)}
     .wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:repeat(2,1fr)}
@@ -574,6 +599,10 @@
     .hq-item,.day-item,.note{padding:9px}
     input,textarea,select{padding:8px;font-size:11px}
     .stats{grid-template-columns:repeat(2,1fr)}
+    .finance-total{font-size:28px}
+    .finance-kpis{grid-template-columns:1fr}
+    .finance-actions{justify-content:flex-start}
+    .finance-table{font-size:10px}
     .actions{grid-template-columns:1fr}
     .project-grid,.wardrobe,.money-grid,.three-grid,.two-grid{grid-template-columns:1fr}
     .trait{grid-template-columns:70px 1fr 26px}
@@ -892,6 +921,7 @@
     .rent-card{grid-template-columns:1fr}
   }
 </style>
+<script src="data/secretary-config.js"></script>
 </head>
 <body>
 <header class="topbar">
@@ -1126,10 +1156,24 @@
   </section>
 
   <section class="view" id="finance">
-    <div class="grid split">
-      <div class="card">
-        <div class="section-kicker">Финансы сегодня</div>
-        <div class="section-title">Ручной ввод</div>
+    <div class="finance-os">
+      <section class="card finance-hero">
+        <div>
+          <div class="section-kicker">Финансы</div>
+          <div class="section-title">Денежный штаб</div>
+          <div class="finance-total" id="financeNetWorth">—</div>
+          <div class="finance-meta" id="financeMeta"></div>
+          <div class="finance-status" id="financeStatus">Финансы работают локально. Подключи вкладки Google Sheets в config.</div>
+        </div>
+        <div class="finance-actions">
+          <button class="primary" onclick="refreshFinanceSheet()">Обновить таблицу</button>
+          <button class="ghost" onclick="toggleFinanceManual()">Ручной ввод</button>
+        </div>
+      </section>
+
+      <section class="card" id="financeManualCard" style="display:none">
+        <div class="section-kicker">Fallback</div>
+        <div class="section-title">Ручной ввод на сегодня</div>
         <div class="mini-form">
           <input id="financeIncomePage" type="number" placeholder="Доход сегодня">
           <input id="financeExpensePage" type="number" placeholder="Расход сегодня">
@@ -1137,15 +1181,48 @@
           <textarea id="financeCommentPage" placeholder="Комментарий"></textarea>
           <button class="primary" onclick="saveFinancePage()">Сохранить</button>
         </div>
+      </section>
+
+      <div class="finance-kpis" id="financeKpis"></div>
+
+      <div class="finance-layout">
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></div><h2>Операции</h2></div>
+          </div>
+          <div id="financeOperations"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4"></path></svg></div><h2>Счета</h2></div>
+          </div>
+          <div class="finance-list" id="financeAccounts"></div>
+        </section>
       </div>
-      <div class="card">
-        <div class="section-kicker">Интеграции</div>
-        <div class="section-title">Money Flow - planned</div>
-        <div class="timeline">
-          <div class="event"><b>Сейчас</b><span>ручной ввод дохода, расхода, баланса и комментария</span></div>
-          <div class="event"><b>Позже</b><span>импорт через файл/текст или API, если он доступен</span></div>
+
+      <div class="finance-layout">
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2Z"></path></svg></div><h2>Платежи на контроле</h2></div>
+          </div>
+          <div class="finance-list" id="financePayments"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Долги и цели</h2></div>
+          </div>
+          <div class="finance-list" id="financeDebtsGoals"></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 18h16M7 18V8M12 18V4M17 18v-7"></path></svg></div><h2>Доход | Prima Life</h2></div>
         </div>
-      </div>
+        <div class="finance-list" id="financePrimaIncome"></div>
+      </section>
     </div>
   </section>
 
@@ -1523,6 +1600,7 @@ const todayKey=new Date().toISOString().slice(0,10);
 const secretarySampleUrl="data/secretary-snapshot.sample.json";
 let secretarySnapshot=null;
 let secretaryLoadState={source:"offline",message:""};
+let financeSheet={loaded:false,source:"local",updatedAt:null,tabs:{}};
 let notificationTimers=[];
 let cloudUserId=null;
 const morningHabits=[
@@ -2112,16 +2190,22 @@ function renderHeroMetrics(day){
   if(taskCount)taskCount.textContent=`${progress.taskDone}/${progress.taskTotal}`;
   if(habitCount)habitCount.textContent=`${progress.habitDone}/${progress.habitTotal}`;
 }
-async function fetchJson(url){
-  const response=await fetch(url,{cache:"no-store"});
+async function fetchJson(url,options={}){
+  const response=await fetch(url,{cache:"no-store",headers:options.headers||{}});
   if(!response.ok)throw new Error(`HTTP ${response.status}`);
   return response.json();
 }
+async function fetchText(url,options={}){
+  const response=await fetch(url,{cache:"no-store",headers:options.headers||{}});
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  return response.text();
+}
 async function loadSecretarySnapshot(){
-  const liveUrl=window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.snapshotUrl;
+  const config=window.LIFE_OS_SECRETARY_CONFIG||{};
+  const liveUrl=config.snapshotUrl;
   try{
     if(liveUrl){
-      secretarySnapshot=await fetchJson(liveUrl);
+      secretarySnapshot=await fetchJson(liveUrl,{headers:config.headers});
       secretaryLoadState={source:(secretarySnapshot.meta&&secretarySnapshot.meta.source)||"live",message:""};
       renderSecretarySnapshot();
       return;
@@ -2230,6 +2314,265 @@ function setProgress(prefix,pct){
   const fill=document.getElementById(`${prefix}Fill`);
   if(label)label.textContent=value+"%";
   if(fill)fill.style.width=value+"%";
+}
+function parseCsv(text){
+  const rows=[];
+  let row=[],value="",quoted=false;
+  for(let i=0;i<String(text).length;i++){
+    const char=text[i],next=text[i+1];
+    if(char==='"'&&quoted&&next==='"'){value+='"';i++;continue}
+    if(char==='"'){quoted=!quoted;continue}
+    if(char===","&&!quoted){row.push(value);value="";continue}
+    if((char==="\n"||char==="\r")&&!quoted){
+      if(char==="\r"&&next==="\n")i++;
+      row.push(value);
+      if(row.some(cell=>String(cell).trim()!==""))rows.push(row);
+      row=[];value="";
+      continue;
+    }
+    value+=char;
+  }
+  row.push(value);
+  if(row.some(cell=>String(cell).trim()!==""))rows.push(row);
+  if(!rows.length)return [];
+  const headerIndex=Math.max(0,rows.findIndex(cells=>cells.map(normalizeHeader).some(cell=>["дата","date"].includes(cell))));
+  const headers=rows[headerIndex].map(normalizeHeader);
+  return rows.slice(headerIndex+1).map(cols=>{
+    const item={};
+    headers.forEach((header,i)=>item[header]=String(cols[i]||"").trim());
+    return item;
+  });
+}
+function normalizeHeader(value){
+  return String(value||"").trim().toLowerCase().replaceAll("ё","е").replace(/\s+/g,"_");
+}
+function pick(row,names){
+  for(const name of names){
+    const key=normalizeHeader(name);
+    if(row[key]!==undefined&&row[key]!=="")return row[key];
+  }
+  return "";
+}
+function parseMoney(value){
+  const raw=String(value||"").replace(/\s/g,"").replace(",",".").replace(/[^\d.-]/g,"");
+  const number=Number(raw);
+  return Number.isFinite(number)?number:0;
+}
+function isGoogleSheetUrl(url){
+  return String(url||"").includes("docs.google.com/spreadsheets/")&&String(url||"").includes("/gviz/");
+}
+function googleSheetRows(url){
+  return new Promise((resolve,reject)=>{
+    const callback=`lifeFinanceSheet_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+    const script=document.createElement("script");
+    const src=new URL(url);
+    src.searchParams.set("tqx",`responseHandler:${callback}`);
+    window[callback]=(response)=>{
+      try{
+        const table=response&&response.table;
+        if(!table)throw new Error("Empty Google table");
+        const headers=(table.cols||[]).map(col=>normalizeHeader(col.label||col.id));
+        if(!headers.some(Boolean))throw new Error("Empty Google headers");
+        const rows=(table.rows||[]).map(row=>{
+          const item={};
+          headers.forEach((header,i)=>{
+            const cell=row.c&&row.c[i];
+            item[header]=cell?(cell.f!==undefined?cell.f:cell.v!==undefined?cell.v:""):"";
+          });
+          return item;
+        });
+        resolve(rows);
+      }catch(e){
+        reject(e);
+      }finally{
+        delete window[callback];
+        script.remove();
+      }
+    };
+    script.onerror=()=>{
+      delete window[callback];
+      script.remove();
+      reject(new Error("Google Sheets script load failed"));
+    };
+    script.src=src.toString();
+    document.head.appendChild(script);
+  });
+}
+async function loadFinanceSheet(){
+  const config=(window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.finance)||{};
+  const tabs=config.tabs||{};
+  const headers=config.headers||window.LIFE_OS_SECRETARY_CONFIG.headers||{};
+  const entries=Object.entries(tabs).filter(([,url])=>url);
+  if(!entries.length){
+    financeSheet={loaded:false,source:"local",updatedAt:null,tabs:{}};
+    renderFinanceDashboard();
+    return;
+  }
+  const loaded={};
+  const failures=[];
+  await Promise.all(entries.map(async([name,url])=>{
+    try{
+      loaded[name]=isGoogleSheetUrl(url)?await googleSheetRows(url):parseCsv(await fetchText(url,{headers}));
+    }catch(e){
+      failures.push(name);
+      loaded[name]=[];
+    }
+  }));
+  financeSheet={loaded:true,source:failures.length?"partial":"google-sheets",updatedAt:new Date().toISOString(),tabs:loaded,failures};
+  renderFinanceDashboard();
+}
+function refreshFinanceSheet(){
+  const status=document.getElementById("financeStatus");
+  if(status)status.textContent="Обновляю финансы из таблицы...";
+  loadFinanceSheet();
+}
+function toggleFinanceManual(){
+  const card=document.getElementById("financeManualCard");
+  if(card)card.style.display=card.style.display==="none"?"block":"none";
+}
+function financeRows(name){
+  return financeSheet.tabs&&financeSheet.tabs[name]||[];
+}
+function financeSummaryValue(keys,fallback=0){
+  const summary=financeRows("summary")[0]||{};
+  const value=pick(summary,keys);
+  return value===""?fallback:parseMoney(value);
+}
+function financeOperationAmount(row){
+  const amount=parseMoney(pick(row,["amount","сумма"]));
+  const type=pick(row,["type","тип"]).toLowerCase();
+  if(type.includes("расход"))return -Math.abs(amount);
+  return amount;
+}
+function parseFinanceDate(value){
+  const raw=String(value||"").trim();
+  const match=raw.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);
+  if(match)return new Date(`${match[3]}-${match[2].padStart(2,"0")}-${match[1].padStart(2,"0")}T00:00:00`);
+  const date=new Date(raw);
+  return Number.isNaN(date.getTime())?null:date;
+}
+function sameFinanceDay(date){
+  if(!date)return false;
+  const now=new Date();
+  return date.getFullYear()===now.getFullYear()&&date.getMonth()===now.getMonth()&&date.getDate()===now.getDate();
+}
+function sameFinanceMonth(date){
+  if(!date)return false;
+  const now=new Date();
+  return date.getFullYear()===now.getFullYear()&&date.getMonth()===now.getMonth();
+}
+function deriveAccountsFromOperations(operations){
+  const map=new Map();
+  operations.forEach(row=>{
+    const name=pick(row,["account","счет"])||"Не уточнен";
+    map.set(name,(map.get(name)||0)+financeOperationAmount(row));
+  });
+  return [...map.entries()].map(([account,balance])=>({account,balance}));
+}
+function renderFinanceDashboard(){
+  const root=document.getElementById("financeKpis");
+  if(!root)return;
+  const day=todayDay();
+  const operations=financeRows("operations");
+  const accounts=financeRows("accounts").length?financeRows("accounts"):deriveAccountsFromOperations(operations);
+  const payments=financeRows("payments").length?financeRows("payments"):operations.filter(row=>{
+    const status=pick(row,["status","статус"]).toLowerCase();
+    const plan=pick(row,["plan_fact","план_факт","план/факт"]).toLowerCase();
+    return plan.includes("план")||status.includes("контроль")||status.includes("открыт")||status.includes("ожида");
+  });
+  const debts=financeRows("debts").length?financeRows("debts"):operations.filter(row=>pick(row,["type","тип"]).toLowerCase().includes("долг"));
+  const goals=financeRows("goals");
+  const todayOps=operations.filter(row=>sameFinanceDay(parseFinanceDate(pick(row,["date","дата"]))));
+  const monthOps=operations.filter(row=>sameFinanceMonth(parseFinanceDate(pick(row,["date","дата"]))));
+  const income=financeSummaryValue(["income_today","доход_сегодня","доход"],todayOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),parseMoney(day.finance.income)));
+  const expense=financeSummaryValue(["expense_today","spent_today","расход_сегодня","потратил"],Math.abs(todayOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),-parseMoney(day.finance.expense))));
+  const balance=financeSummaryValue(["balance","баланс","остаток"],parseMoney(day.finance.balance));
+  const netWorth=accounts.length?accounts.reduce((sum,row)=>sum+parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"])),0):balance;
+  const monthIncome=financeSummaryValue(["month_income","доход_месяц","доход_за_месяц"],monthOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
+  const monthExpense=financeSummaryValue(["month_expense","расход_месяц","расход_за_месяц"],Math.abs(monthOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0)));
+  const netWorthRoot=document.getElementById("financeNetWorth");
+  const metaRoot=document.getElementById("financeMeta");
+  const statusRoot=document.getElementById("financeStatus");
+  if(netWorthRoot)netWorthRoot.textContent=moneyText(netWorth);
+  if(metaRoot)metaRoot.innerHTML=[
+    `<span class="finance-pill">${escapeHtml(financeSheet.source)}</span>`,
+    `<span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`,
+    `<span class="finance-pill">операций: ${operations.length}</span>`
+  ].join("");
+  if(statusRoot){
+    statusRoot.textContent=financeSheet.loaded
+      ? (financeSheet.failures&&financeSheet.failures.length?`Часть вкладок не загрузилась: ${financeSheet.failures.join(", ")}`:"Финансовые вкладки загружены из Google Sheets.")
+      : "Финансы работают локально. Подключи CSV export URL вкладок в data/secretary-config.js.";
+  }
+  root.innerHTML=[
+    financeKpi("Доход сегодня",income,"finance-positive"),
+    financeKpi("Расход сегодня",expense,"finance-negative"),
+    financeKpi("Доход за месяц",monthIncome,"finance-positive"),
+    financeKpi("Расход за месяц",monthExpense,"finance-negative")
+  ].join("");
+  renderFinanceOperations(operations);
+  renderFinanceCards("financeAccounts",accounts,row=>({
+    title:pick(row,["account","счет","name","название"])||"Счет",
+    meta:[pick(row,["type","тип"]),pick(row,["currency","валюта"])].filter(Boolean).join(" · "),
+    amount:parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]))
+  }),"Счета появятся после подключения вкладки accounts.");
+  renderFinanceCards("financePayments",payments,row=>({
+    title:pick(row,["title","название","payment","платеж"])||"Платеж",
+    meta:[pick(row,["due_date","дата","срок"]),pick(row,["status","статус"])].filter(Boolean).join(" · "),
+    amount:parseMoney(pick(row,["amount","сумма"]))
+  }),"Платежей на контроле нет.");
+  const debtGoalRows=[
+    ...debts.map(row=>Object.assign({kind:"Долг"},row)),
+    ...goals.map(row=>Object.assign({kind:"Цель"},row))
+  ];
+  renderFinanceCards("financeDebtsGoals",debtGoalRows,row=>({
+    title:pick(row,["title","название","debt","goal","долг","цель"])||row.kind,
+    meta:[row.kind,pick(row,["status","статус"]),pick(row,["deadline","срок","date","дата"])].filter(Boolean).join(" · "),
+    amount:parseMoney(pick(row,["amount","сумма","target","цель_сумма","left","остаток"]))
+  }),"Долги и цели появятся после подключения вкладок debts/goals.");
+  renderPrimaIncome(financeRows("primaIncome"));
+}
+function financeKpi(label,value,className=""){
+  return `<div class="finance-kpi"><span>${escapeHtml(label)}</span><b class="${className}">${moneyText(value)}</b></div>`;
+}
+function renderFinanceOperations(rows){
+  const root=document.getElementById("financeOperations");
+  if(!root)return;
+  const list=(rows||[]).slice(0,12);
+  if(!list.length){
+    root.innerHTML=`<div class="finance-status">Операции появятся после подключения вкладки operations.</div>`;
+    return;
+  }
+  root.innerHTML=`<table class="finance-table"><thead><tr><th>Дата</th><th>Категория</th><th>Описание</th><th>Сумма</th></tr></thead><tbody>${list.map(row=>{
+    const amount=financeOperationAmount(row);
+    return `<tr><td>${escapeHtml(pick(row,["date","дата"]))}</td><td>${escapeHtml(pick(row,["category","категория"]))}</td><td>${escapeHtml(pick(row,["title","описание","comment","комментарий"]))}</td><td class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</td></tr>`;
+  }).join("")}</tbody></table>`;
+}
+function renderFinanceCards(id,rows,mapper,empty){
+  const root=document.getElementById(id);
+  if(!root)return;
+  const list=(rows||[]).slice(0,10).map(mapper);
+  if(!list.length){
+    root.innerHTML=`<div class="finance-status">${escapeHtml(empty)}</div>`;
+    return;
+  }
+  root.innerHTML=list.map(item=>`<div class="finance-row"><div><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.meta)}</span></div><strong>${moneyText(item.amount)}</strong></div>`).join("");
+}
+function renderPrimaIncome(rows){
+  const root=document.getElementById("financePrimaIncome");
+  if(!root)return;
+  const list=(rows||[]).filter(row=>pick(row,["дата","date"])||pick(row,["клиент_/_организация","клиент","client"])).slice(0,10);
+  if(!list.length){
+    root.innerHTML=`<div class="finance-status">Продажи Prima Life появятся после заполнения строк под заголовком во вкладке.</div>`;
+    return;
+  }
+  root.innerHTML=list.map(row=>{
+    const title=pick(row,["клиент_/_организация","клиент","client"])||"Клиент";
+    const service=pick(row,["услуга","service"]);
+    const status=pick(row,["статус","status"]);
+    const amount=parseMoney(pick(row,["итого_клиенту","выручка","оплачено","amount"]));
+    return `<div class="finance-row"><div><b>${escapeHtml(title)}</b><span>${escapeHtml([service,status,pick(row,["дата","date"])].filter(Boolean).join(" · "))}</span></div><strong>${moneyText(amount)}</strong></div>`;
+  }).join("");
 }
 function progressStats(day){
   const taskTotal=day.tasks.length;
@@ -3707,6 +4050,7 @@ function resetDay(){
 function renderAll(){
   renderHome();
   renderSecretarySnapshot();
+  renderFinanceDashboard();
   renderTraits();
   renderActions();
   if(document.getElementById("todayGrid"))renderToday();
@@ -3744,6 +4088,7 @@ window.setFirebaseStatus=function(text,connected){
 buildNav();
 renderAll();
 loadSecretarySnapshot();
+loadFinanceSheet();
 if(location.hash)showView(location.hash.slice(1));
 window.addEventListener("hashchange",()=>showView(location.hash.slice(1)));
 window.addEventListener("load",()=>setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),30));
