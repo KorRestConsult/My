@@ -451,6 +451,32 @@
   .property-form.open{display:grid}
   .property-form .full{grid-column:1/-1}
   .subtle-btn{border:1px solid var(--line);background:transparent;color:var(--gold2);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:850}
+  .secretary-panel{display:grid;gap:10px}
+  .secretary-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .secretary-meta{display:flex;gap:6px;flex-wrap:wrap;color:var(--muted);font-size:10px}
+  .secretary-pill{border:1px solid var(--line);border-radius:7px;padding:5px 7px;background:var(--paper2);font-weight:800}
+  .secretary-pill.source-live{color:#7ec596}
+  .secretary-pill.source-sample{color:var(--gold2)}
+  .secretary-pill.source-offline{color:#d98b7d}
+  .secretary-status{color:var(--muted);font-size:11px}
+  .secretary-focus{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .focus-card{background:linear-gradient(145deg,rgba(185,138,79,.18),rgba(255,255,255,.035));border:1px solid rgba(226,205,163,.24);border-radius:8px;padding:10px;min-width:0}
+  .focus-card b,.secretary-item b,.secretary-project b{display:block;font-size:12px;line-height:1.25}
+  .focus-card span,.secretary-item span,.secretary-project span{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin-top:4px}
+  .focus-priority{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:5px;background:var(--gold);color:#100e0c;font-weight:900;font-size:11px;margin-bottom:8px}
+  .secretary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .secretary-block{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:10px;min-width:0}
+  .secretary-block h3{font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+  .secretary-list{display:grid;gap:7px}
+  .secretary-item,.secretary-project{border-top:1px solid var(--line);padding-top:7px}
+  .secretary-item:first-child,.secretary-project:first-child{border-top:0;padding-top:0}
+  .secretary-money{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+  .money-chip{border:1px solid var(--line);border-radius:7px;padding:7px;background:rgba(255,255,255,.035)}
+  .money-chip b{display:block;font-size:14px;color:var(--gold2)}
+  .money-chip span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+  .priority-high{color:#f0c37b!important}
+  .risk-high{border-color:rgba(162,80,79,.5);background:rgba(162,80,79,.12)}
+  .secretary-empty{color:var(--muted);font-size:11px;line-height:1.4}
 
   @media (max-width:1120px){
     .topbar .shell{grid-template-columns:1fr;gap:12px;padding:12px 18px}
@@ -844,6 +870,8 @@
     .property-actions{grid-template-columns:repeat(5,1fr)}
   }
   @media (max-width:760px){
+    .secretary-focus,.secretary-grid{grid-template-columns:1fr}
+    .secretary-money{grid-template-columns:1fr}
     .property-hero{grid-template-columns:1fr}
     .property-hero h2{font-size:29px}
     .property-list{grid-template-columns:1fr}
@@ -947,6 +975,19 @@
           </div>
         </div>
       </div>
+
+      <section class="section-card wide-card secretary-panel" id="secretaryPanel">
+        <div class="secretary-top">
+          <div class="section-title-row">
+            <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"></path></svg></div>
+            <h2>Панель дня Ильи</h2>
+          </div>
+          <button class="ghost" onclick="refreshSecretarySnapshot()">Обновить</button>
+        </div>
+        <div class="secretary-meta" id="secretaryMeta"></div>
+        <div class="secretary-status" id="secretaryStatus">Загрузка панели дня...</div>
+        <div id="secretaryContent"></div>
+      </section>
 
       <div class="hq-two">
         <section class="section-card">
@@ -1474,10 +1515,14 @@ window.LIFE_OS_FIREBASE_CONFIG={
   messagingSenderId:"474583721915",
   appId:"1:474583721915:web:61022bdde5302f85a6c69e"
 };
+window.LIFE_OS_SECRETARY_CONFIG=window.LIFE_OS_SECRETARY_CONFIG||{};
 </script>
 <script>
 const stateKey="ilya_life_os_v1";
 const todayKey=new Date().toISOString().slice(0,10);
+const secretarySampleUrl="data/secretary-snapshot.sample.json";
+let secretarySnapshot=null;
+let secretaryLoadState={source:"offline",message:""};
 let notificationTimers=[];
 let cloudUserId=null;
 const morningHabits=[
@@ -2066,6 +2111,118 @@ function renderHeroMetrics(day){
   const habitCount=document.getElementById("habitCountLabel");
   if(taskCount)taskCount.textContent=`${progress.taskDone}/${progress.taskTotal}`;
   if(habitCount)habitCount.textContent=`${progress.habitDone}/${progress.habitTotal}`;
+}
+async function fetchJson(url){
+  const response=await fetch(url,{cache:"no-store"});
+  if(!response.ok)throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}
+async function loadSecretarySnapshot(){
+  const liveUrl=window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.snapshotUrl;
+  try{
+    if(liveUrl){
+      secretarySnapshot=await fetchJson(liveUrl);
+      secretaryLoadState={source:(secretarySnapshot.meta&&secretarySnapshot.meta.source)||"live",message:""};
+      renderSecretarySnapshot();
+      return;
+    }
+  }catch(e){
+    secretaryLoadState={source:"offline",message:"Источник данных недоступен. Используется локальный режим."};
+  }
+  try{
+    secretarySnapshot=await fetchJson(secretarySampleUrl);
+    secretaryLoadState={
+      source:(secretarySnapshot.meta&&secretarySnapshot.meta.source)||"sample",
+      message:secretaryLoadState.message||""
+    };
+  }catch(e){
+    secretarySnapshot=null;
+    secretaryLoadState={source:"offline",message:"Источник данных недоступен. Используется локальный режим."};
+  }
+  renderSecretarySnapshot();
+}
+function refreshSecretarySnapshot(){
+  const status=document.getElementById("secretaryStatus");
+  if(status)status.textContent="Обновляю панель дня...";
+  loadSecretarySnapshot();
+}
+function sourceClass(source){
+  return source==="live"?"source-live":source==="sample"?"source-sample":"source-offline";
+}
+function formatDateTime(value){
+  if(!value)return "не обновлялось";
+  const date=new Date(value);
+  if(Number.isNaN(date.getTime()))return value;
+  return date.toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"});
+}
+function valueOrEmpty(value,empty="—"){
+  return value===null||value===undefined||value===""?empty:value;
+}
+function moneyText(value){
+  return value===null||value===undefined?"—":formatMoney(value);
+}
+function renderSecretarySnapshot(){
+  const metaRoot=document.getElementById("secretaryMeta");
+  const statusRoot=document.getElementById("secretaryStatus");
+  const contentRoot=document.getElementById("secretaryContent");
+  if(!metaRoot||!statusRoot||!contentRoot)return;
+  const data=secretarySnapshot;
+  const source=secretaryLoadState.source||"offline";
+  if(!data){
+    metaRoot.innerHTML=`<span class="secretary-pill ${sourceClass(source)}">offline</span>`;
+    statusRoot.textContent=secretaryLoadState.message||"Данных пока нет. Панель работает в локальном режиме.";
+    contentRoot.innerHTML=`<div class="secretary-empty">Данных для панели дня нет. Когда появится JSON endpoint, задайте <b>window.LIFE_OS_SECRETARY_CONFIG.snapshotUrl</b>.</div>`;
+    return;
+  }
+  const meta=data.meta||{};
+  metaRoot.innerHTML=[
+    `<span class="secretary-pill">${escapeHtml(valueOrEmpty(meta.date,"без даты"))}</span>`,
+    `<span class="secretary-pill">${escapeHtml(valueOrEmpty(meta.city,"город не задан"))}</span>`,
+    `<span class="secretary-pill">обновлено: ${escapeHtml(formatDateTime(meta.updatedAt))}</span>`,
+    `<span class="secretary-pill ${sourceClass(source)}">${escapeHtml(source)}</span>`
+  ].join("");
+  statusRoot.textContent=secretaryLoadState.message||"";
+  contentRoot.innerHTML=[
+    renderSecretaryFocus(data.focus),
+    `<div class="secretary-grid">
+      ${renderSecretaryMoney(data.money)}
+      ${renderSecretaryList("Встречи сегодня",data.calendarToday,item=>`<b>${escapeHtml(valueOrEmpty(item.time,"--:--"))} · ${escapeHtml(item.title)}</b><span>${escapeHtml([item.place,item.source].filter(Boolean).join(" · "))}</span>`,"Жёстких событий на сегодня нет")}
+      ${renderSecretaryList("Дела сегодня",(data.tasksToday||[]).filter(item=>item.status!=="done"),item=>`<b class="${item.priority==="high"?"priority-high":""}">${escapeHtml(item.title)}</b><span>${escapeHtml([item.project,item.source,item.priority].filter(Boolean).join(" · "))}</span>`,"Активных дел на сегодня нет")}
+      ${renderSecretaryList("Ожидаю ответа",data.waiting,item=>`<b>${escapeHtml(item.title)}</b><span>${escapeHtml([item.status,item.nextCheck].filter(Boolean).join(" · "))}</span>`,"Ничего не висит в ожидании")}
+      ${renderSecretaryList("Что можно забыть / риски",data.risks,item=>`<b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.text||item.level||"")}</span>`,"Риски не указаны","risk-high")}
+      ${renderSecretaryList("Здоровье",data.health,item=>`<b>${escapeHtml(item.title)}</b><span>${escapeHtml([item.status,item.action].filter(Boolean).join(" · "))}</span>`,"Актуальных назначений нет")}
+      ${renderSecretaryList("Дом / машина / квартира",data.homeCar,item=>`<b>${escapeHtml(item.title)}</b><span>${escapeHtml([item.status,item.action].filter(Boolean).join(" · "))}</span>`,"Активных хвостов нет")}
+      ${renderSecretaryProjects(data.projects)}
+      ${renderSecretaryWeather(data.weather)}
+    </div>`
+  ].join("");
+}
+function renderSecretaryFocus(items){
+  const list=(items||[]).slice(0,3);
+  if(!list.length)return `<div class="secretary-block"><h3>Сейчас главное</h3><div class="secretary-empty">Главные фокусы не заданы.</div></div>`;
+  return `<div><div class="section-kicker">Сейчас главное</div><div class="secretary-focus">${list.map(item=>`<div class="focus-card"><div class="focus-priority">${escapeHtml(item.priority||"")}</div><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.area||"")}</span><span>${escapeHtml(item.nextStep||"")}</span></div>`).join("")}</div></div>`;
+}
+function renderSecretaryMoney(money){
+  const data=money||{};
+  const payments=data.mustPay||[];
+  return `<div class="secretary-block"><h3>Деньги</h3><div class="secretary-money"><div class="money-chip"><b>${moneyText(data.balanceRub)}</b><span>баланс</span></div><div class="money-chip"><b>${moneyText(data.spentTodayRub)}</b><span>потратил</span></div><div class="money-chip"><b>${moneyText(data.earnedTodayRub)}</b><span>заработал</span></div></div>${renderSecretaryItems(payments,item=>`<b>${escapeHtml(item.title)}</b><span>${escapeHtml([moneyText(item.amountRub),item.dueDate,item.status].filter(Boolean).join(" · "))}</span>`,"Платежей на контроле нет")}</div>`;
+}
+function renderSecretaryItems(items,renderer,empty,className=""){
+  const list=items||[];
+  if(!list.length)return `<div class="secretary-empty">${escapeHtml(empty)}</div>`;
+  return `<div class="secretary-list">${list.map(item=>`<div class="secretary-item ${className}">${renderer(item)}</div>`).join("")}</div>`;
+}
+function renderSecretaryList(title,items,renderer,empty,className=""){
+  return `<div class="secretary-block"><h3>${escapeHtml(title)}</h3>${renderSecretaryItems(items,renderer,empty,className)}</div>`;
+}
+function renderSecretaryProjects(items){
+  const list=items||[];
+  return `<div class="secretary-block"><h3>Проекты</h3>${list.length?`<div class="secretary-list">${list.map(item=>`<div class="secretary-project"><b>${escapeHtml(item.title)}</b><span>${escapeHtml(item.status||"")}</span><span>${escapeHtml(item.nextStep||"")}</span></div>`).join("")}</div>`:`<div class="secretary-empty">Активных проектов нет.</div>`}</div>`;
+}
+function renderSecretaryWeather(weather){
+  const data=weather||{};
+  const temp=[data.tempMinC,data.tempMaxC].every(value=>value===null||value===undefined)?"—":`${valueOrEmpty(data.tempMinC)}...${valueOrEmpty(data.tempMaxC)}°C`;
+  return `<div class="secretary-block"><h3>Погода</h3><div class="secretary-list"><div class="secretary-item"><b>${escapeHtml(valueOrEmpty(data.city,"Город не задан"))} · ${escapeHtml(temp)}</b><span>${escapeHtml(data.summary||"")}</span><span>${escapeHtml(data.recommendation||"")}</span></div></div></div>`;
 }
 function setProgress(prefix,pct){
   const value=Math.max(0,Math.min(100,Math.round(pct||0)));
@@ -3549,6 +3706,7 @@ function resetDay(){
 }
 function renderAll(){
   renderHome();
+  renderSecretarySnapshot();
   renderTraits();
   renderActions();
   if(document.getElementById("todayGrid"))renderToday();
@@ -3585,6 +3743,7 @@ window.setFirebaseStatus=function(text,connected){
 };
 buildNav();
 renderAll();
+loadSecretarySnapshot();
 if(location.hash)showView(location.hash.slice(1));
 window.addEventListener("hashchange",()=>showView(location.hash.slice(1)));
 window.addEventListener("load",()=>setTimeout(()=>window.scrollTo({top:0,behavior:"auto"}),30));
