@@ -1254,16 +1254,16 @@
       <div class="finance-layout">
         <section class="card">
           <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v13H4V7a2 2 0 0 1 2-2Z"></path></svg></div><h2>Открытые обязательства</h2></div>
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Долги</h2></div>
           </div>
-          <div class="finance-list" id="financePayments"></div>
+          <div class="finance-list" id="financeDebts"></div>
         </section>
 
         <section class="card">
           <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Долги и цели</h2></div>
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M5 19h14M7 17V9M12 17V5M17 17v-6"></path></svg></div><h2>Финансовые цели</h2></div>
           </div>
-          <div class="finance-list" id="financeDebtsGoals"></div>
+          <div class="finance-list" id="financeGoals"></div>
         </section>
       </div>
     </div>
@@ -2561,7 +2561,7 @@ function topFinanceCategories(rows){
 }
 function financeDebtData(row){
   const total=parseMoney(pick(row,["amount","сумма","target","цель_сумма"]))||0;
-  const paid=parseMoney(pick(row,["paid","оплачено","paid_amount","выплачено"]));
+  const paid=parseMoney(pick(row,["paid","оплачено","paid_amount","выплачено","saved","накоплено","current","текущая_сумма"]));
   const leftRaw=pick(row,["left","остаток","remaining","осталось"]);
   const left=leftRaw===""?Math.max(0,total-paid):parseMoney(leftRaw);
   const progress=total>0?Math.max(0,Math.min(100,Math.round((total-left)/total*100))):0;
@@ -2577,11 +2577,6 @@ function renderFinanceDashboard(){
   const day=todayDay();
   const operations=financeRows("operations");
   const accounts=financeRows("accounts").length?sortFinanceAccounts(financeRows("accounts")):deriveAccountsFromOperations(operations);
-  const payments=financeRows("payments").length?financeRows("payments"):operations.filter(row=>{
-    const status=pick(row,["status","статус"]).toLowerCase();
-    const plan=pick(row,["plan_fact","план_факт","план/факт"]).toLowerCase();
-    return plan.includes("план")||status.includes("контроль")||status.includes("открыт")||status.includes("ожида");
-  });
   const debts=financeRows("debts").length?financeRows("debts"):operations.filter(row=>pick(row,["type","тип"]).toLowerCase().includes("долг"));
   const goals=financeRows("goals");
   const todayOps=operations.filter(row=>sameFinanceDay(parseFinanceDate(pick(row,["date","дата"]))));
@@ -2606,7 +2601,7 @@ function renderFinanceDashboard(){
     financeKpi("Доход за месяц",monthIncome,"finance-positive"),
     financeKpi("Расход за месяц",monthExpense,"finance-negative")
   ].join("");
-  renderFinanceInsights(operations,monthOps,payments,debts);
+  renderFinanceInsights(operations,monthOps,debts,goals);
   renderFinanceOperations(operations);
   renderFinanceCards("financeAccounts",accounts,row=>({
     title:normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account),
@@ -2614,23 +2609,14 @@ function renderFinanceDashboard(){
     amount:financeAccountAmount(row),
     tone:financeAccountAmount(row)>=0?"income":"expense"
   }),"Счета появятся после подключения вкладки accounts.");
-  renderFinanceCards("financePayments",payments,row=>({
-    title:pick(row,["subcategory","подкатегория","title","название","payment","платеж","counterparty","контрагент"])||"Обязательство",
-    meta:[pick(row,["due_date","дата","срок"]),pick(row,["status","статус"]),pick(row,["project","проект/объект"])].filter(Boolean).join(" · "),
-    amount:parseMoney(pick(row,["amount","сумма"])),
-    tone:"debt"
-  }),"Открытых обязательств нет.");
-  const debtGoalRows=[
-    ...debts.map(row=>Object.assign({kind:"Долг"},row)),
-    ...goals.map(row=>Object.assign({kind:"Цель"},row))
-  ];
-  renderFinanceDebts(debtGoalRows);
+  renderFinanceDebts(debts.map(row=>Object.assign({kind:"Долг"},row)));
+  renderFinanceGoals(goals.map(row=>Object.assign({kind:"Цель"},row)));
 }
 function renderFinanceLoading(){
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
-  const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financePayments","financeDebtsGoals"];
+  const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financeDebts","financeGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
   if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">обновляю таблицу</span>`;
   if(statusRoot)statusRoot.textContent="";
@@ -2678,33 +2664,51 @@ function renderFinanceOperations(rows){
     }).join("")}</details>`;
   }).join("")}</div>`;
 }
-function renderFinanceInsights(operations,monthOps,payments,debts){
+function renderFinanceInsights(operations,monthOps,debts,goals){
   const root=document.getElementById("financeInsights");
   if(!root)return;
   const categories=topFinanceCategories(monthOps);
   const debtLeft=debts.reduce((sum,row)=>sum+financeDebtData(row).left,0);
-  const planned=payments.reduce((sum,row)=>sum+Math.abs(parseMoney(pick(row,["amount","сумма"]))),0);
+  const goalLeft=goals.reduce((sum,row)=>sum+financeDebtData(row).left,0);
   root.innerHTML=[
     `<div class="finance-kpi"><span>Главные расходы</span><b>${categories.length?escapeHtml(categories.map(([name])=>name).join(" · ")):"—"}</b></div>`,
     `<div class="finance-kpi"><span>Долги остаток</span><b class="${debtLeft>0?"finance-negative":""}">${moneyText(debtLeft)}</b></div>`,
-    `<div class="finance-kpi"><span>Открытые обязательства</span><b>${moneyText(planned)}</b></div>`
+    `<div class="finance-kpi"><span>До целей осталось</span><b>${goals.length?moneyText(goalLeft):"—"}</b></div>`
   ].join("");
 }
 function renderFinanceDebts(rows){
-  const root=document.getElementById("financeDebtsGoals");
+  const root=document.getElementById("financeDebts");
   if(!root)return;
   const list=(rows||[]).slice(0,10);
   if(!list.length){
-    root.innerHTML=`<div class="finance-status">Долги и цели появятся после подключения вкладок debts/goals или строк с типом Долг.</div>`;
+    root.innerHTML=`<div class="finance-status">Долги появятся из строк, где тип содержит Долг: взял или дал.</div>`;
     return;
   }
   root.innerHTML=list.map(row=>{
     const debt=financeDebtData(row);
-    const title=pick(row,["title","название","debt","goal","долг","цель","counterparty","контрагент"])||row.kind||"Долг";
+    const type=pick(row,["type","тип"]).toLowerCase();
+    const direction=type.includes("дал")||type.includes("мне")?"Мне должны":"Я должен";
+    const title=pick(row,["counterparty","контрагент","title","название","debt","долг"])||"Контрагент не указан";
     const opened=pick(row,["date","дата","opened","дата_открытия"]);
     const due=pick(row,["deadline","срок","due_date","дата_возврата"]);
     const status=pick(row,["status","статус"]);
-    return `<div class="finance-debt-card"><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${moneyText(debt.left)}</strong></div><div class="finance-debt-meta">${escapeHtml([row.kind,status,opened?`от ${opened}`:"",due?`до ${due}`:""].filter(Boolean).join(" · "))}</div><div class="finance-debt-bar" aria-label="Погашено ${debt.progress}%"><div style="width:${debt.progress}%"></div></div><div class="finance-debt-meta">Погашено ${debt.progress}% · всего ${moneyText(debt.total)}${debt.paid?` · оплачено ${moneyText(debt.paid)}`:""}</div></div>`;
+    return `<div class="finance-debt-card"><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${moneyText(debt.left)}</strong></div><div class="finance-debt-meta">${escapeHtml([direction,status,opened?`от ${opened}`:"",due?`до ${due}`:""].filter(Boolean).join(" · "))}</div><div class="finance-debt-bar" aria-label="Погашено ${debt.progress}%"><div style="width:${debt.progress}%"></div></div><div class="finance-debt-meta">Погашено ${debt.progress}% · всего ${moneyText(debt.total)}${debt.paid?` · оплачено ${moneyText(debt.paid)}`:""}</div></div>`;
+  }).join("");
+}
+function renderFinanceGoals(rows){
+  const root=document.getElementById("financeGoals");
+  if(!root)return;
+  const list=(rows||[]).slice(0,10);
+  if(!list.length){
+    root.innerHTML=`<div class="finance-status">Финансовые цели появятся из вкладки goals: название, цель, накоплено, срок.</div>`;
+    return;
+  }
+  root.innerHTML=list.map(row=>{
+    const goal=financeDebtData(row);
+    const title=pick(row,["title","название","goal","цель"])||"Финансовая цель";
+    const due=pick(row,["deadline","срок","due_date","дата"]);
+    const status=pick(row,["status","статус"]);
+    return `<div class="finance-debt-card"><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${goal.progress}%</strong></div><div class="finance-debt-meta">${escapeHtml([status,due?`до ${due}`:""].filter(Boolean).join(" · "))}</div><div class="finance-debt-bar" aria-label="Накоплено ${goal.progress}%"><div style="width:${goal.progress}%"></div></div><div class="finance-debt-meta">Накоплено ${moneyText(goal.paid)} · осталось ${moneyText(goal.left)} · цель ${moneyText(goal.total)}</div></div>`;
   }).join("");
 }
 function renderFinanceCards(id,rows,mapper,empty){
