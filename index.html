@@ -102,6 +102,7 @@
   .finance-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
   .finance-pill{border:1px solid var(--line);background:var(--paper2);border-radius:7px;padding:5px 8px;color:var(--muted);font-size:10px;font-weight:800}
   .finance-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+  .finance-actions button[disabled]{opacity:.58;cursor:wait}
   .finance-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
   .finance-kpi{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:10px;min-width:0}
   .finance-kpi span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.07em}
@@ -171,6 +172,14 @@
   .finance-loading-line{width:220px;max-width:100%;height:5px;border-radius:99px;background:rgba(226,205,163,.13);overflow:hidden}
   .finance-loading-line div{width:42%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--gold),var(--gold2));animation:financeLoad 1.1s ease-in-out infinite alternate}
   @keyframes financeLoad{from{transform:translateX(-70%)}to{transform:translateX(170%)}}
+  .hq-finance{display:grid;gap:9px}
+  .hq-finance-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+  .hq-finance-source{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .hq-finance-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+  .hq-finance-cell{border:1px solid var(--line);background:var(--paper2);border-radius:8px;padding:9px;min-width:0}
+  .hq-finance-cell span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.07em}
+  .hq-finance-cell b{display:block;margin-top:5px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .hq-finance-status{color:var(--muted);font-size:10px;line-height:1.35}
   .connectors{display:grid;gap:6px}
   .connector{display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px}
   .connector span{font-size:11px;color:#dce9e2}
@@ -588,6 +597,7 @@
     .dashboard,.split{grid-template-columns:1fr}
     .finance-hero,.finance-layout{grid-template-columns:1fr}
     .finance-kpis{grid-template-columns:repeat(2,1fr)}
+    .hq-finance-grid{grid-template-columns:repeat(2,1fr)}
     .finance-insights{grid-template-columns:1fr}
     .today-grid{grid-template-columns:1fr}
     .project-grid{grid-template-columns:repeat(2,1fr)}
@@ -655,6 +665,7 @@
     .stats{grid-template-columns:repeat(2,1fr)}
     .finance-total{font-size:28px}
     .finance-kpis{grid-template-columns:1fr}
+    .hq-finance-grid{grid-template-columns:1fr}
     .finance-actions{justify-content:flex-start}
     .finance-table{font-size:10px}
     .finance-day-head,.finance-op,.finance-debt-top{grid-template-columns:1fr}
@@ -1088,6 +1099,18 @@
         <div id="secretaryContent"></div>
       </section>
 
+      <section class="section-card wide-card hq-finance" id="homeFinancePanel">
+        <div class="hq-finance-top">
+          <div class="section-title-row">
+            <div class="section-icon"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg></div>
+            <h2>Финансовый штаб</h2>
+          </div>
+          <div class="hq-finance-source" id="homeFinanceSource"></div>
+        </div>
+        <div class="hq-finance-grid" id="homeFinanceKpis"></div>
+        <div class="hq-finance-status" id="homeFinanceStatus">Финансы загружаются...</div>
+      </section>
+
       <div class="hq-two">
         <section class="section-card">
           <div class="section-head">
@@ -1235,7 +1258,7 @@
           <div class="finance-status" id="financeStatus">Финансы работают через ZenMoney Stable. Если MCP URL еще не сохранен, нажми ZenMoney.</div>
         </div>
         <div class="finance-actions">
-          <button class="primary" onclick="refreshFinanceSheet()">Обновить финансы</button>
+          <button class="primary" id="financeRefreshButton" onclick="refreshFinanceSheet()">Обновить финансы</button>
           <button class="ghost" onclick="showZenMoneySetup()">ZenMoney</button>
           <button class="ghost" onclick="toggleFinanceManual()">Ручной ввод</button>
         </div>
@@ -1667,6 +1690,7 @@ let secretarySnapshot=null;
 let secretaryLoadState={source:"offline",message:""};
 let financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
 let financeRefreshTimer=null;
+let financeLoadPromise=null;
 const zenMoneyMcpStorageKey="lifeOsZenMoneyMcpUrl";
 let notificationTimers=[];
 let cloudUserId=null;
@@ -2090,6 +2114,7 @@ function showView(id,updateHash=false){
   document.getElementById(id).classList.add("active");
   document.querySelectorAll(".nav-btn")[views.findIndex(v=>v[0]===id)].classList.add("active");
   if(updateHash)history.replaceState(null,"",`#${id}`);
+  if(id==="finance")refreshFinanceSheet();
   window.scrollTo({top:0,behavior:"auto"});
 }
 function traitValue(id,base){
@@ -2140,6 +2165,7 @@ function renderHome(){
   if(goalRoot)goalRoot.innerHTML=(day.goalSteps||[]).map((step,i)=>goalStepRow(step,i)).join("");
   if(habitRoot)habitRoot.innerHTML=habitPeriods(day);
   renderFinanceInputs(day);
+  renderHomeFinanceWidget();
   renderHealthSummary();
   renderGoalsList();
   const progress=progressStats(day);
@@ -2243,11 +2269,12 @@ function renderDayRing(day){
 }
 function renderHeroMetrics(day){
   const progress=progressStats(day);
-  const balance=Number(day.finance&&day.finance.balance||8270);
+  const finance=financeDashboardData(day);
+  const balance=finance&&finance.ready?finance.netWorth:Number(day.finance&&day.finance.balance||8270);
   const calories=day.nutrition||{calories:1750,target:2300};
   const balanceLabel=document.getElementById("balanceLabel");
   const caloriesLabel=document.getElementById("caloriesLabel");
-  if(balanceLabel)balanceLabel.textContent=`${balance>=0?"+":""}${balance.toLocaleString("ru-RU")} ₽`;
+  if(balanceLabel)balanceLabel.textContent=moneyText(balance);
   if(caloriesLabel)caloriesLabel.textContent=Number(calories.calories||1750).toLocaleString("ru-RU");
   setProgress("dailyGoal",day.dailyGoal&&Number.isFinite(Number(day.dailyGoal.progress))?Number(day.dailyGoal.progress):progress.day);
   setProgress("habit",progress.habits);
@@ -2472,6 +2499,15 @@ function googleSheetRows(url){
   });
 }
 async function loadFinanceSheet(){
+  if(financeLoadPromise)return financeLoadPromise;
+  financeLoadPromise=loadFinanceSheetNow();
+  try{
+    await financeLoadPromise;
+  }finally{
+    financeLoadPromise=null;
+  }
+}
+async function loadFinanceSheetNow(){
   const zenMoneyMcpUrl=getZenMoneyMcpUrl();
   if(zenMoneyMcpUrl){
     await loadZenMoneyFinance(zenMoneyMcpUrl);
@@ -2505,10 +2541,22 @@ async function loadFinanceSheet(){
   financeSheet={loaded:true,loading:false,source:failures.length?"partial":"google-sheets",updatedAt:new Date().toISOString(),tabs:loaded,failures};
   renderFinanceDashboard();
 }
-function refreshFinanceSheet(){
+async function refreshFinanceSheet(){
   const status=document.getElementById("financeStatus");
+  const button=document.getElementById("financeRefreshButton");
   if(status)status.textContent="Обновляю финансы...";
-  loadFinanceSheet();
+  if(button){
+    button.disabled=true;
+    button.textContent="Обновляю...";
+  }
+  try{
+    await loadFinanceSheet();
+  }finally{
+    if(button){
+      button.disabled=false;
+      button.textContent="Обновить финансы";
+    }
+  }
 }
 function getZenMoneyMcpUrl(){
   const config=(window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.finance)||{};
@@ -2706,6 +2754,86 @@ function financeDebtData(row){
   const progress=total>0?Math.max(0,Math.min(100,Math.round((total-left)/total*100))):0;
   return {total,paid,left,progress};
 }
+function financeSourceLabel(){
+  if(financeSheet.source==="zenmoney")return "ZenMoney Stable";
+  if(financeSheet.source==="google-sheets")return "Google Sheets";
+  if(financeSheet.source==="partial")return "Google Sheets частично";
+  if(financeSheet.source==="local")return "Локальный режим";
+  if(financeSheet.source==="zenmoney-error")return "ZenMoney Stable";
+  return "Загрузка";
+}
+function financeNextRefreshText(){
+  const ms=Number(window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.finance&&window.LIFE_OS_SECRETARY_CONFIG.finance.autoRefreshMs)||300000;
+  if(ms<=0)return "автообновление выключено";
+  const minutes=Math.max(1,Math.round(ms/60000));
+  return `автообновление каждые ${minutes} мин`;
+}
+function financeStatusText(){
+  if(financeSheet.loading)return financeSheet.source==="zenmoney"?"Синхронизирую ZenMoney Stable...":"Обновляю финансовые данные...";
+  if(financeSheet.source==="zenmoney-error")return `ZenMoney не ответил: ${financeSheet.error||"проверь MCP URL в localStorage"}`;
+  if(financeSheet.source==="zenmoney")return `Источник ZenMoney Stable. ${financeNextRefreshText()}, также обновляется при возврате на вкладку.`;
+  if(financeSheet.source==="partial")return `Часть вкладок Google Sheets не загрузилась: ${(financeSheet.failures||[]).join(", ")||"проверь доступ"}.`;
+  if(financeSheet.source==="google-sheets")return `Fallback Google Sheets. ${financeNextRefreshText()}.`;
+  return "MCP URL не найден: используется локальный или резервный источник.";
+}
+function financeDashboardData(day=todayDay()){
+  if(financeSheet.loading||financeSheet.source==="zenmoney-error")return null;
+  const operations=financeRows("operations");
+  const accounts=sortFinanceAccounts(financeRows("accounts"));
+  const debts=financeRows("debts").length?financeRows("debts"):operations.filter(row=>pick(row,["type","тип"]).toLowerCase().includes("долг"));
+  const goals=financeRows("goals");
+  const todayOps=operations.filter(row=>sameFinanceDay(parseFinanceDate(pick(row,["date","дата"]))));
+  const monthOps=operations.filter(row=>sameFinanceMonth(parseFinanceDate(pick(row,["date","дата"]))));
+  const income=financeSummaryValue(["income_today","доход_сегодня","доход"],todayOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),parseMoney(day.finance.income)));
+  const expense=financeSummaryValue(["expense_today","spent_today","расход_сегодня","потратил"],Math.abs(todayOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),-parseMoney(day.finance.expense))));
+  const balance=financeSummaryValue(["balance","баланс","остаток"],parseMoney(day.finance.balance));
+  const netWorth=accounts.length?accounts.reduce((sum,row)=>sum+financeAccountAmount(row),0):balance;
+  const monthIncome=financeSummaryValue(["month_income","доход_месяц","доход_за_месяц"],monthOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
+  const monthExpense=financeSummaryValue(["month_expense","расход_месяц","расход_за_месяц"],Math.abs(monthOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0)));
+  return {ready:true,operations,accounts,debts,goals,todayOps,monthOps,income,expense,balance,netWorth,monthIncome,monthExpense};
+}
+function renderHomeFinanceWidget(){
+  const source=document.getElementById("homeFinanceSource");
+  const kpis=document.getElementById("homeFinanceKpis");
+  const status=document.getElementById("homeFinanceStatus");
+  if(!source||!kpis||!status)return;
+  source.innerHTML=`<span class="finance-pill">${escapeHtml(financeSourceLabel())}</span>${financeSheet.updatedAt?`<span class="finance-pill">${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`:""}`;
+  if(financeSheet.loading){
+    kpis.innerHTML=[
+      homeFinanceCell("Капитал","—"),
+      homeFinanceCell("Сегодня","—"),
+      homeFinanceCell("Месяц доход","—"),
+      homeFinanceCell("Месяц расход","—")
+    ].join("");
+    status.textContent=financeStatusText();
+    return;
+  }
+  if(financeSheet.source==="zenmoney-error"){
+    kpis.innerHTML=[
+      homeFinanceCell("Капитал","—"),
+      homeFinanceCell("Сегодня","—"),
+      homeFinanceCell("Месяц доход","—"),
+      homeFinanceCell("Месяц расход","—")
+    ].join("");
+    status.textContent=financeStatusText();
+    return;
+  }
+  const data=financeDashboardData();
+  if(!data){
+    status.textContent=financeStatusText();
+    return;
+  }
+  kpis.innerHTML=[
+    homeFinanceCell("Капитал",moneyText(data.netWorth)),
+    homeFinanceCell("Сегодня",moneyText(data.income-data.expense),data.income-data.expense>=0?"finance-positive":"finance-negative"),
+    homeFinanceCell("Месяц доход",moneyText(data.monthIncome),"finance-positive"),
+    homeFinanceCell("Месяц расход",moneyText(data.monthExpense),"finance-negative")
+  ].join("");
+  status.textContent=financeStatusText();
+}
+function homeFinanceCell(label,value,className=""){
+  return `<div class="hq-finance-cell"><span>${escapeHtml(label)}</span><b class="${className}">${escapeHtml(value)}</b></div>`;
+}
 function renderFinanceDashboard(){
   const root=document.getElementById("financeKpis");
   if(!root)return;
@@ -2719,37 +2847,31 @@ function renderFinanceDashboard(){
     const statusRoot=document.getElementById("financeStatus");
     const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financeDebts","financeGoals"];
     if(netWorthRoot)netWorthRoot.textContent="—";
-    if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">ZenMoney Stable</span><span class="finance-pill">ошибка</span>`;
-    if(statusRoot)statusRoot.textContent=`ZenMoney не ответил: ${financeSheet.error||"проверь MCP URL"}`;
+    if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">ZenMoney Stable</span><span class="finance-pill">ошибка</span><span class="finance-pill">${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
+    if(statusRoot)statusRoot.textContent=financeStatusText();
     clearIds.forEach(id=>{
       const el=document.getElementById(id);
       if(el)el.innerHTML="";
     });
+    renderHomeFinanceWidget();
     return;
   }
   const day=todayDay();
-  const operations=financeRows("operations");
-  const accounts=sortFinanceAccounts(financeRows("accounts"));
-  const debts=financeRows("debts").length?financeRows("debts"):operations.filter(row=>pick(row,["type","тип"]).toLowerCase().includes("долг"));
-  const goals=financeRows("goals");
-  const todayOps=operations.filter(row=>sameFinanceDay(parseFinanceDate(pick(row,["date","дата"]))));
-  const monthOps=operations.filter(row=>sameFinanceMonth(parseFinanceDate(pick(row,["date","дата"]))));
-  const income=financeSummaryValue(["income_today","доход_сегодня","доход"],todayOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),parseMoney(day.finance.income)));
-  const expense=financeSummaryValue(["expense_today","spent_today","расход_сегодня","потратил"],Math.abs(todayOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),-parseMoney(day.finance.expense))));
-  const balance=financeSummaryValue(["balance","баланс","остаток"],parseMoney(day.finance.balance));
-  const netWorth=accounts.length?accounts.reduce((sum,row)=>sum+financeAccountAmount(row),0):balance;
-  const monthIncome=financeSummaryValue(["month_income","доход_месяц","доход_за_месяц"],monthOps.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
-  const monthExpense=financeSummaryValue(["month_expense","расход_месяц","расход_за_месяц"],Math.abs(monthOps.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0)));
+  const data=financeDashboardData(day);
+  if(!data){
+    renderHomeFinanceWidget();
+    return;
+  }
+  const {operations,accounts,debts,goals,monthOps,income,expense,netWorth,monthIncome,monthExpense}=data;
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
   if(netWorthRoot)netWorthRoot.textContent=moneyText(netWorth);
   if(metaRoot){
-    const source=financeSheet.source==="zenmoney"?"ZenMoney Stable":financeSheet.source==="google-sheets"?"Google Sheets":financeSheet.source;
-    metaRoot.innerHTML=`<span class="finance-pill">${escapeHtml(source)}</span><span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
+    metaRoot.innerHTML=`<span class="finance-pill">${escapeHtml(financeSourceLabel())}</span><span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span><span class="finance-pill">${escapeHtml(financeNextRefreshText())}</span>`;
   }
   if(statusRoot){
-    statusRoot.textContent=financeSheet.source==="zenmoney"?"Синхронно с ZenMoney. Операции из ChatGPT попадут сюда после обновления.":"";
+    statusRoot.textContent=financeStatusText();
   }
   root.innerHTML=[
     financeKpi("Доход сегодня",income,"finance-positive"),
@@ -2767,6 +2889,7 @@ function renderFinanceDashboard(){
   }),financeSheet.source==="zenmoney"?"Счета появятся после синхронизации ZenMoney.":financeSheet.loaded?"Заполните вкладку Счета в Google Sheets. Баланс больше не вычисляется из операций.":"Счета появятся после подключения вкладки Счета.");
   renderFinanceDebts(debts.map(row=>Object.assign({kind:"Долг"},row)));
   renderFinanceGoals(goals.map(row=>Object.assign({kind:"Цель"},row)));
+  renderHomeFinanceWidget();
 }
 function renderFinanceLoading(){
   const netWorthRoot=document.getElementById("financeNetWorth");
@@ -2774,13 +2897,14 @@ function renderFinanceLoading(){
   const statusRoot=document.getElementById("financeStatus");
   const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financeDebts","financeGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
-  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">${financeSheet.source==="zenmoney"?"обновляю ZenMoney":"обновляю таблицу"}</span>`;
-  if(statusRoot)statusRoot.textContent="";
+  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">${financeSheet.source==="zenmoney"?"обновляю ZenMoney Stable":"обновляю таблицу"}</span><span class="finance-pill">${escapeHtml(financeNextRefreshText())}</span>`;
+  if(statusRoot)statusRoot.textContent=financeStatusText();
   clearIds.forEach(id=>{
     const el=document.getElementById(id);
     if(!el)return;
     el.innerHTML=id==="financeOperations"?`<div class="finance-loading"><div class="finance-loading-inner"><div class="finance-loader-mark">И</div><b>Собираю финансы</b><span>${financeSheet.source==="zenmoney"?"Синхронизирую ZenMoney, счета и последние операции.":"Читаю вкладки Google Sheets, считаю дни, счета, долги и платежи."}</span><div class="finance-loading-line"><div></div></div></div></div>`:"";
   });
+  renderHomeFinanceWidget();
 }
 function financeKpi(label,value,className=""){
   return `<div class="finance-kpi"><span>${escapeHtml(label)}</span><b class="${className}">${moneyText(value)}</b></div>`;
