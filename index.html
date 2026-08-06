@@ -1291,22 +1291,19 @@
           <div class="section-kicker">Финансы</div>
           <div class="section-title">Денежный штаб</div>
           <div class="finance-total" id="financeNetWorth">—</div>
-          <div class="finance-meta" id="financeMeta"></div>
-          <div class="finance-status" id="financeStatus">Финансы работают через ZenMoney Stable. Если MCP URL еще не сохранен, нажми ZenMoney.</div>
+          <div class="finance-meta" id="financeMeta" hidden></div>
+          <div class="finance-status" id="financeStatus" hidden></div>
         </div>
       </section>
 
       <div class="finance-kpis" id="financeKpis"></div>
 
-      <div class="finance-command">
-        <section class="finance-decision" id="financeDecision"></section>
-        <section class="card">
-          <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 10h14M7 17h10"></path></svg></div><h2>Сегодня</h2></div>
-          </div>
-          <div class="finance-signal-grid" id="financeToday"></div>
-        </section>
-      </div>
+      <section class="card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 10h14M7 17h10"></path></svg></div><h2>Сегодня</h2></div>
+        </div>
+        <div class="finance-signal-grid" id="financeToday"></div>
+      </section>
 
       <div class="finance-layout">
         <section class="card">
@@ -1314,13 +1311,6 @@
             <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Обязательства и победы</h2></div>
           </div>
           <div class="finance-bars" id="financeDebts"></div>
-        </section>
-
-        <section class="card">
-          <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 19V5M4 19h16M8 16v-5M13 16V8M18 16v-3"></path></svg></div><h2>Куда ушли деньги</h2></div>
-          </div>
-          <div class="finance-bars" id="financeCategories"></div>
         </section>
       </div>
 
@@ -1726,6 +1716,7 @@ let secretaryLoadState={source:"offline",message:""};
 let financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
 let financeRefreshTimer=null;
 let financeLoadPromise=null;
+let financeGoldPrice={value:null,date:"",source:""};
 const zenMoneyMcpStorageKey="lifeOsZenMoneyMcpUrl";
 let notificationTimers=[];
 let cloudUserId=null;
@@ -2533,6 +2524,27 @@ function googleSheetRows(url){
     document.head.appendChild(script);
   });
 }
+function cbrDate(value){
+  return `${String(value.getDate()).padStart(2,"0")}/${String(value.getMonth()+1).padStart(2,"0")}/${value.getFullYear()}`;
+}
+async function loadCbrGoldPrice(){
+  const to=new Date();
+  const from=new Date();
+  from.setDate(to.getDate()-45);
+  const url=`https://www.cbr.ru/scripts/xml_metall.asp?date_req1=${cbrDate(from)}&date_req2=${cbrDate(to)}`;
+  try{
+    const text=await fetchText(url);
+    const xml=new DOMParser().parseFromString(text,"text/xml");
+    const records=[...xml.querySelectorAll('Record[Code="1"]')];
+    const record=records[records.length-1];
+    const value=parseMoney(record&&record.querySelector("Buy")&&record.querySelector("Buy").textContent);
+    if(value>0){
+      financeGoldPrice={value,date:record.getAttribute("Date")||"",source:"ЦБ РФ"};
+    }
+  }catch(e){
+    financeGoldPrice=financeGoldPrice.value?financeGoldPrice:{value:null,date:"",source:""};
+  }
+}
 async function loadFinanceSheet(){
   if(financeLoadPromise)return financeLoadPromise;
   financeLoadPromise=loadFinanceSheetNow();
@@ -2543,6 +2555,7 @@ async function loadFinanceSheet(){
   }
 }
 async function loadFinanceSheetNow(){
+  await loadCbrGoldPrice();
   const zenMoneyMcpUrl=getZenMoneyMcpUrl();
   if(zenMoneyMcpUrl){
     await loadZenMoneyFinance(zenMoneyMcpUrl);
@@ -2955,9 +2968,9 @@ function renderFinanceDashboard(){
     const netWorthRoot=document.getElementById("financeNetWorth");
     const metaRoot=document.getElementById("financeMeta");
     const statusRoot=document.getElementById("financeStatus");
-    const clearIds=["financeKpis","financeDecision","financeToday","financeCategories","financeOperations","financeAccounts","financeDebts","financeGoals"];
+    const clearIds=["financeKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
     if(netWorthRoot)netWorthRoot.textContent="—";
-    if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">ZenMoney Stable</span><span class="finance-pill">ошибка</span><span class="finance-pill">${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
+    if(metaRoot)metaRoot.innerHTML="";
     if(statusRoot)statusRoot.textContent=financeStatusText();
     clearIds.forEach(id=>{
       const el=document.getElementById(id);
@@ -2972,13 +2985,13 @@ function renderFinanceDashboard(){
     renderHomeFinanceWidget();
     return;
   }
-  const {operations,accounts,debts,goals,monthOps,income,expense,netWorth,monthIncome,monthExpense}=data;
+  const {operations,accounts,debts,goals,income,expense,netWorth,monthIncome,monthExpense}=data;
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
   if(netWorthRoot)netWorthRoot.textContent=moneyText(netWorth);
   if(metaRoot){
-    metaRoot.innerHTML=`<span class="finance-pill">${escapeHtml(financeSourceLabel())}</span><span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span><span class="finance-pill">${escapeHtml(financeNextRefreshText())}</span>`;
+    metaRoot.innerHTML="";
   }
   if(statusRoot){
     statusRoot.textContent=financeStatusText();
@@ -2989,9 +3002,7 @@ function renderFinanceDashboard(){
     financeKpi("Доход за месяц",monthIncome,"finance-positive"),
     financeKpi("Расход за месяц",monthExpense,"finance-negative")
   ].join("");
-  renderFinanceDecision(data);
   renderFinanceToday(data);
-  renderFinanceCategories(monthOps);
   renderFinanceOperations(operations);
   renderFinanceCards("financeAccounts",accounts,row=>({
     title:normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account),
@@ -3007,9 +3018,9 @@ function renderFinanceLoading(){
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
-  const clearIds=["financeKpis","financeDecision","financeToday","financeCategories","financeOperations","financeAccounts","financeDebts","financeGoals"];
+  const clearIds=["financeKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
-  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">${financeSheet.source==="zenmoney"?"обновляю ZenMoney Stable":"обновляю таблицу"}</span><span class="finance-pill">${escapeHtml(financeNextRefreshText())}</span>`;
+  if(metaRoot)metaRoot.innerHTML="";
   if(statusRoot)statusRoot.textContent=financeStatusText();
   clearIds.forEach(id=>{
     const el=document.getElementById(id);
@@ -3041,46 +3052,14 @@ function financeAccountDebts(accounts){
     };
   });
 }
-function renderFinanceDecision(data){
-  const root=document.getElementById("financeDecision");
-  if(!root)return;
-  const obligations=[...financeAccountDebts(data.accounts),...(data.debts||[])].reduce((sum,row)=>sum+financeDebtData(row).left,0);
-  const dailyBudget=Math.floor((data.netWorth-obligations)/Math.max(1,new Date(new Date().getFullYear(),new Date().getMonth()+1,0).getDate()-new Date().getDate()+1));
-  const ok=data.netWorth>0&&dailyBudget>0;
-  root.className=`finance-decision ${ok?"":"warn"}`;
-  root.innerHTML=`<div class="section-kicker">Решение дня</div><b>${ok?`Можно тратить до ${moneyText(dailyBudget)} в день`:"Режим осторожности: сначала закрыть обязательства"}</b><span>${escapeHtml(ok?"Деньги есть, но расходы месяца лучше держать в дневном лимите.":`Свободный остаток ${moneyText(data.netWorth)}, обязательства ${moneyText(obligations)}. Новые траты лучше проводить только необходимые.`)}</span>`;
-}
 function renderFinanceToday(data){
   const root=document.getElementById("financeToday");
   if(!root)return;
-  const last=data.operations.slice().sort((a,b)=>{
-    const left=parseFinanceDate(pick(a,["date","дата"]));
-    const right=parseFinanceDate(pick(b,["date","дата"]));
-    return (right?right.getTime():0)-(left?left.getTime():0);
-  })[0];
-  const lastAmount=last?financeOperationAmount(last):0;
   root.innerHTML=[
     financeSignal("Доход",moneyText(data.income),"finance-positive"),
     financeSignal("Расход",moneyText(data.expense),"finance-negative"),
-    financeSignal("Последняя",last?`${financeOperationTitle(last,lastAmount)} · ${moneyText(lastAmount)}`:"—",lastAmount>=0?"finance-positive":"finance-negative")
+    financeSignal("Итог",moneyText(data.income-data.expense),data.income-data.expense>=0?"finance-positive":"finance-negative")
   ].join("");
-}
-function renderFinanceCategories(rows){
-  const root=document.getElementById("financeCategories");
-  if(!root)return;
-  const categories=topFinanceCategories(rows||[]);
-  if(!categories.length){
-    root.innerHTML=`<div class="finance-status">Расходы по категориям появятся после операций месяца.</div>`;
-    return;
-  }
-  const max=Math.max(...categories.map(([,value])=>value),1);
-  root.innerHTML=categories.map(([title,value])=>financeBarRow({
-    title,
-    amount:value,
-    meta:`${Math.round(value/max*100)}% от крупнейшей категории`,
-    progress:Math.round(value/max*100),
-    tone:"category"
-  })).join("");
 }
 function financeBarRow({title,amount,meta,progress,tone=""}){
   const width=Math.max(2,Math.min(100,Number(progress)||0));
@@ -3171,12 +3150,12 @@ function renderFinanceGoals(rows){
   if(!root)return;
   const list=(rows||[]).slice(0,10);
   if(!list.length){
-    root.innerHTML=`<div class="finance-status">Финансовые цели появятся из вкладки goals: название, цель, накоплено, срок.</div>`;
+    root.innerHTML=`<div class="finance-status">Финансовые цели появятся из таблицы. Названия редактирует чат в Google Sheets.</div>`;
     return;
   }
   root.innerHTML=list.map(row=>{
     const goal=financeGoalData(row);
-    const title=pick(row,["title","название","goal","цель"])||"Финансовая цель";
+    const title=pick(row,["title","название","goal","цель","name","имя"])||"Без названия в таблице";
     const due=pick(row,["deadline","срок","due_date","дата"]);
     const status=pick(row,["status","статус"]);
     return `<div class="finance-debt-card"><div class="finance-debt-top"><b>${escapeHtml(title)}</b><strong>${goal.progress}%</strong></div><div class="finance-card-grid"><div class="finance-card-stat"><span>Накоплено</span><b>${moneyText(goal.saved)}</b></div><div class="finance-card-stat"><span>Осталось</span><b>${moneyText(goal.left)}</b></div><div class="finance-card-stat"><span>Цель</span><b>${moneyText(goal.total)}</b></div><div class="finance-card-stat"><span>Срок</span><b>${escapeHtml(due||"не задан")}</b></div></div><div class="finance-debt-bar" aria-label="Накоплено ${goal.progress}%"><div style="width:${goal.progress}%"></div></div><div class="finance-debt-meta">${escapeHtml([status||"в работе",`прогресс ${goal.progress}%`].filter(Boolean).join(" · "))}</div></div>`;
