@@ -1232,10 +1232,11 @@
           <div class="section-title">Денежный штаб</div>
           <div class="finance-total" id="financeNetWorth">—</div>
           <div class="finance-meta" id="financeMeta"></div>
-          <div class="finance-status" id="financeStatus">Финансы работают локально. Подключи вкладки Google Sheets в config.</div>
+          <div class="finance-status" id="financeStatus">Финансы работают через ZenMoney Stable. Если MCP URL еще не сохранен, нажми ZenMoney.</div>
         </div>
         <div class="finance-actions">
-          <button class="primary" onclick="refreshFinanceSheet()">Обновить таблицу</button>
+          <button class="primary" onclick="refreshFinanceSheet()">Обновить финансы</button>
+          <button class="ghost" onclick="showZenMoneySetup()">ZenMoney</button>
           <button class="ghost" onclick="toggleFinanceManual()">Ручной ввод</button>
         </div>
       </section>
@@ -1666,6 +1667,7 @@ let secretarySnapshot=null;
 let secretaryLoadState={source:"offline",message:""};
 let financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
 let financeRefreshTimer=null;
+const zenMoneyMcpStorageKey="lifeOsZenMoneyMcpUrl";
 let notificationTimers=[];
 let cloudUserId=null;
 const morningHabits=[
@@ -2470,6 +2472,11 @@ function googleSheetRows(url){
   });
 }
 async function loadFinanceSheet(){
+  const zenMoneyMcpUrl=getZenMoneyMcpUrl();
+  if(zenMoneyMcpUrl){
+    await loadZenMoneyFinance(zenMoneyMcpUrl);
+    return;
+  }
   const config=(window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.finance)||{};
   const tabLabels={summary:"Сводка",operations:"Финансы",accounts:"Счета",payments:"Платежи",debts:"Долги",goals:"Финансовые цели"};
   const tabs=Object.assign({},...Object.entries(tabLabels).map(([name,label])=>({[name]:googleSheetTabUrl(config.spreadsheetId,label)})));
@@ -2500,8 +2507,89 @@ async function loadFinanceSheet(){
 }
 function refreshFinanceSheet(){
   const status=document.getElementById("financeStatus");
-  if(status)status.textContent="Обновляю финансы из таблицы...";
+  if(status)status.textContent="Обновляю финансы...";
   loadFinanceSheet();
+}
+function getZenMoneyMcpUrl(){
+  const config=(window.LIFE_OS_SECRETARY_CONFIG&&window.LIFE_OS_SECRETARY_CONFIG.finance)||{};
+  return localStorage.getItem(zenMoneyMcpStorageKey)||config.zenMoneyMcpUrl||"";
+}
+function showZenMoneySetup(){
+  const current=getZenMoneyMcpUrl();
+  const next=prompt("MCP URL ZenMoney Stable",current||"https://chatgpt-zenmoney-mcp.netlify.app/mcp?key=");
+  if(next===null)return;
+  const value=next.trim();
+  if(value){
+    localStorage.setItem(zenMoneyMcpStorageKey,value);
+    refreshFinanceSheet();
+  }else{
+    localStorage.removeItem(zenMoneyMcpStorageKey);
+    loadFinanceSheet();
+  }
+}
+window.connectZenMoneyStable=function(url){
+  if(!url)return false;
+  localStorage.setItem(zenMoneyMcpStorageKey,String(url).trim());
+  refreshFinanceSheet();
+  return true;
+};
+async function callZenMoneyMcp(url,name,args={}){
+  const response=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({jsonrpc:"2.0",id:Date.now(),method:"tools/call",params:{name,arguments:args}})
+  });
+  const payload=await response.json();
+  if(!response.ok||payload.error)throw new Error(payload.error&&payload.error.message||`MCP HTTP ${response.status}`);
+  return payload.result&&payload.result.structuredContent||{};
+}
+async function loadZenMoneyFinance(url){
+  financeSheet={loaded:false,loading:true,source:"zenmoney",updatedAt:null,tabs:{}};
+  renderFinanceDashboard();
+  try{
+    await callZenMoneyMcp(url,"sync_data",{force_full:true});
+    const accountsResult=await callZenMoneyMcp(url,"list_accounts",{include_archived:false});
+    const transactionsResult=await callZenMoneyMcp(url,"list_transactions",{days:45,limit:150});
+    const accounts=(accountsResult.accounts||[]).map(mapZenMoneyAccount);
+    const operations=(transactionsResult.transactions||[]).map(mapZenMoneyTransaction).filter(Boolean);
+    financeSheet={loaded:true,loading:false,source:"zenmoney",updatedAt:new Date().toISOString(),tabs:{summary:[{}],accounts,operations,debts:[],goals:[]}};
+  }catch(error){
+    financeSheet={loaded:false,loading:false,source:"zenmoney-error",updatedAt:new Date().toISOString(),tabs:{},error:error instanceof Error?error.message:String(error)};
+  }
+  renderFinanceDashboard();
+}
+function mapZenMoneyAccount(account){
+  const balance=Number(account.displayBalance??account.availableCredit??account.balance??0);
+  const title=account.title||account.name||account.id||"Счет";
+  const isCredit=account.balanceMeaning==="available_credit";
+  return {
+    account:title,
+    balance,
+    displayBalance:balance,
+    rawBalance:Number(account.balance??balance),
+    type:isCredit?"Кредитка · доступно":account.type||"ZenMoney",
+    currency:"RUB",
+    creditLimit:Number(account.creditLimit||0),
+    debt:Number(account.debt||0),
+    availableCredit:Number(account.availableCredit??balance),
+    balanceMeaning:account.balanceMeaning||"account_balance"
+  };
+}
+function mapZenMoneyTransaction(tx){
+  if(tx.deleted)return null;
+  const income=Number(tx.income||0);
+  const outcome=Number(tx.outcome||0);
+  const isTransfer=income>0&&outcome>0;
+  const amount=isTransfer?0:(income>0?income:-outcome);
+  return {
+    date:tx.date||"",
+    type:isTransfer?"Перевод":amount>=0?"Доход":"Расход",
+    category:Array.isArray(tx.tag)&&tx.tag.length?tx.tag.join(", "):"ZenMoney",
+    account:tx.outcomeAccount||tx.incomeAccount||"",
+    payee:tx.payee||tx.merchant||"",
+    comment:tx.comment||"",
+    amount
+  };
 }
 function toggleFinanceManual(){
   const card=document.getElementById("financeManualCard");
@@ -2568,10 +2656,21 @@ function normalizeFinanceAccountName(value){
   return raw;
 }
 function financeAccountAmount(row){
+  const display=pick(row,["displayBalance","display_balance","availableCredit","available_credit","доступно"]);
+  if(display!=="")return parseMoney(display);
   const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
   const price=parseMoney(pick(row,["gold_price_rub","цена_грамм","цена_за_грамм","руб_за_грамм","price_gram"]));
   if(grams&&price)return grams*price;
   return parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]));
+}
+function financeAccountMeta(row){
+  const type=pick(row,["type","тип"]);
+  const currency=pick(row,["currency","валюта"]);
+  const debt=parseMoney(pick(row,["debt","долг"]));
+  const limit=parseMoney(pick(row,["creditLimit","credit_limit","лимит"]));
+  const gold=pick(row,["grams","граммы","г"])&&pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])?`${pick(row,["grams","граммы","г"])} г × ${pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])} ₽/г`:"";
+  const credit=limit?`долг ${moneyText(debt)} из ${moneyText(limit)}`:"";
+  return [type,currency,credit,gold].filter(Boolean).join(" · ");
 }
 function financeGoalData(row){
   const total=parseMoney(pick(row,["target","цель_сумма","сумма_цели","amount","сумма"]))||0;
@@ -2614,6 +2713,20 @@ function renderFinanceDashboard(){
     renderFinanceLoading();
     return;
   }
+  if(financeSheet.source==="zenmoney-error"){
+    const netWorthRoot=document.getElementById("financeNetWorth");
+    const metaRoot=document.getElementById("financeMeta");
+    const statusRoot=document.getElementById("financeStatus");
+    const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financeDebts","financeGoals"];
+    if(netWorthRoot)netWorthRoot.textContent="—";
+    if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">ZenMoney Stable</span><span class="finance-pill">ошибка</span>`;
+    if(statusRoot)statusRoot.textContent=`ZenMoney не ответил: ${financeSheet.error||"проверь MCP URL"}`;
+    clearIds.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.innerHTML="";
+    });
+    return;
+  }
   const day=todayDay();
   const operations=financeRows("operations");
   const accounts=sortFinanceAccounts(financeRows("accounts"));
@@ -2631,9 +2744,12 @@ function renderFinanceDashboard(){
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
   if(netWorthRoot)netWorthRoot.textContent=moneyText(netWorth);
-  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
+  if(metaRoot){
+    const source=financeSheet.source==="zenmoney"?"ZenMoney Stable":financeSheet.source==="google-sheets"?"Google Sheets":financeSheet.source;
+    metaRoot.innerHTML=`<span class="finance-pill">${escapeHtml(source)}</span><span class="finance-pill">обновлено: ${escapeHtml(formatDateTime(financeSheet.updatedAt))}</span>`;
+  }
   if(statusRoot){
-    statusRoot.textContent="";
+    statusRoot.textContent=financeSheet.source==="zenmoney"?"Синхронно с ZenMoney. Операции из ChatGPT попадут сюда после обновления.":"";
   }
   root.innerHTML=[
     financeKpi("Доход сегодня",income,"finance-positive"),
@@ -2645,10 +2761,10 @@ function renderFinanceDashboard(){
   renderFinanceOperations(operations);
   renderFinanceCards("financeAccounts",accounts,row=>({
     title:normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account),
-    meta:[pick(row,["type","тип"]),pick(row,["currency","валюта"]),pick(row,["grams","граммы","г"])&&pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])?`${pick(row,["grams","граммы","г"])} г × ${pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])} ₽/г`:""].filter(Boolean).join(" · "),
+    meta:financeAccountMeta(row),
     amount:financeAccountAmount(row),
     tone:financeAccountAmount(row)>=0?"income":"expense"
-  }),financeSheet.loaded?"Заполните вкладку Счета в Google Sheets. Баланс больше не вычисляется из операций.":"Счета появятся после подключения вкладки Счета.");
+  }),financeSheet.source==="zenmoney"?"Счета появятся после синхронизации ZenMoney.":financeSheet.loaded?"Заполните вкладку Счета в Google Sheets. Баланс больше не вычисляется из операций.":"Счета появятся после подключения вкладки Счета.");
   renderFinanceDebts(debts.map(row=>Object.assign({kind:"Долг"},row)));
   renderFinanceGoals(goals.map(row=>Object.assign({kind:"Цель"},row)));
 }
@@ -2658,12 +2774,12 @@ function renderFinanceLoading(){
   const statusRoot=document.getElementById("financeStatus");
   const clearIds=["financeKpis","financeInsights","financeOperations","financeAccounts","financeDebts","financeGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
-  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">обновляю таблицу</span>`;
+  if(metaRoot)metaRoot.innerHTML=`<span class="finance-pill">${financeSheet.source==="zenmoney"?"обновляю ZenMoney":"обновляю таблицу"}</span>`;
   if(statusRoot)statusRoot.textContent="";
   clearIds.forEach(id=>{
     const el=document.getElementById(id);
     if(!el)return;
-    el.innerHTML=id==="financeOperations"?`<div class="finance-loading"><div class="finance-loading-inner"><div class="finance-loader-mark">И</div><b>Собираю финансы</b><span>Читаю вкладки Google Sheets, считаю дни, счета, долги и платежи.</span><div class="finance-loading-line"><div></div></div></div></div>`:"";
+    el.innerHTML=id==="financeOperations"?`<div class="finance-loading"><div class="finance-loading-inner"><div class="finance-loader-mark">И</div><b>Собираю финансы</b><span>${financeSheet.source==="zenmoney"?"Синхронизирую ZenMoney, счета и последние операции.":"Читаю вкладки Google Sheets, считаю дни, счета, долги и платежи."}</span><div class="finance-loading-line"><div></div></div></div></div>`:"";
   });
 }
 function financeKpi(label,value,className=""){
