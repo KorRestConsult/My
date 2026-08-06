@@ -1,4 +1,4 @@
-name: Fix final interface contrast
+name: Repair GitHub Pages queue
 
 on:
   push:
@@ -6,61 +6,31 @@ on:
       - ".github/workflows/fix-header-contrast.yml"
 
 permissions:
+  actions: write
   contents: write
+  deployments: write
 
 jobs:
-  patch:
+  repair:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-      - name: Apply final contrast override
+      - name: Release stuck Pages deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path("index.html")
-          text = path.read_text(encoding="utf-8")
-          marker = "/* FINAL CONTRAST OVERRIDE — 2026-08-06 */"
-          css = r'''
-            /* FINAL CONTRAST OVERRIDE — 2026-08-06 */
-            .topbar h1{color:#f7ead0!important;text-shadow:0 1px 0 rgba(0,0,0,.25)!important}
-            .topbar .avatar{color:#d6a14d!important;border-color:#b9853e!important}
-            .topbar .nav-btn{color:rgba(247,234,208,.82)!important}
-            .topbar .nav-btn svg{stroke:#c99243!important;opacity:1!important}
-            .topbar .nav-btn.active{color:#f2c56d!important;background:rgba(185,138,79,.22)!important;box-shadow:inset 0 0 0 1px rgba(220,170,85,.55)!important}
-            .hq-hero{color:#f7ead0!important}
-            .hq-hero .section-kicker{color:rgba(247,234,208,.68)!important}
-            .hq-hero .section-title,
-            .hq-hero .hero-metric strong,
-            .hq-hero .ring-hour,
-            .hq-hero .ring-center,
-            .hq-hero .weekday,
-            .hq-hero .day-number,
-            .hq-hero .month-label,
-            .hq-hero .progress-card b,
-            .hq-hero .progress-value{color:#f7ead0!important}
-            .hq-hero .hero-metric span{color:rgba(247,234,208,.72)!important}
-            .hq-hero .progress-card{color:#f7ead0!important}
-            .hq-hero .hero-bar{background:rgba(247,234,208,.18)!important}
-            @media (max-width:900px){
-              .hq-hero .progress-card{background:rgba(255,255,255,.065)!important}
-            }
-          '''
-
-          if marker not in text:
-              text = text.replace("</style>", css + "\n</style>", 1)
-              path.write_text(text, encoding="utf-8")
-          PY
-      - name: Commit and push index
+          gh api --method POST repos/${{ github.repository }}/deployments/5779823762/statuses \
+            -f state=inactive \
+            -f description='Reset stuck GitHub Pages deployment' || true
+          gh api --method POST repos/${{ github.repository }}/actions/runs/31103735603/cancel || true
+          sleep 8
+      - name: Trigger one clean Pages deployment
         run: |
           git config user.name "KorRestConsult"
           git config user.email "Korobicin@live.com"
-          git add index.html
-          if git diff --cached --quiet; then
-            echo "No changes needed"
-          else
-            git commit -m "Fix dark interface readability"
-            git push origin main
-          fi
+          date -u +%FT%TZ > .pages-redeploy
+          git add .pages-redeploy
+          git commit -m "Restart Pages after queue reset"
+          git push origin main
