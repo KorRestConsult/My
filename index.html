@@ -1095,6 +1095,72 @@
     }
   }
 
+
+/* Финансы: блок Сегодня — только доход и расход */
+.finance-today .today-total,
+.finance-today .today-summary,
+.finance-today .today-extra,
+.today-total,
+.today-summary {
+  display:none!important;
+}
+
+/* Долги */
+.finance-debts-title {
+  font-size: inherit;
+}
+.debt-card {
+  cursor:pointer;
+  transition:max-height .35s ease, padding .35s ease;
+}
+.debt-details {
+  display:none;
+}
+.debt-card.open .debt-details {
+  display:block;
+}
+
+
+/* Долги: раскрывающиеся карточки */
+.debt-modern-card{
+  border:1px solid rgba(185,138,79,.25);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:10px;
+  cursor:pointer;
+  overflow:hidden;
+}
+.debt-modern-card .debt-details{
+  max-height:0;
+  opacity:0;
+  overflow:hidden;
+  transition:max-height .35s ease,opacity .35s ease,margin .35s ease;
+}
+.debt-modern-card.open .debt-details{
+  max-height:500px;
+  opacity:1;
+  margin-top:14px;
+}
+.debt-progress{
+  height:8px;
+  background:rgba(255,255,255,.12);
+  border-radius:99px;
+  overflow:hidden;
+  margin:10px 0;
+}
+.debt-progress span{
+  display:block;
+  height:100%;
+  width:35%;
+  background:#b98a4f;
+}
+.debt-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0;
+}
+
 </style>
 
 <script>
@@ -1387,7 +1453,7 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
       <div class="finance-layout">
         <section class="card">
           <div class="section-head">
-            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Обязательства и победы</h2></div>
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 20 7v6c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4Z"></path></svg></div><h2>Долги</h2></div>
           </div>
           <div class="finance-bars" id="financeDebts"></div>
         </section>
@@ -4848,5 +4914,15 @@ if(config&&config.apiKey){
   window.setFirebaseStatus("Firebase: локальный режим",false);
 }
 </script>
+
+<script>
+document.addEventListener("click", function(e){
+  const card = e.target.closest(".debt-card, .finance-debt-card");
+  if(card){
+    card.classList.toggle("open");
+  }
+});
+</script>
+
 </body>
 </html>
