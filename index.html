@@ -285,15 +285,15 @@
   .topbar .shell{max-width:1280px;min-height:62px;padding:8px 22px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;align-items:center}
   .hero{padding:0;grid-template-columns:auto auto;gap:12px;align-items:center}
   .avatar{width:40px;height:40px;border-radius:3px;font-size:18px;background:transparent;color:var(--gold2);border:1px solid var(--gold);box-shadow:inset 0 0 20px rgba(185,138,79,.12);font-family:"Playfair Display",Georgia,"Times New Roman",serif}
-  h1{font-size:25px;text-shadow:none;color:#fff4df;font-family:"Playfair Display",Georgia,"Times New Roman",serif}
+  h1{font-size:25px;text-shadow:none;color:var(--ink);font-family:"Playfair Display",Georgia,"Times New Roman",serif}
   .subtitle,.year-ring,.pulse{display:none}
   .nav{background:transparent;border:0;padding:0;gap:2px;justify-content:space-between;align-items:center;overflow:visible;min-width:0}
-  .nav-btn{height:46px;min-width:0;flex:1 1 0;display:grid;grid-template-rows:19px 13px;place-items:center;align-content:center;gap:2px;border:0;background:transparent;color:#e8ddcb;border-radius:7px;padding:5px 3px;font-size:8.5px;line-height:1;font-weight:650;white-space:nowrap;overflow:hidden}
+  .nav-btn{height:46px;min-width:0;flex:1 1 0;display:grid;grid-template-rows:19px 13px;place-items:center;align-content:center;gap:2px;border:0;background:transparent;color:rgba(239,233,223,.64);border-radius:7px;padding:5px 3px;font-size:8.5px;line-height:1;font-weight:650;white-space:nowrap;overflow:hidden}
   .nav-btn span{max-width:100%;overflow:hidden;text-overflow:ellipsis}
   .nav-btn svg{width:17px;height:17px;stroke:var(--gold);stroke-width:1.7;fill:none;filter:none}
   .nav-btn:focus{outline:0!important}
   .nav-btn:focus-visible{box-shadow:inset 0 0 0 1px rgba(226,205,163,.34)}
-  .nav-btn.active{background:rgba(185,138,79,.18);color:#fff4df;box-shadow:inset 0 0 0 1px rgba(185,138,79,.42)}
+  .nav-btn.active{background:rgba(185,138,79,.11);color:var(--gold2);box-shadow:inset 0 0 0 1px rgba(185,138,79,.28)}
   main.shell{max-width:1120px;padding:8px 18px}
   .hq-hero{background:linear-gradient(145deg,#18130f,#0f0d0b 72%);color:var(--ink);border:1px solid rgba(210,180,130,.18);border-radius:8px;box-shadow:none;padding:12px 22px}
   .hq-hero .section-kicker{color:var(--muted)}
@@ -1038,41 +1038,49 @@
     .rent-card{grid-template-columns:1fr}
   }
 
-  /* Contrast fix for the dark command panel */
-  .hq-hero{
-    color:#fff4df;
+  /* Final contrast settings embedded in the single HTML file */
+  .topbar h1{color:#f4ead8!important}
+  .topbar .nav-btn{color:rgba(244,234,216,.78)!important}
+  .topbar .nav-btn.active{
+    color:#efc36f!important;
+    background:rgba(185,138,79,.16)!important;
+    box-shadow:inset 0 0 0 1px rgba(239,195,111,.38)!important
   }
-  .hq-hero .hero-metric strong{
-    color:#fff4df;
-  }
-  .hq-hero .hero-metric span{
-    color:#cfc3b2;
-  }
-  .hq-hero .ring-hour{
-    color:#e8ddcb;
-  }
-  .hq-hero .ring-center{
-    color:#fff4df;
-  }
+  .hq-hero{color:#f6ead8!important}
+  .hq-hero .hero-metric strong,
+  .hq-hero .progress-card b,
+  .hq-hero .progress-value,
+  .hq-hero .ring-hour,
+  .hq-hero .ring-center,
   .hq-hero .weekday,
-  .hq-hero .month-label{
-    color:#d8ccba;
-  }
-  .hq-hero .day-number{
-    color:#fff4df;
-  }
-  .hq-hero .progress-card b{
-    color:#fff4df;
-  }
-  .hq-hero .progress-value{
-    color:#f0dfc4;
-  }
-  .hq-hero .hero-bar{
-    background:rgba(255,244,223,.18);
-  }
+  .hq-hero .month-label,
+  .hq-hero .day-number{color:#f6ead8!important}
+  .hq-hero .hero-metric span{color:rgba(246,234,216,.72)!important}
+  .hq-hero .time-pill{color:#17120d!important}
 
 </style>
-<script src="data/secretary-config.js"></script>
+
+<script>
+window.LIFE_OS_SECRETARY_CONFIG = {
+  snapshotUrl: "",
+  headers: {},
+  finance: {
+    spreadsheetId: "15BsyIn4eglomCan8By63l1RV-3bTAY8Hkcy1xuyInLY",
+    autoRefreshMs: 300000,
+    tabs: {
+      summary: "",
+      operations: "https://docs.google.com/spreadsheets/d/15BsyIn4eglomCan8By63l1RV-3bTAY8Hkcy1xuyInLY/gviz/tq?tqx=out:csv&gid=1009",
+      accounts: "",
+      payments: "",
+      debts: "",
+      goals: ""
+    },
+    headers: {}
+  }
+};
+window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Рязань","timezone":"Europe/Moscow","updatedAt":"2026-07-27T09:30:00+03:00","source":"sample"},"money":{"balanceRub":1730,"spentTodayRub":0,"earnedTodayRub":0,"mustPay":[{"title":"Коммуналка","amountRub":null,"dueDate":null,"status":"control"}]},"focus":[{"title":"Core REST AI — подготовить демо и коммерческое предложение","area":"Деньги / работа","priority":1,"nextStep":"Собрать короткую презентацию и сценарий продажи для кофеен"},{"title":"Разобрать хвосты по быту","area":"Дом","priority":2,"nextStep":"Один бытовой блок на 20–30 минут"},{"title":"Проверить лечение / здоровье","area":"Здоровье","priority":3,"nextStep":"Не сорвать текущие назначения"}],"calendarToday":[{"time":"12:00","title":"Созвон / встреча","place":"","source":"Google Calendar"}],"tasksToday":[{"title":"Подготовить сайт / демо","project":"Работа","source":"Todoist","status":"active","priority":"high"}],"waiting":[{"title":"Москва / сайт косметики","status":"вероятность сделки снижена","nextCheck":"держать на контроле, но не считать основным доходом"},{"title":"Ирина Новикова","status":"резюме отправлено, ответа нет","nextCheck":"не зависать на ожидании"},{"title":"Медкнижки","status":"тишина","nextCheck":"проверить отдельно"}],"risks":[{"title":"Распыление","level":"high","text":"Не брать новые ИИ-игрушки и случайные проекты, пока не сделан денежный шаг дня."}],"health":[{"title":"Текущие назначения","status":"проверять по Штабу / Журналу здоровья","action":"не отмечать без фактического подтверждения"}],"homeCar":[{"title":"Коммуналка / квартира / машина","status":"контроль активных хвостов","action":"показывать только актуальное, не весь архив"}],"projects":[{"title":"Core REST AI","status":"главный рабочий фокус","nextStep":"упаковать как решение для общепита"},{"title":"Life OS / Секретарь","status":"строится командный экран","nextStep":"вывести реальные данные на сайт"},{"title":"ИИ-инструменты","status":"заморозка","nextStep":"не устанавливать новое без денежной пользы"}],"weather":{"city":"Рязань","summary":"погода будет подключена отдельным источником","tempMinC":null,"tempMaxC":null,"recommendation":"Пока показывать пустое состояние или моковые данные."}};
+</script>
+
 </head>
 <body>
 <header class="topbar">
@@ -1744,7 +1752,7 @@ window.LIFE_OS_SECRETARY_CONFIG=window.LIFE_OS_SECRETARY_CONFIG||{};
 <script>
 const stateKey="ilya_life_os_v1";
 const todayKey=new Date().toISOString().slice(0,10);
-const secretarySampleUrl="data/secretary-snapshot.sample.json";
+const secretarySampleUrl="data:application/json;charset=utf-8,%7B%22meta%22%3A%7B%22date%22%3A%222026-07-27%22%2C%22city%22%3A%22%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%8C%22%2C%22timezone%22%3A%22Europe/Moscow%22%2C%22updatedAt%22%3A%222026-07-27T09%3A30%3A00%2B03%3A00%22%2C%22source%22%3A%22sample%22%7D%2C%22money%22%3A%7B%22balanceRub%22%3A1730%2C%22spentTodayRub%22%3A0%2C%22earnedTodayRub%22%3A0%2C%22mustPay%22%3A%5B%7B%22title%22%3A%22%D0%9A%D0%BE%D0%BC%D0%BC%D1%83%D0%BD%D0%B0%D0%BB%D0%BA%D0%B0%22%2C%22amountRub%22%3Anull%2C%22dueDate%22%3Anull%2C%22status%22%3A%22control%22%7D%5D%7D%2C%22focus%22%3A%5B%7B%22title%22%3A%22Core%20REST%20AI%20%E2%80%94%20%D0%BF%D0%BE%D0%B4%D0%B3%D0%BE%D1%82%D0%BE%D0%B2%D0%B8%D1%82%D1%8C%20%D0%B4%D0%B5%D0%BC%D0%BE%20%D0%B8%20%D0%BA%D0%BE%D0%BC%D0%BC%D0%B5%D1%80%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B5%20%D0%BF%D1%80%D0%B5%D0%B4%D0%BB%D0%BE%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5%22%2C%22area%22%3A%22%D0%94%D0%B5%D0%BD%D1%8C%D0%B3%D0%B8%20/%20%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%22%2C%22priority%22%3A1%2C%22nextStep%22%3A%22%D0%A1%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BA%D0%BE%D1%80%D0%BE%D1%82%D0%BA%D1%83%D1%8E%20%D0%BF%D1%80%D0%B5%D0%B7%D0%B5%D0%BD%D1%82%D0%B0%D1%86%D0%B8%D1%8E%20%D0%B8%20%D1%81%D1%86%D0%B5%D0%BD%D0%B0%D1%80%D0%B8%D0%B9%20%D0%BF%D1%80%D0%BE%D0%B4%D0%B0%D0%B6%D0%B8%20%D0%B4%D0%BB%D1%8F%20%D0%BA%D0%BE%D1%84%D0%B5%D0%B5%D0%BD%22%7D%2C%7B%22title%22%3A%22%D0%A0%D0%B0%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D1%85%D0%B2%D0%BE%D1%81%D1%82%D1%8B%20%D0%BF%D0%BE%20%D0%B1%D1%8B%D1%82%D1%83%22%2C%22area%22%3A%22%D0%94%D0%BE%D0%BC%22%2C%22priority%22%3A2%2C%22nextStep%22%3A%22%D0%9E%D0%B4%D0%B8%D0%BD%20%D0%B1%D1%8B%D1%82%D0%BE%D0%B2%D0%BE%D0%B9%20%D0%B1%D0%BB%D0%BE%D0%BA%20%D0%BD%D0%B0%2020%E2%80%9330%20%D0%BC%D0%B8%D0%BD%D1%83%D1%82%22%7D%2C%7B%22title%22%3A%22%D0%9F%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B8%D1%82%D1%8C%20%D0%BB%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B5%20/%20%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D1%8C%D0%B5%22%2C%22area%22%3A%22%D0%97%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D1%8C%D0%B5%22%2C%22priority%22%3A3%2C%22nextStep%22%3A%22%D0%9D%D0%B5%20%D1%81%D0%BE%D1%80%D0%B2%D0%B0%D1%82%D1%8C%20%D1%82%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%22%7D%5D%2C%22calendarToday%22%3A%5B%7B%22time%22%3A%2212%3A00%22%2C%22title%22%3A%22%D0%A1%D0%BE%D0%B7%D0%B2%D0%BE%D0%BD%20/%20%D0%B2%D1%81%D1%82%D1%80%D0%B5%D1%87%D0%B0%22%2C%22place%22%3A%22%22%2C%22source%22%3A%22Google%20Calendar%22%7D%5D%2C%22tasksToday%22%3A%5B%7B%22title%22%3A%22%D0%9F%D0%BE%D0%B4%D0%B3%D0%BE%D1%82%D0%BE%D0%B2%D0%B8%D1%82%D1%8C%20%D1%81%D0%B0%D0%B9%D1%82%20/%20%D0%B4%D0%B5%D0%BC%D0%BE%22%2C%22project%22%3A%22%D0%A0%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%22%2C%22source%22%3A%22Todoist%22%2C%22status%22%3A%22active%22%2C%22priority%22%3A%22high%22%7D%5D%2C%22waiting%22%3A%5B%7B%22title%22%3A%22%D0%9C%D0%BE%D1%81%D0%BA%D0%B2%D0%B0%20/%20%D1%81%D0%B0%D0%B9%D1%82%20%D0%BA%D0%BE%D1%81%D0%BC%D0%B5%D1%82%D0%B8%D0%BA%D0%B8%22%2C%22status%22%3A%22%D0%B2%D0%B5%D1%80%D0%BE%D1%8F%D1%82%D0%BD%D0%BE%D1%81%D1%82%D1%8C%20%D1%81%D0%B4%D0%B5%D0%BB%D0%BA%D0%B8%20%D1%81%D0%BD%D0%B8%D0%B6%D0%B5%D0%BD%D0%B0%22%2C%22nextCheck%22%3A%22%D0%B4%D0%B5%D1%80%D0%B6%D0%B0%D1%82%D1%8C%20%D0%BD%D0%B0%20%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D0%B5%2C%20%D0%BD%D0%BE%20%D0%BD%D0%B5%20%D1%81%D1%87%D0%B8%D1%82%D0%B0%D1%82%D1%8C%20%D0%BE%D1%81%D0%BD%D0%BE%D0%B2%D0%BD%D1%8B%D0%BC%20%D0%B4%D0%BE%D1%85%D0%BE%D0%B4%D0%BE%D0%BC%22%7D%2C%7B%22title%22%3A%22%D0%98%D1%80%D0%B8%D0%BD%D0%B0%20%D0%9D%D0%BE%D0%B2%D0%B8%D0%BA%D0%BE%D0%B2%D0%B0%22%2C%22status%22%3A%22%D1%80%D0%B5%D0%B7%D1%8E%D0%BC%D0%B5%20%D0%BE%D1%82%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%BE%2C%20%D0%BE%D1%82%D0%B2%D0%B5%D1%82%D0%B0%20%D0%BD%D0%B5%D1%82%22%2C%22nextCheck%22%3A%22%D0%BD%D0%B5%20%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B0%D1%82%D1%8C%20%D0%BD%D0%B0%20%D0%BE%D0%B6%D0%B8%D0%B4%D0%B0%D0%BD%D0%B8%D0%B8%22%7D%2C%7B%22title%22%3A%22%D0%9C%D0%B5%D0%B4%D0%BA%D0%BD%D0%B8%D0%B6%D0%BA%D0%B8%22%2C%22status%22%3A%22%D1%82%D0%B8%D1%88%D0%B8%D0%BD%D0%B0%22%2C%22nextCheck%22%3A%22%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D0%B8%D1%82%D1%8C%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE%22%7D%5D%2C%22risks%22%3A%5B%7B%22title%22%3A%22%D0%A0%D0%B0%D1%81%D0%BF%D1%8B%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5%22%2C%22level%22%3A%22high%22%2C%22text%22%3A%22%D0%9D%D0%B5%20%D0%B1%D1%80%D0%B0%D1%82%D1%8C%20%D0%BD%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%98%D0%98-%D0%B8%D0%B3%D1%80%D1%83%D1%88%D0%BA%D0%B8%20%D0%B8%20%D1%81%D0%BB%D1%83%D1%87%D0%B0%D0%B9%D0%BD%D1%8B%D0%B5%20%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82%D1%8B%2C%20%D0%BF%D0%BE%D0%BA%D0%B0%20%D0%BD%D0%B5%20%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D0%BD%20%D0%B4%D0%B5%D0%BD%D0%B5%D0%B6%D0%BD%D1%8B%D0%B9%20%D1%88%D0%B0%D0%B3%20%D0%B4%D0%BD%D1%8F.%22%7D%5D%2C%22health%22%3A%5B%7B%22title%22%3A%22%D0%A2%D0%B5%D0%BA%D1%83%D1%89%D0%B8%D0%B5%20%D0%BD%D0%B0%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%22%2C%22status%22%3A%22%D0%BF%D1%80%D0%BE%D0%B2%D0%B5%D1%80%D1%8F%D1%82%D1%8C%20%D0%BF%D0%BE%20%D0%A8%D1%82%D0%B0%D0%B1%D1%83%20/%20%D0%96%D1%83%D1%80%D0%BD%D0%B0%D0%BB%D1%83%20%D0%B7%D0%B4%D0%BE%D1%80%D0%BE%D0%B2%D1%8C%D1%8F%22%2C%22action%22%3A%22%D0%BD%D0%B5%20%D0%BE%D1%82%D0%BC%D0%B5%D1%87%D0%B0%D1%82%D1%8C%20%D0%B1%D0%B5%D0%B7%20%D1%84%D0%B0%D0%BA%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D0%BF%D0%BE%D0%B4%D1%82%D0%B2%D0%B5%D1%80%D0%B6%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%22%7D%5D%2C%22homeCar%22%3A%5B%7B%22title%22%3A%22%D0%9A%D0%BE%D0%BC%D0%BC%D1%83%D0%BD%D0%B0%D0%BB%D0%BA%D0%B0%20/%20%D0%BA%D0%B2%D0%B0%D1%80%D1%82%D0%B8%D1%80%D0%B0%20/%20%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0%22%2C%22status%22%3A%22%D0%BA%D0%BE%D0%BD%D1%82%D1%80%D0%BE%D0%BB%D1%8C%20%D0%B0%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D1%85%20%D1%85%D0%B2%D0%BE%D1%81%D1%82%D0%BE%D0%B2%22%2C%22action%22%3A%22%D0%BF%D0%BE%D0%BA%D0%B0%D0%B7%D1%8B%D0%B2%D0%B0%D1%82%D1%8C%20%D1%82%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE%20%D0%B0%D0%BA%D1%82%D1%83%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D0%B5%2C%20%D0%BD%D0%B5%20%D0%B2%D0%B5%D1%81%D1%8C%20%D0%B0%D1%80%D1%85%D0%B8%D0%B2%22%7D%5D%2C%22projects%22%3A%5B%7B%22title%22%3A%22Core%20REST%20AI%22%2C%22status%22%3A%22%D0%B3%D0%BB%D0%B0%D0%B2%D0%BD%D1%8B%D0%B9%20%D1%80%D0%B0%D0%B1%D0%BE%D1%87%D0%B8%D0%B9%20%D1%84%D0%BE%D0%BA%D1%83%D1%81%22%2C%22nextStep%22%3A%22%D1%83%D0%BF%D0%B0%D0%BA%D0%BE%D0%B2%D0%B0%D1%82%D1%8C%20%D0%BA%D0%B0%D0%BA%20%D1%80%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D0%B5%20%D0%B4%D0%BB%D1%8F%20%D0%BE%D0%B1%D1%89%D0%B5%D0%BF%D0%B8%D1%82%D0%B0%22%7D%2C%7B%22title%22%3A%22Life%20OS%20/%20%D0%A1%D0%B5%D0%BA%D1%80%D0%B5%D1%82%D0%B0%D1%80%D1%8C%22%2C%22status%22%3A%22%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D1%81%D1%8F%20%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%D0%BD%D1%8B%D0%B9%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%22%2C%22nextStep%22%3A%22%D0%B2%D1%8B%D0%B2%D0%B5%D1%81%D1%82%D0%B8%20%D1%80%D0%B5%D0%B0%D0%BB%D1%8C%D0%BD%D1%8B%D0%B5%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5%20%D0%BD%D0%B0%20%D1%81%D0%B0%D0%B9%D1%82%22%7D%2C%7B%22title%22%3A%22%D0%98%D0%98-%D0%B8%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B%22%2C%22status%22%3A%22%D0%B7%D0%B0%D0%BC%D0%BE%D1%80%D0%BE%D0%B7%D0%BA%D0%B0%22%2C%22nextStep%22%3A%22%D0%BD%D0%B5%20%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%B0%D0%B2%D0%BB%D0%B8%D0%B2%D0%B0%D1%82%D1%8C%20%D0%BD%D0%BE%D0%B2%D0%BE%D0%B5%20%D0%B1%D0%B5%D0%B7%20%D0%B4%D0%B5%D0%BD%D0%B5%D0%B6%D0%BD%D0%BE%D0%B9%20%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D1%8B%22%7D%5D%2C%22weather%22%3A%7B%22city%22%3A%22%D0%A0%D1%8F%D0%B7%D0%B0%D0%BD%D1%8C%22%2C%22summary%22%3A%22%D0%BF%D0%BE%D0%B3%D0%BE%D0%B4%D0%B0%20%D0%B1%D1%83%D0%B4%D0%B5%D1%82%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B0%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%BC%20%D0%B8%D1%81%D1%82%D0%BE%D1%87%D0%BD%D0%B8%D0%BA%D0%BE%D0%BC%22%2C%22tempMinC%22%3Anull%2C%22tempMaxC%22%3Anull%2C%22recommendation%22%3A%22%D0%9F%D0%BE%D0%BA%D0%B0%20%D0%BF%D0%BE%D0%BA%D0%B0%D0%B7%D1%8B%D0%B2%D0%B0%D1%82%D1%8C%20%D0%BF%D1%83%D1%81%D1%82%D0%BE%D0%B5%20%D1%81%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D0%BD%D0%B8%D0%B5%20%D0%B8%D0%BB%D0%B8%20%D0%BC%D0%BE%D0%BA%D0%BE%D0%B2%D1%8B%D0%B5%20%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5.%22%7D%7D";
 let secretarySnapshot=null;
 let secretaryLoadState={source:"offline",message:""};
 let financeSheet={loaded:false,loading:true,source:"loading",updatedAt:null,tabs:{}};
@@ -1929,7 +1937,7 @@ const defaultProperties=()=>({
 const defaultAuto=()=>({
   vehicleId:"primary",
   vehicleProfile:{
-    photo:"bmw-car.png",
+    photo:"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20480%22%3E%0A%3Crect%20width%3D%22800%22%20height%3D%22480%22%20fill%3D%22%23f0e8db%22/%3E%0A%3Cpath%20d%3D%22M145%20300h510l-45-95c-13-28-41-46-72-46H300c-34%200-65%2019-80%2049l-42%2092h-33z%22%20fill%3D%22%2324201a%22/%3E%0A%3Cpath%20d%3D%22M270%20180h255c25%200%2048%2014%2059%2036l22%2046H213l28-54c6-17%2016-28%2029-28z%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ctext%20x%3D%22400%22%20y%3D%22430%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2242%22%20fill%3D%22%237b5223%22%3EBMW%20X3%3C/text%3E%0A%3C/svg%3E",
     brand:"BMW",
     model:"X3",
     generation:"F25",
@@ -2098,7 +2106,7 @@ function normalizeAutoState(data){
   if(data.autoDocs&&data.autoDocs.length&&!((data.auto||{}).documents||[]).some(doc=>doc.file)){
     data.autoDocs.forEach((file,i)=>auto.documents.push({id:`legacy-doc-${i}`,title:file.name||"Документ",number:"",expires:"",file,status:"active"}));
   }
-  if(auto.vehicleProfile.photo==="bmw-xs.png")auto.vehicleProfile.photo="bmw-car.png";
+  if(auto.vehicleProfile.photo==="bmw-xs.png")auto.vehicleProfile.photo="data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20480%22%3E%0A%3Crect%20width%3D%22800%22%20height%3D%22480%22%20fill%3D%22%23f0e8db%22/%3E%0A%3Cpath%20d%3D%22M145%20300h510l-45-95c-13-28-41-46-72-46H300c-34%200-65%2019-80%2049l-42%2092h-33z%22%20fill%3D%22%2324201a%22/%3E%0A%3Cpath%20d%3D%22M270%20180h255c25%200%2048%2014%2059%2036l22%2046H213l28-54c6-17%2016-28%2029-28z%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ctext%20x%3D%22400%22%20y%3D%22430%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2242%22%20fill%3D%22%237b5223%22%3EBMW%20X3%3C/text%3E%0A%3C/svg%3E";
   ["documents","maintenance","expenses","parts","reminders","insurance","fuel"].forEach(key=>auto[key]=auto[key]||[]);
   auto.serviceIntervalKm=Number(auto.serviceIntervalKm)||10000;
   auto.serviceIntervalMonths=Number(auto.serviceIntervalMonths)||12;
@@ -3894,7 +3902,7 @@ function renderVehiclePassport(){
   const car=autoProfile();
   const title=[car.brand,car.model,car.generation].filter(Boolean).join(" ")||"Автомобиль";
   root.innerHTML=`<div class="vehicle-card">
-    <img class="vehicle-photo" src="${escapeAttr(car.photo||"bmw-car.png")}" alt="${escapeAttr(title)}">
+    <img class="vehicle-photo" src="${escapeAttr(car.photo||"data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20800%20480%22%3E%0A%3Crect%20width%3D%22800%22%20height%3D%22480%22%20fill%3D%22%23f0e8db%22/%3E%0A%3Cpath%20d%3D%22M145%20300h510l-45-95c-13-28-41-46-72-46H300c-34%200-65%2019-80%2049l-42%2092h-33z%22%20fill%3D%22%2324201a%22/%3E%0A%3Cpath%20d%3D%22M270%20180h255c25%200%2048%2014%2059%2036l22%2046H213l28-54c6-17%2016-28%2029-28z%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22260%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2258%22%20fill%3D%22%2317120d%22/%3E%3Ccircle%20cx%3D%22565%22%20cy%3D%22328%22%20r%3D%2226%22%20fill%3D%22%23b9853e%22/%3E%0A%3Ctext%20x%3D%22400%22%20y%3D%22430%22%20text-anchor%3D%22middle%22%20font-family%3D%22Georgia%2Cserif%22%20font-size%3D%2242%22%20fill%3D%22%237b5223%22%3EBMW%20X3%3C/text%3E%0A%3C/svg%3E")}" alt="${escapeAttr(title)}">
     <div>
       <div class="vehicle-name">${escapeHtml(title)}</div>
       <div class="vehicle-sub">${escapeHtml([car.year,car.engine,car.drive,car.transmission].filter(Boolean).join(" · "))}</div>
