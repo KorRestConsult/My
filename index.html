@@ -1257,23 +1257,6 @@
           <div class="finance-meta" id="financeMeta"></div>
           <div class="finance-status" id="financeStatus">Финансы работают через ZenMoney Stable. Если MCP URL еще не сохранен, нажми ZenMoney.</div>
         </div>
-        <div class="finance-actions">
-          <button class="primary" id="financeRefreshButton" onclick="refreshFinanceSheet()">Обновить финансы</button>
-          <button class="ghost" onclick="showZenMoneySetup()">ZenMoney</button>
-          <button class="ghost" onclick="toggleFinanceManual()">Ручной ввод</button>
-        </div>
-      </section>
-
-      <section class="card" id="financeManualCard" style="display:none">
-        <div class="section-kicker">Fallback</div>
-        <div class="section-title">Ручной ввод на сегодня</div>
-        <div class="mini-form">
-          <input id="financeIncomePage" type="number" placeholder="Доход сегодня">
-          <input id="financeExpensePage" type="number" placeholder="Расход сегодня">
-          <input id="financeBalancePage" type="number" placeholder="Баланс месяца">
-          <textarea id="financeCommentPage" placeholder="Комментарий"></textarea>
-          <button class="primary" onclick="saveFinancePage()">Сохранить</button>
-        </div>
       </section>
 
       <div class="finance-kpis" id="financeKpis"></div>
@@ -2599,7 +2582,8 @@ async function loadZenMoneyFinance(url){
     const accountsResult=await callZenMoneyMcp(url,"list_accounts",{include_archived:false});
     const transactionsResult=await callZenMoneyMcp(url,"list_transactions",{days:45,limit:150});
     const accounts=(accountsResult.accounts||[]).map(mapZenMoneyAccount);
-    const operations=(transactionsResult.transactions||[]).map(mapZenMoneyTransaction).filter(Boolean);
+    const accountNames=new Map(accounts.map(account=>[account.id,account.account]).filter(([id])=>id));
+    const operations=(transactionsResult.transactions||[]).map(tx=>mapZenMoneyTransaction(tx,accountNames)).filter(Boolean);
     financeSheet={loaded:true,loading:false,source:"zenmoney",updatedAt:new Date().toISOString(),tabs:{summary:[{}],accounts,operations,debts:[],goals:[]}};
   }catch(error){
     financeSheet={loaded:false,loading:false,source:"zenmoney-error",updatedAt:new Date().toISOString(),tabs:{},error:error instanceof Error?error.message:String(error)};
@@ -2611,6 +2595,7 @@ function mapZenMoneyAccount(account){
   const title=account.title||account.name||account.id||"Счет";
   const isCredit=account.balanceMeaning==="available_credit";
   return {
+    id:account.id||"",
     account:title,
     balance,
     displayBalance:balance,
@@ -2623,19 +2608,40 @@ function mapZenMoneyAccount(account){
     balanceMeaning:account.balanceMeaning||"account_balance"
   };
 }
-function mapZenMoneyTransaction(tx){
+function looksLikeId(value){
+  return /^[0-9a-f]{8}-[0-9a-f-]{13,}$/i.test(String(value||"").trim());
+}
+function cleanFinanceText(value){
+  const text=String(value||"").trim();
+  return text&&looksLikeId(text)?"":text;
+}
+function zenMoneyAccountName(id,accountNames){
+  const value=String(id||"").trim();
+  if(!value)return "";
+  return accountNames&&accountNames.get(value)||cleanFinanceText(value);
+}
+function mapZenMoneyTransaction(tx,accountNames=new Map()){
   if(tx.deleted)return null;
   const income=Number(tx.income||0);
   const outcome=Number(tx.outcome||0);
   const isTransfer=income>0&&outcome>0;
   const amount=isTransfer?0:(income>0?income:-outcome);
+  const tags=Array.isArray(tx.tag)?tx.tag.map(cleanFinanceText).filter(Boolean):[];
+  const incomeAccount=zenMoneyAccountName(tx.incomeAccount,accountNames);
+  const outcomeAccount=zenMoneyAccountName(tx.outcomeAccount,accountNames);
+  const account=isTransfer?[outcomeAccount,incomeAccount].filter(Boolean).join(" → "):amount>=0?incomeAccount:outcomeAccount;
+  const merchant=cleanFinanceText(tx.merchant);
+  const payee=cleanFinanceText(tx.payee);
+  const comment=cleanFinanceText(tx.comment);
+  const title=merchant||payee||comment||tags[0]||(isTransfer?"Перевод":"Операция");
   return {
     date:tx.date||"",
     type:isTransfer?"Перевод":amount>=0?"Доход":"Расход",
-    category:Array.isArray(tx.tag)&&tx.tag.length?tx.tag.join(", "):"ZenMoney",
-    account:tx.outcomeAccount||tx.incomeAccount||"",
-    payee:tx.payee||tx.merchant||"",
-    comment:tx.comment||"",
+    category:tags.join(", ")||title,
+    subcategory:title,
+    account,
+    counterparty:merchant||payee,
+    comment:comment===title?"":comment,
     amount
   };
 }
@@ -2656,6 +2662,18 @@ function financeOperationAmount(row){
   const type=pick(row,["type","тип"]).toLowerCase();
   if(type.includes("расход"))return -Math.abs(amount);
   return amount;
+}
+function financeOperationTitle(row,amount){
+  return cleanFinanceText(pick(row,["subcategory","подкатегория","title","описание","payee","получатель","counterparty","контрагент","category","категория"]))||(amount>=0?"Доход":"Расход");
+}
+function financeOperationMeta(row){
+  const title=financeOperationTitle(row,financeOperationAmount(row));
+  return [
+    cleanFinanceText(pick(row,["category","категория"])),
+    cleanFinanceText(pick(row,["account","счет"])),
+    cleanFinanceText(pick(row,["counterparty","контрагент","payee","получатель"])),
+    cleanFinanceText(pick(row,["status","статус"]))
+  ].filter(item=>item&&item!==title).join(" · ");
 }
 function parseFinanceDate(value){
   const raw=String(value||"").trim();
@@ -2937,9 +2955,9 @@ function renderFinanceOperations(rows){
       const amount=financeOperationAmount(row);
       const type=pick(row,["type","тип"]).toLowerCase();
       const tone=type.includes("долг")?"debt":amount>=0?"income":"expense";
-      const title=pick(row,["subcategory","подкатегория","category","категория"])||"Операция";
-      const meta=[pick(row,["counterparty","контрагент"]),pick(row,["account","счет"]),pick(row,["status","статус"])].filter(Boolean).join(" · ");
-      const comment=pick(row,["title","описание","comment","комментарий"]);
+      const title=financeOperationTitle(row,amount);
+      const meta=financeOperationMeta(row);
+      const comment=cleanFinanceText(pick(row,["comment","комментарий"]));
       return `<div class="finance-op ${tone}"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(meta)}</span>${comment?`<span>${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
     }).join("")}</details>`;
   }).join("")}</div>`;
