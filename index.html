@@ -2826,12 +2826,20 @@ function normalizeFinanceAccountName(value){
   if(normalized.includes("золот"))return "Золото";
   return raw;
 }
+function financeGoldAccountData(row){
+  const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
+  const sheetPrice=parseMoney(pick(row,["gold_price_rub","цена_грамм","цена_за_грамм","руб_за_грамм","price_gram"]));
+  const livePrice=Number(financeGoldPrice&&financeGoldPrice.value)||0;
+  const price=livePrice||sheetPrice;
+  const source=livePrice?`${financeGoldPrice.source||"ЦБ РФ"}${financeGoldPrice.date?` на ${financeGoldPrice.date}`:""}`:sheetPrice?"цена из таблицы":"";
+  return {grams,price,value:grams&&price?grams*price:0,source};
+}
 function financeAccountAmount(row){
   const display=pick(row,["displayBalance","display_balance","availableCredit","available_credit","доступно"]);
   if(display!=="")return parseMoney(display);
-  const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
-  const price=parseMoney(pick(row,["gold_price_rub","цена_грамм","цена_за_грамм","руб_за_грамм","price_gram"]));
-  if(grams&&price)return grams*price;
+  const accountName=normalizeFinanceAccountName(pick(row,["account","счет","name","название"]));
+  const gold=financeGoldAccountData(row);
+  if((accountName==="Золото"||gold.grams)&&gold.value)return gold.value;
   return parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]));
 }
 function financeAccountMeta(row){
@@ -2839,7 +2847,8 @@ function financeAccountMeta(row){
   const currency=pick(row,["currency","валюта"]);
   const debt=parseMoney(pick(row,["debt","долг"]));
   const limit=parseMoney(pick(row,["creditLimit","credit_limit","лимит"]));
-  const gold=pick(row,["grams","граммы","г"])&&pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])?`${pick(row,["grams","граммы","г"])} г × ${pick(row,["gold_price_rub","цена_грамм","цена_за_грамм"])} ₽/г`:"";
+  const goldData=financeGoldAccountData(row);
+  const gold=goldData.grams&&goldData.price?`${goldData.grams.toLocaleString("ru-RU")} г × ${moneyText(goldData.price)}/г = ${moneyText(goldData.value)}${goldData.source?` · ${goldData.source}`:""}`:"";
   const credit=limit?`долг ${moneyText(debt)} из ${moneyText(limit)}`:"";
   return [type,currency,credit,gold].filter(Boolean).join(" · ");
 }
