@@ -1,0 +1,49 @@
+name: Release stuck GitHub Pages lock
+
+on:
+  push:
+    paths:
+      - ".github/workflows/release-pages-lock.yml"
+
+permissions:
+  actions: write
+  deployments: write
+  contents: read
+
+jobs:
+  unlock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel all active Pages runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          REPO="${{ github.repository }}"
+          gh api "repos/$REPO/actions/runs?per_page=100" --jq '.workflow_runs[] | select(.name=="pages build and deployment" and .status!="completed") | .id' | while read -r RUN_ID; do
+            [ -z "$RUN_ID" ] || gh api --method POST "repos/$REPO/actions/runs/$RUN_ID/cancel" || true
+          done
+          sleep 20
+
+      - name: Mark every non-final Pages deployment inactive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -e
+          REPO="${{ github.repository }}"
+          gh api "repos/$REPO/deployments?environment=github-pages&per_page=100" --jq '.[].id' | while read -r DEPLOYMENT_ID; do
+            [ -z "$DEPLOYMENT_ID" ] && continue
+            STATE=$(gh api "repos/$REPO/deployments/$DEPLOYMENT_ID/statuses?per_page=1" --jq '.[0].state // ""')
+            if [ "$STATE" != "success" ] && [ "$STATE" != "inactive" ]; then
+              gh api --method POST "repos/$REPO/deployments/$DEPLOYMENT_ID/statuses" -f state=inactive -f description='Release stale GitHub Pages deployment lock' || true
+            fi
+          done
+          gh api --method POST "repos/$REPO/deployments/5779975534/statuses" -f state=inactive -f description='Release stale d49 deployment lock' || true
+          gh api --method POST "repos/$REPO/deployments/5780069663/statuses" -f state=inactive -f description='Release stale d49 retry lock' || true
+          sleep 10
+
+      - name: Re-run only the approved Pages deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST repos/${{ github.repository }}/actions/jobs/92628680825/rerun
