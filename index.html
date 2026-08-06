@@ -121,7 +121,7 @@
   .finance-row span{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin-top:3px}
   .finance-row strong{color:var(--gold2);white-space:nowrap;text-align:right}
   .finance-positive{color:#7ec596!important}
-  .finance-negative{color:#d98b7d!important}
+  .finance-negative{color:#a64036!important}
   .finance-status{color:var(--muted);font-size:11px;line-height:1.45}
   .finance-command{display:grid;grid-template-columns:1.2fr .8fr;gap:10px}
   .finance-decision{border:1px solid rgba(63,143,101,.25);background:linear-gradient(145deg,rgba(63,143,101,.12),rgba(255,255,255,.62));border-radius:8px;padding:12px;display:grid;gap:8px}
@@ -183,7 +183,7 @@
   .finance-debt-meta{color:var(--muted);font-size:10px;line-height:1.35}
   .finance-card-label{display:inline-flex;align-items:center;width:max-content;border:1px solid var(--line);border-radius:6px;padding:3px 6px;color:var(--gold2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.06em}
   .finance-debt-card.receivable .finance-card-label,.finance-debt-card.receivable .finance-debt-top strong{color:#7ec596}
-  .finance-debt-card.payable .finance-card-label,.finance-debt-card.payable .finance-debt-top strong{color:#d98b7d}
+  .finance-debt-card.payable .finance-card-label,.finance-debt-card.payable .finance-debt-top strong{color:#a64036}
   .finance-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
   .finance-card-stat{border:1px solid var(--line);border-radius:7px;background:rgba(255,255,255,.025);padding:7px;min-width:0}
   .finance-card-stat span{display:block;color:var(--muted);font-size:9px;margin-bottom:3px}
@@ -1057,6 +1057,43 @@
   .hq-hero .day-number{color:#f6ead8!important}
   .hq-hero .hero-metric span{color:rgba(246,234,216,.72)!important}
   .hq-hero .time-pill{color:#17120d!important}
+
+
+  /* Mobile menu: all existing sections in a compact 4-column grid */
+  @media (max-width:560px){
+    .topbar{position:relative}
+    .nav{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:5px;
+      overflow:visible;
+      padding:5px 0 2px;
+    }
+    .nav-btn{
+      width:100%;
+      min-width:0;
+      height:54px;
+      border:1px solid rgba(185,138,79,.28);
+      border-radius:8px;
+      padding:5px 2px;
+      grid-template-rows:20px 12px;
+      background:rgba(255,255,255,.025);
+    }
+    .nav-btn svg{
+      width:18px;
+      height:18px;
+    }
+    .nav-btn span{
+      font-size:7.5px;
+      line-height:1;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .nav-btn.active{
+      background:rgba(185,138,79,.18);
+      box-shadow:inset 0 0 0 1px rgba(185,138,79,.42);
+    }
+  }
 
 </style>
 
