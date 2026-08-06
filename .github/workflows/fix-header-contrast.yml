@@ -1,0 +1,71 @@
+name: Fix header contrast
+
+on:
+  push:
+    paths:
+      - ".github/workflows/fix-header-contrast.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Improve header readability
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+          marker = "Header contrast fix: readable dark navigation"
+          css = r'''
+            /* Header contrast fix: readable dark navigation */
+            .topbar{
+              background:rgba(24,21,17,.98)!important;
+              border-bottom:1px solid rgba(199,150,75,.48)!important;
+              box-shadow:0 4px 18px rgba(0,0,0,.28)!important;
+            }
+            .topbar h1{color:#f6ead6!important;}
+            .topbar .avatar{
+              color:#e8bd73!important;
+              border-color:#c7964b!important;
+              background:rgba(185,133,62,.08)!important;
+            }
+            .topbar .nav-btn{
+              color:#ddd4c7!important;
+              opacity:1!important;
+              text-shadow:0 1px 1px rgba(0,0,0,.4);
+            }
+            .topbar .nav-btn svg{
+              stroke:#d8a64f!important;
+              opacity:1!important;
+            }
+            .topbar .nav-btn.active{
+              background:#3a2b1b!important;
+              color:#ffd590!important;
+              box-shadow:inset 0 0 0 1px rgba(218,166,79,.72)!important;
+            }
+            .topbar .nav-btn.active svg{stroke:#ffd590!important;}
+            .topbar .nav-btn:focus-visible{
+              box-shadow:inset 0 0 0 2px rgba(255,213,144,.78)!important;
+            }
+          '''
+          if marker not in text:
+              text = text.replace("</style>", css + "\n</style>", 1)
+              path.write_text(text, encoding="utf-8")
+          PY
+      - name: Commit and push
+        run: |
+          git config user.name "KorRestConsult"
+          git config user.email "Korobicin@live.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes needed"
+          else
+            git commit -m "Improve top navigation contrast"
+            git push origin main
+          fi
