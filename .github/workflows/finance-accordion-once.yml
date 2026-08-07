@@ -1,7 +1,8 @@
 name: Finance accordion one-shot
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 permissions:
   contents: write
 jobs:
@@ -9,88 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Patch finance day accordion only
+      - name: Patch finance accordion
         shell: bash
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          begin='<!-- FINANCE_DAY_ACCORDION_BEGIN -->'
-          end='<!-- FINANCE_DAY_ACCORDION_END -->'
-          if begin in s and end in s:
-              a=s.index(begin); b=s.index(end,a)+len(end)
-              s=s[:a]+s[b:]
-          patch=r'''<!-- FINANCE_DAY_ACCORDION_BEGIN -->
-<style id="financeDayAccordionStyles">
-#financeOperations details.finance-day{overflow:hidden;will-change:height;transition:box-shadow .22s ease,transform .22s ease,border-color .22s ease}
-#financeOperations details.finance-day[open]{box-shadow:0 8px 22px rgba(57,42,24,.08);transform:translateY(-1px)}
-#financeOperations details.finance-day summary{user-select:none;-webkit-user-select:none}
-#financeOperations details.finance-day .finance-day-toggle{transition:transform .24s cubic-bezier(.22,.8,.25,1)}
-</style>
-<script id="financeDayAccordionScript">
-(function(){
-  const root=document.getElementById('financeOperations');
-  if(!root||root.dataset.smoothAccordion==='1')return;
-  root.dataset.smoothAccordion='1';
-  const duration=260;
-  const easing='cubic-bezier(.22,.8,.25,1)';
-  function clearAnim(d){
-    if(d._financeAnim){try{d._financeAnim.cancel()}catch(_){ } d._financeAnim=null;}
-    d.style.height='';d.style.overflow='';
-  }
-  function closeDay(d){
-    if(!d||!d.open)return Promise.resolve();
-    clearAnim(d);
-    const summary=d.querySelector(':scope > summary');
-    if(!summary){d.open=false;return Promise.resolve();}
-    const from=d.getBoundingClientRect().height;
-    const to=summary.getBoundingClientRect().height;
-    d.style.overflow='hidden';
-    d.style.height=from+'px';
-    const a=d.animate([{height:from+'px',opacity:1},{height:to+'px',opacity:.98}],{duration,easing,fill:'forwards'});
-    d._financeAnim=a;
-    return a.finished.catch(()=>{}).then(()=>{
-      if(d._financeAnim!==a)return;
-      d.open=false;d._financeAnim=null;d.style.height='';d.style.overflow='';
-    });
-  }
-  function openDay(d){
-    if(!d||d.open)return;
-    clearAnim(d);
-    const summary=d.querySelector(':scope > summary');
-    if(!summary)return;
-    const from=summary.getBoundingClientRect().height;
-    d.open=true;
-    const to=d.scrollHeight;
-    d.style.overflow='hidden';
-    d.style.height=from+'px';
-    const a=d.animate([{height:from+'px',opacity:.98},{height:to+'px',opacity:1}],{duration,easing,fill:'forwards'});
-    d._financeAnim=a;
-    a.finished.catch(()=>{}).then(()=>{
-      if(d._financeAnim!==a)return;
-      d._financeAnim=null;d.style.height='';d.style.overflow='';
-    });
-  }
-  root.addEventListener('click',function(e){
-    const summary=e.target.closest('details.finance-day > summary');
-    if(!summary||!root.contains(summary))return;
-    const day=summary.parentElement;
-    e.preventDefault();
-    if(day.open){closeDay(day);return;}
-    root.querySelectorAll('details.finance-day[open]').forEach(other=>{if(other!==day)closeDay(other)});
-    openDay(day);
-  });
-})();
-</script>
-<!-- FINANCE_DAY_ACCORDION_END -->'''
-          marker='</body>'
-          if marker not in s:
-              raise SystemExit('index.html has no </body>')
-          s=s.replace(marker,patch+'\n'+marker,1)
-          p.write_text(s,encoding='utf-8')
-          PY
-          rm -f .github/workflows/finance-accordion-once.yml
+          python3 -c "import base64; from pathlib import Path; p=Path('index.html'); s=p.read_text(encoding='utf-8'); begin='<!-- FINANCE_DAY_ACCORDION_BEGIN -->'; end='<!-- FINANCE_DAY_ACCORDION_END -->'; a=s.find(begin); b=s.find(end,a)+len(end) if a>=0 else -1; s=(s[:a]+s[b:]) if a>=0 and b>=len(end) else s; patch=base64.b64decode('PCEtLSBGSU5BTkNFX0RBWV9BQ0NPUkRJT05fQkVHSU4gLS0+CjxzdHlsZSBpZD0iZmluYW5jZURheUFjY29yZGlvblN0eWxlcyI+CiNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5e292ZXJmbG93OmhpZGRlbjt3aWxsLWNoYW5nZTpoZWlnaHQ7dHJhbnNpdGlvbjpib3gtc2hhZG93IC4yMnMgZWFzZSx0cmFuc2Zvcm0gLjIycyBlYXNlLGJvcmRlci1jb2xvciAuMjJzIGVhc2V9CiNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5W29wZW5de2JveC1zaGFkb3c6MCA4cHggMjJweCByZ2JhKDU3LDQyLDI0LC4wOCk7dHJhbnNmb3JtOnRyYW5zbGF0ZVkoLTFweCl9CiNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5IHN1bW1hcnl7dXNlci1zZWxlY3Q6bm9uZTstd2Via2l0LXVzZXItc2VsZWN0Om5vbmV9CiNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5IC5maW5hbmNlLWRheS10b2dnbGV7dHJhbnNpdGlvbjp0cmFuc2Zvcm0gLjI0cyBjdWJpYy1iZXppZXIoLjIyLC44LC4yNSwxKX0KPC9zdHlsZT4KPHNjcmlwdCBpZD0iZmluYW5jZURheUFjY29yZGlvblNjcmlwdCI+CihmdW5jdGlvbigpewogIGNvbnN0IHJvb3Q9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2ZpbmFuY2VPcGVyYXRpb25zJyk7CiAgaWYoIXJvb3R8fHJvb3QuZGF0YXNldC5zbW9vdGhBY2NvcmRpb249PT0nMScpcmV0dXJuOwogIHJvb3QuZGF0YXNldC5zbW9vdGhBY2NvcmRpb249JzEnOwogIGNvbnN0IGR1cmF0aW9uPTI2MDsKICBjb25zdCBlYXNpbmc9J2N1YmljLWJlemllciguMjIsLjgsLjI1LDEpJzsKICBmdW5jdGlvbiBjbGVhckFuaW0oZCl7CiAgICBpZihkLl9maW5hbmNlQW5pbSl7dHJ5e2QuX2ZpbmFuY2VBbmltLmNhbmNlbCgpfWNhdGNoKF8peyB9IGQuX2ZpbmFuY2VBbmltPW51bGw7fQogICAgZC5zdHlsZS5oZWlnaHQ9Jyc7ZC5zdHlsZS5vdmVyZmxvdz0nJzsKICB9CiAgZnVuY3Rpb24gY2xvc2VEYXkoZCl7CiAgICBpZighZHx8IWQub3BlbilyZXR1cm4gUHJvbWlzZS5yZXNvbHZlKCk7CiAgICBjbGVhckFuaW0oZCk7CiAgICBjb25zdCBzdW1tYXJ5PWQucXVlcnlTZWxlY3RvcignOnNjb3BlID4gc3VtbWFyeScpOwogICAgaWYoIXN1bW1hcnkpe2Qub3Blbj1mYWxzZTtyZXR1cm4gUHJvbWlzZS5yZXNvbHZlKCk7fQogICAgY29uc3QgZnJvbT1kLmdldEJvdW5kaW5nQ2xpZW50UmVjdCgpLmhlaWdodDsKICAgIGNvbnN0IHRvPXN1bW1hcnkuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCkuaGVpZ2h0OwogICAgZC5zdHlsZS5vdmVyZmxvdz0naGlkZGVuJzsKICAgIGQuc3R5bGUuaGVpZ2h0PWZyb20rJ3B4JzsKICAgIGNvbnN0IGE9ZC5hbmltYXRlKFt7aGVpZ2h0OmZyb20rJ3B4JyxvcGFjaXR5OjF9LHtoZWlnaHQ6dG8rJ3B4JyxvcGFjaXR5Oi45OH1dLHtkdXJhdGlvbixlYXNpbmcsZmlsbDonZm9yd2FyZHMnfSk7CiAgICBkLl9maW5hbmNlQW5pbT1hOwogICAgcmV0dXJuIGEuZmluaXNoZWQuY2F0Y2goKCk9Pnt9KS50aGVuKCgpPT57CiAgICAgIGlmKGQuX2ZpbmFuY2VBbmltIT09YSlyZXR1cm47CiAgICAgIGQub3Blbj1mYWxzZTtkLl9maW5hbmNlQW5pbT1udWxsO2Quc3R5bGUuaGVpZ2h0PScnO2Quc3R5bGUub3ZlcmZsb3c9Jyc7CiAgICB9KTsKICB9CiAgZnVuY3Rpb24gb3BlbkRheShkKXsKICAgIGlmKCFkfHxkLm9wZW4pcmV0dXJuOwogICAgY2xlYXJBbmltKGQpOwogICAgY29uc3Qgc3VtbWFyeT1kLnF1ZXJ5U2VsZWN0b3IoJzpzY29wZSA+IHN1bW1hcnknKTsKICAgIGlmKCFzdW1tYXJ5KXJldHVybjsKICAgIGNvbnN0IGZyb209c3VtbWFyeS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKS5oZWlnaHQ7CiAgICBkLm9wZW49dHJ1ZTsKICAgIGNvbnN0IHRvPWQuc2Nyb2xsSGVpZ2h0OwogICAgZC5zdHlsZS5vdmVyZmxvdz0naGlkZGVuJzsKICAgIGQuc3R5bGUuaGVpZ2h0PWZyb20rJ3B4JzsKICAgIGNvbnN0IGE9ZC5hbmltYXRlKFt7aGVpZ2h0OmZyb20rJ3B4JyxvcGFjaXR5Oi45OH0se2hlaWdodDp0bysncHgnLG9wYWNpdHk6MX1dLHtkdXJhdGlvbixlYXNpbmcsZmlsbDonZm9yd2FyZHMnfSk7CiAgICBkLl9maW5hbmNlQW5pbT1hOwogICAgYS5maW5pc2hlZC5jYXRjaCgoKT0+e30pLnRoZW4oKCk9PnsKICAgICAgaWYoZC5fZmluYW5jZUFuaW0hPT1hKXJldHVybjsKICAgICAgZC5fZmluYW5jZUFuaW09bnVsbDtkLnN0eWxlLmhlaWdodD0nJztkLnN0eWxlLm92ZXJmbG93PScnOwogICAgfSk7CiAgfQogIHJvb3QuYWRkRXZlbnRMaXN0ZW5lcignY2xpY2snLGZ1bmN0aW9uKGUpewogICAgY29uc3Qgc3VtbWFyeT1lLnRhcmdldC5jbG9zZXN0KCdkZXRhaWxzLmZpbmFuY2UtZGF5ID4gc3VtbWFyeScpOwogICAgaWYoIXN1bW1hcnl8fCFyb290LmNvbnRhaW5zKHN1bW1hcnkpKXJldHVybjsKICAgIGNvbnN0IGRheT1zdW1tYXJ5LnBhcmVudEVsZW1lbnQ7CiAgICBlLnByZXZlbnREZWZhdWx0KCk7CiAgICBpZihkYXkub3Blbil7Y2xvc2VEYXkoZGF5KTtyZXR1cm47fQogICAgcm9vdC5xdWVyeVNlbGVjdG9yQWxsKCdkZXRhaWxzLmZpbmFuY2UtZGF5W29wZW5dJykuZm9yRWFjaChvdGhlcj0+e2lmKG90aGVyIT09ZGF5KWNsb3NlRGF5KG90aGVyKX0pOwogICAgb3BlbkRheShkYXkpOwogIH0pOwp9KSgpOwo8L3NjcmlwdD4KPCEtLSBGSU5BTkNFX0RBWV9BQ0NPUkRJT05fRU5EIC0tPg==').decode(); s=s.replace('</body>',patch+'\n</body>',1); p.write_text(s,encoding='utf-8')"
+          rm -f .github/workflows/finance-accordion-once.yml .github/workflows/finance-day-accordion-once.yml
           rmdir .github/workflows 2>/dev/null || true
           rmdir .github 2>/dev/null || true
           git config user.name "github-actions[bot]"
