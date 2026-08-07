@@ -1527,6 +1527,37 @@
     .finance-month-days{padding:6px;gap:5px}
   }
 
+
+  /* Current finance month polish */
+  .finance-current-month{
+    display:grid;
+    gap:9px;
+  }
+  .finance-current-month .finance-day{
+    box-shadow:0 2px 8px rgba(84,57,28,.035);
+  }
+  .finance-day.empty{
+    border-color:rgba(116,91,57,.18);
+    background:linear-gradient(145deg,rgba(241,234,223,.72),rgba(255,250,242,.7));
+  }
+  .finance-day.empty .finance-day-head{
+    border-bottom:0;
+  }
+  .finance-day.empty .finance-weekday{
+    background:#9a8975;
+  }
+  .finance-day.empty .finance-calendar-date{
+    color:#756b5f!important;
+  }
+  .finance-day-empty-note{
+    color:var(--muted);
+    font-size:8.5px;
+    font-weight:700;
+  }
+  @media (max-width:560px){
+    .finance-current-month{gap:8px}
+  }
+
 </style>
 
 <script>
@@ -3743,12 +3774,15 @@ function financeDaySummary(items){
     income,
     expense,
     net:income-expense,
-    tone:income>0&&expense>0?"mixed":income>0?"income":"expense"
+    tone:!items.length?"empty":income>0&&expense>0?"mixed":income>0?"income":"expense"
   };
 }
 function renderFinanceDayBlock(key,items,open=false){
   const sums=financeDaySummary(items);
   const label=financeDateLabel(key);
+  if(!items.length){
+    return `<div class="finance-day empty" data-date="${escapeHtml(key)}"><div class="finance-day-head"><div class="finance-day-title"><b><span class="finance-weekday">${escapeHtml(label.weekday)}</span><span class="finance-calendar-date">${escapeHtml(label.dateText)}</span></b><span>${escapeHtml(label.sub)} · 0 операций</span></div><div class="finance-day-total">0 ₽<span class="finance-day-empty-note">операций нет</span></div></div></div>`;
+  }
   return `<details class="finance-day ${sums.tone}" data-date="${escapeHtml(key)}" ${open?"open":""}><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span><span class="finance-weekday">${escapeHtml(label.weekday)}</span><span class="finance-calendar-date">${escapeHtml(label.dateText)}</span></b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${sums.net>=0?"finance-positive":"finance-negative"}">${moneyText(sums.net)}<span>+${formatNumber(sums.income)} / −${formatNumber(sums.expense)}</span></div></summary>${items.map(row=>{
     const amount=financeOperationAmount(row);
     const type=pick(row,["type","тип"]).toLowerCase();
@@ -3790,12 +3824,20 @@ function renderFinanceOperations(rows){
   });
 
   const currentMonthKey=financeCurrentMonthKey();
-  const currentDays=monthGroups.get(currentMonthKey)||[];
   const archiveMonths=[...monthGroups.entries()].filter(([monthKey])=>monthKey!==currentMonthKey);
 
-  const currentHtml=currentDays.map(([dayKey,items],index)=>
-    renderFinanceDayBlock(dayKey,items,index===0)
-  ).join("");
+  // Текущий месяц всегда показывает все календарные дни до сегодняшнего дня.
+  // Если операций нет, день остаётся нейтральным и заполнится сам, когда строки появятся в таблице.
+  const now=new Date();
+  const currentDays=[];
+  for(let day=now.getDate();day>=1;day--){
+    const dayKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+    currentDays.push([dayKey,dayGroups.get(dayKey)||[]]);
+  }
+  const firstRealDayIndex=currentDays.findIndex(([,items])=>items.length>0);
+  const currentHtml=`<div class="finance-current-month">${currentDays.map(([dayKey,items],index)=>
+    renderFinanceDayBlock(dayKey,items,index===firstRealDayIndex)
+  ).join("")}</div>`;
 
   const archiveHtml=archiveMonths.map(([monthKey,days])=>{
     const allItems=days.flatMap(([,items])=>items);
