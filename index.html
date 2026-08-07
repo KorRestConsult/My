@@ -1215,6 +1215,58 @@
     .finance-budget-main b{font-size:22px}
   }
 
+
+  /* Finance v2: functional header + compact budget/account dashboard */
+  .topbar .shell{
+    grid-template-columns:1fr!important;
+    min-height:0!important;
+    gap:0!important;
+    padding:7px 10px!important;
+  }
+  .topbar .nav{
+    grid-column:1/-1!important;
+    width:100%;
+    padding:0!important;
+  }
+  .finance-account-kpis{margin-top:-2px}
+  .finance-account-kpis .finance-kpi{background:rgba(255,250,242,.78)}
+  .finance-account-kpis .finance-kpi b{color:var(--ink)}
+  .finance-budget-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+  }
+  .finance-budget-stat{
+    border:1px solid var(--line);
+    background:rgba(255,250,242,.76);
+    border-radius:10px;
+    padding:11px;
+    min-width:0;
+  }
+  .finance-budget-stat span{
+    display:block;
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+  }
+  .finance-budget-stat b{
+    display:block;
+    margin-top:5px;
+    font-size:20px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .finance-budget-stat.debt b{color:var(--gold2)}
+  .finance-budget-card{gap:8px}
+  @media (max-width:560px){
+    .topbar .shell{padding:7px!important}
+    .finance-budget-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    .finance-budget-stat{padding:10px 9px}
+    .finance-budget-stat b{font-size:18px}
+  }
+
 </style>
 
 <script>
@@ -1242,25 +1294,6 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 <body>
 <header class="topbar">
   <div class="shell">
-    <div class="hero">
-      <div class="avatar">И</div>
-      <div class="identity">
-        <h1>Илья</h1>
-        <div class="subtitle">Life OS · личная штаб-квартира · RPG-панель</div>
-      </div>
-      <div class="year-ring" id="yearPercent">44%</div>
-      <div class="pulse">
-        <div class="pulse-item"><div class="pulse-label">Возраст</div><div class="pulse-value">33 года</div></div>
-        <div class="pulse-item"><div class="pulse-label">Вес</div><div class="pulse-value">86.4 кг</div></div>
-        <div class="pulse-item top-progress">
-          <div class="pulse-label">День</div>
-          <div class="top-progress-row">
-            <div class="top-progress-track"><div class="top-progress-fill" id="topDayFill"></div></div>
-          </div>
-        </div>
-        <div class="pulse-item"><div class="pulse-label">Данные</div><div class="pulse-value" id="firebaseStatusText">local</div></div>
-      </div>
-    </div>
     <nav class="nav" id="nav"></nav>
   </div>
 </header>
@@ -1485,17 +1518,8 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 
   <section class="view" id="finance">
     <div class="finance-os">
-      <section class="card finance-hero">
-        <div>
-          <div class="section-kicker">Финансы</div>
-          <div class="section-title">Денежный штаб</div>
-          <div class="finance-total" id="financeNetWorth">—</div>
-          <div class="finance-meta" id="financeMeta" hidden></div>
-          <div class="finance-status" id="financeStatus" hidden></div>
-        </div>
-      </section>
-
-      <div class="finance-kpis" id="financeKpis"></div>
+<div class="finance-kpis" id="financeKpis"></div>
+      <div class="finance-kpis finance-account-kpis" id="financeAccountKpis"></div>
 
       <section class="card">
         <div class="section-head">
@@ -3106,38 +3130,28 @@ function financeCurrentMonthLabel(){
     return "месяц";
   }
 }
-const FINANCE_DAILY_BUDGET_PREFIX="lifeos.finance.dailyBudget.";
-function financeTodayStorageKey(){
-  const d=new Date();
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${FINANCE_DAILY_BUDGET_PREFIX}${y}-${m}-${day}`;
+
+function financeDaysLeftInMonth(){
+  const now=new Date();
+  const lastDay=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  return Math.max(1,lastDay-now.getDate()+1);
 }
-function getFinanceDailyBudget(){
-  try{
-    const raw=localStorage.getItem(financeTodayStorageKey());
-    if(raw===null||raw==="")return null;
-    const value=Number(raw);
-    return Number.isFinite(value)&&value>=0?value:null;
-  }catch(_){
-    return null;
-  }
+function financeOutstandingDebt(data){
+  const accountDebt=financeAccountDebts(data.accounts||[])
+    .reduce((sum,row)=>sum+Math.max(0,Number(row.left)||0),0);
+  const sheetDebt=(data.debts||[])
+    .reduce((sum,row)=>sum+Math.max(0,financeDebtData(row).left||0),0);
+  return accountDebt+sheetDebt;
 }
-function setFinanceDailyBudget(){
-  const current=getFinanceDailyBudget();
-  const raw=window.prompt("Бюджет на сегодня, ₽",current===null?"":String(Math.round(current)));
-  if(raw===null)return;
-  const value=Number(String(raw).replace(/\s+/g,"").replace(",","."));
-  if(!Number.isFinite(value)||value<0){
-    window.alert("Введите сумму бюджета числом.");
-    return;
-  }
-  try{
-    localStorage.setItem(financeTodayStorageKey(),String(value));
-  }catch(_){}
-  const data=financeDashboardData();
-  if(data)renderFinanceToday(data);
+function financeAutomaticDailyBudget(data){
+  const monthFree=Math.max(0,(Number(data.monthIncome)||0)-(Number(data.monthExpense)||0));
+  const daysLeft=financeDaysLeftInMonth();
+  const dailyFree=monthFree/daysLeft;
+  const debtOutstanding=financeOutstandingDebt(data);
+  const debtShare=debtOutstanding>0?0.20:0;
+  const debtReserve=dailyFree*debtShare;
+  const spendable=Math.max(0,dailyFree-debtReserve);
+  return {monthFree,daysLeft,dailyFree,debtReserve,spendable,debtOutstanding,debtShare};
 }
 
 function financeDashboardData(day=todayDay()){
@@ -3198,6 +3212,26 @@ function renderHomeFinanceWidget(){
 function homeFinanceCell(label,value,className=""){
   return `<div class="hq-finance-cell"><span>${escapeHtml(label)}</span><b class="${className}">${escapeHtml(value)}</b></div>`;
 }
+
+function financeCompactAccount(accounts,kind){
+  const wanted=kind==="cash"?"Наличные":"Кредитная карта / Т-Банк";
+  return (accounts||[]).find(row=>normalizeFinanceAccountName(
+    pick(row,["account","счет","name","название"])||row.account
+  )===wanted)||null;
+}
+function renderFinanceAccountKpis(accounts){
+  const root=document.getElementById("financeAccountKpis");
+  if(!root)return;
+  const credit=financeCompactAccount(accounts,"credit");
+  const cash=financeCompactAccount(accounts,"cash");
+  const creditValue=credit?financeAccountAmount(credit):0;
+  const cashValue=cash?financeAccountAmount(cash):0;
+  root.innerHTML=[
+    `<div class="finance-kpi"><span>Кредитка · Т-Банк</span><b>${credit?moneyText(creditValue):"—"}</b></div>`,
+    `<div class="finance-kpi"><span>Наличные</span><b>${cash?moneyText(cashValue):"—"}</b></div>`
+  ].join("");
+}
+
 function renderFinanceDashboard(){
   const root=document.getElementById("financeKpis");
   if(!root)return;
@@ -3209,7 +3243,7 @@ function renderFinanceDashboard(){
     const netWorthRoot=document.getElementById("financeNetWorth");
     const metaRoot=document.getElementById("financeMeta");
     const statusRoot=document.getElementById("financeStatus");
-    const clearIds=["financeKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
+    const clearIds=["financeKpis","financeAccountKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
     if(netWorthRoot)netWorthRoot.textContent="—";
     if(metaRoot)metaRoot.innerHTML="";
     if(statusRoot)statusRoot.textContent=financeStatusText();
@@ -3242,6 +3276,7 @@ function renderFinanceDashboard(){
     financeKpi(`Доход за ${monthLabel}`,monthIncome,"finance-positive"),
     financeKpi(`Расход за ${monthLabel}`,monthExpense,"finance-negative")
   ].join("");
+  renderFinanceAccountKpis(accounts);
   renderFinanceToday(data);
   renderFinanceOperations(operations);
   renderFinanceCards("financeAccounts",accounts,row=>({
@@ -3258,7 +3293,7 @@ function renderFinanceLoading(){
   const netWorthRoot=document.getElementById("financeNetWorth");
   const metaRoot=document.getElementById("financeMeta");
   const statusRoot=document.getElementById("financeStatus");
-  const clearIds=["financeKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
+  const clearIds=["financeKpis","financeAccountKpis","financeToday","financeOperations","financeAccounts","financeDebts","financeGoals"];
   if(netWorthRoot)netWorthRoot.textContent="—";
   if(metaRoot)metaRoot.innerHTML="";
   if(statusRoot)statusRoot.textContent=financeStatusText();
@@ -3295,14 +3330,22 @@ function financeAccountDebts(accounts){
 function renderFinanceToday(data){
   const root=document.getElementById("financeToday");
   if(!root)return;
-  const budget=getFinanceDailyBudget();
-  if(budget===null){
-    root.innerHTML=`<div class="finance-budget-card"><div class="finance-budget-head"><div class="finance-budget-main"><span>Лимит на день</span><b>Не задан</b></div><button class="finance-budget-btn" type="button" onclick="setFinanceDailyBudget()">Задать бюджет</button></div><div class="finance-budget-meta">После установки сумма будет автоматически уменьшаться на фактические расходы сегодняшнего дня.</div></div>`;
-    return;
-  }
-  const spent=Math.max(0,Number(data.expense)||0);
-  const left=budget-spent;
-  root.innerHTML=`<div class="finance-budget-card"><div class="finance-budget-head"><div class="finance-budget-main"><span>Осталось сегодня</span><b class="${left>=0?"finance-positive":"finance-negative"}">${moneyText(left)}</b></div><button class="finance-budget-btn" type="button" onclick="setFinanceDailyBudget()">Изменить</button></div><div class="finance-budget-meta">Лимит ${moneyText(budget)} · потрачено ${moneyText(spent)}</div></div>`;
+  const budget=financeAutomaticDailyBudget(data);
+  const debtPct=Math.round(budget.debtShare*100);
+  const spendClass=budget.spendable>0?"finance-positive":"finance-negative";
+  root.innerHTML=`<div class="finance-budget-card">
+    <div class="finance-budget-grid">
+      <div class="finance-budget-stat">
+        <span>Можно потратить сегодня</span>
+        <b class="${spendClass}">${moneyText(budget.spendable)}</b>
+      </div>
+      <div class="finance-budget-stat debt">
+        <span>Отложить в долги</span>
+        <b>${moneyText(budget.debtReserve)}</b>
+      </div>
+    </div>
+    <div class="finance-budget-meta">Автоматически: свободный поток месяца ${moneyText(budget.monthFree)} распределяется на ${budget.daysLeft} дн.${budget.debtOutstanding>0?` · ${debtPct}% дневного остатка резервируется на долги`:" · долгов для резерва нет"}.</div>
+  </div>`;
 }
 function financeBarRow({title,amount,meta,progress,tone=""}){
   const width=Math.max(2,Math.min(100,Number(progress)||0));
