@@ -1310,6 +1310,126 @@
     }
   }
 
+
+  /* Finance operations compact v1 */
+  .finance-days{gap:7px}
+  .finance-day{border-radius:10px}
+  .finance-day-head{
+    padding:7px 9px;
+    gap:8px;
+    align-items:center;
+    background:linear-gradient(90deg,rgba(185,133,62,.12),rgba(255,250,242,.46));
+  }
+  .finance-day-title{min-width:0}
+  .finance-day-title b{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    line-height:1;
+  }
+  .finance-day-title>span{
+    margin-top:4px;
+    font-size:9px;
+  }
+  .finance-weekday{
+    display:inline-flex!important;
+    align-items:center;
+    justify-content:center;
+    min-width:28px;
+    margin:0!important;
+    padding:3px 5px;
+    border-radius:5px;
+    background:#72502e;
+    color:#fff7e9!important;
+    font-size:9px!important;
+    font-weight:900;
+    letter-spacing:.06em;
+  }
+  .finance-calendar-date{
+    display:inline!important;
+    margin:0!important;
+    color:#6b4521!important;
+    font-size:12px!important;
+    font-weight:900;
+  }
+  .finance-day-toggle{margin-right:0}
+  .finance-day-total{
+    text-align:right;
+    font-size:12px;
+    line-height:1.05;
+  }
+  .finance-day-total span{
+    margin-top:3px;
+    font-size:8.5px;
+  }
+  .finance-op{
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:8px;
+    padding:6px 8px;
+  }
+  .finance-op-main{min-width:0}
+  .finance-op-head{
+    display:flex;
+    align-items:baseline;
+    min-width:0;
+  }
+  .finance-op b{
+    font-size:11px;
+    line-height:1.15;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .finance-op strong{
+    align-self:center;
+    font-size:11px;
+    line-height:1;
+  }
+  .finance-op span.finance-op-purpose{
+    display:block;
+    margin-top:2px;
+    font-size:8.8px;
+    line-height:1.2;
+    color:#74695d;
+  }
+  .finance-op span.finance-op-purpose.warn{
+    color:#8b5a24;
+    font-weight:800;
+  }
+  .finance-op span.finance-op-comment{
+    display:block;
+    margin-top:2px;
+    font-size:8.5px;
+    line-height:1.2;
+    color:#8a8075;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  @media (max-width:560px){
+    .finance-day-head{
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr) auto!important;
+      padding:7px 8px!important;
+      gap:6px!important;
+    }
+    .finance-day-total{
+      text-align:right!important;
+      font-size:11px!important;
+    }
+    .finance-op{
+      display:grid!important;
+      grid-template-columns:minmax(0,1fr) auto!important;
+      gap:7px!important;
+      padding:5px 7px!important;
+    }
+    .finance-op b,.finance-op strong{font-size:10.5px!important}
+    .finance-op span.finance-op-purpose{font-size:8.4px!important}
+    .finance-op span.finance-op-comment{font-size:8.2px!important}
+  }
+
 </style>
 
 <script>
@@ -3035,17 +3155,67 @@ function financeOperationAmount(row){
   if(type.includes("расход"))return -Math.abs(amount);
   return amount;
 }
+function financeMerchantLabel(value){
+  const raw=cleanFinanceText(value);
+  const key=raw.toLowerCase().replaceAll("ё","е");
+  if(key.includes("krasnoe&beloe")||key.includes("красное&белое"))return "Красное&Белое";
+  if(key.includes("burger king"))return "Burger King";
+  if(key.includes("vkusnoitochka"))return "Вкусно — и точка";
+  if(key.includes("ym*profi")||key.includes("y.m*profi")||key==="profi.ru")return "Профи.ру";
+  return raw;
+}
 function financeOperationTitle(row,amount){
-  return cleanFinanceText(pick(row,["subcategory","подкатегория","title","описание","payee","получатель","counterparty","контрагент","category","категория"]))||(amount>=0?"Доход":"Расход");
+  const merchant=financeMerchantLabel(pick(row,["counterparty","контрагент","payee","получатель"]));
+  const subcategory=cleanFinanceText(pick(row,["subcategory","подкатегория"]));
+  const category=cleanFinanceText(pick(row,["category","категория"]));
+  if(merchant&&!merchant.toLowerCase().includes("не уточ"))return merchant;
+  return subcategory||category||(amount>=0?"Доход":"Расход");
+}
+function financeOperationPurpose(row){
+  const category=cleanFinanceText(pick(row,["category","категория"]));
+  const subcategory=cleanFinanceText(pick(row,["subcategory","подкатегория"]));
+  const categoryKey=category.toLowerCase().replaceAll("ё","е");
+  const subKey=subcategory.toLowerCase().replaceAll("ё","е");
+
+  if(categoryKey==="прочее"&&!subcategory){
+    return {text:"Назначение не распознано — нужно уточнить",tone:"warn"};
+  }
+
+  const friendly={
+    "машина":"Авто / обслуживание",
+    "кафе и рестораны":"Еда вне дома",
+    "продукты":"Продукты",
+    "подписки":"Подписка / цифровой сервис",
+    "связь":"Связь",
+    "платежи, комиссии":"Платёж / комиссия",
+    "работа":"Рабочие расходы",
+    "транспорт":"Транспорт",
+    "здоровье":"Здоровье",
+    "развлечения":"Развлечения",
+    "покупки":"Покупки",
+    "личное":"Личные расходы",
+    "переводы":"Перевод"
+  };
+
+  let purpose=subcategory||friendly[categoryKey]||category||"Без категории";
+
+  // Подкатегории ZenMoney часто технические — делаем их чуть понятнее.
+  if(subKey.includes("красное&белое"))purpose="Смешанные покупки";
+  if(subKey.includes("профи.ру"))purpose="Отклики / работа";
+  if(subKey.includes("мобильная связь"))purpose="Мобильная связь";
+
+  return {text:purpose,tone:""};
 }
 function financeOperationMeta(row){
-  const title=financeOperationTitle(row,financeOperationAmount(row));
-  return [
-    cleanFinanceText(pick(row,["category","категория"])),
-    cleanFinanceText(pick(row,["account","счет"])),
-    cleanFinanceText(pick(row,["counterparty","контрагент","payee","получатель"])),
-    cleanFinanceText(pick(row,["status","статус"]))
-  ].filter(item=>item&&item!==title).join(" · ");
+  const purpose=financeOperationPurpose(row);
+  const category=cleanFinanceText(pick(row,["category","категория"]));
+  const account=normalizeFinanceAccountName(pick(row,["account","счет"]));
+  const accountShort=account==="Кредитная карта / Т-Банк"?"Т-Банк":account;
+  const categoryText=category&&category!==purpose.text?category:"";
+  return {
+    purpose,
+    line:[categoryText,purpose.text,accountShort].filter(Boolean).join(" · ")
+  };
 }
 function parseFinanceDate(value){
   const raw=String(value||"").trim();
@@ -3102,11 +3272,15 @@ function financeDateKey(row){
   return `${year}-${month}-${day}`;
 }
 function financeDateLabel(key){
-  if(key==="no-date")return {day:"Без даты",sub:"проверь дату в таблице"};
+  if(key==="no-date")return {weekday:"—",dateText:"Без даты",sub:"проверь дату в таблице"};
   const date=new Date(`${key}T00:00:00`);
   const weekdays=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"];
   const months=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
-  return {day:`${weekdays[date.getDay()]} | ${date.getDate()} | ${months[date.getMonth()]}`,sub:String(date.getFullYear())};
+  return {
+    weekday:weekdays[date.getDay()],
+    dateText:`${date.getDate()} ${months[date.getMonth()]}`,
+    sub:String(date.getFullYear())
+  };
 }
 function deriveAccountsFromOperations(operations){
   const map=new Map();
@@ -3474,14 +3648,15 @@ function renderFinanceOperations(rows){
     const net=income-expense;
     const label=financeDateLabel(key);
     const dayTone=income>0&&expense>0?"mixed":income>0?"income":"expense";
-    return `<details class="finance-day ${dayTone}" data-date="${escapeHtml(key)}" ${groupIndex===0?"open":""}><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span>${escapeHtml(label.day)}</b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${net>=0?"finance-positive":"finance-negative"}">${moneyText(net)}<span>+${formatNumber(income)} / -${formatNumber(expense)}</span></div></summary>${items.map(row=>{
+    return `<details class="finance-day ${dayTone}" data-date="${escapeHtml(key)}" ${groupIndex===0?"open":""}><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span><span class="finance-weekday">${escapeHtml(label.weekday)}</span><span class="finance-calendar-date">${escapeHtml(label.dateText)}</span></b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${net>=0?"finance-positive":"finance-negative"}">${moneyText(net)}<span>+${formatNumber(income)} / −${formatNumber(expense)}</span></div></summary>${items.map(row=>{
       const amount=financeOperationAmount(row);
       const type=pick(row,["type","тип"]).toLowerCase();
       const tone=type.includes("долг")?"debt":amount>=0?"income":"expense";
       const title=financeOperationTitle(row,amount);
       const meta=financeOperationMeta(row);
       const comment=cleanFinanceText(pick(row,["comment","комментарий"]));
-      return `<div class="finance-op ${tone}"><div><b>${escapeHtml(title)}</b><span>${escapeHtml(meta)}</span>${comment?`<span>${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
+      const showComment=comment&&comment!==meta.purpose.text;
+      return `<div class="finance-op ${tone}"><div class="finance-op-main"><div class="finance-op-head"><b>${escapeHtml(title)}</b></div><span class="finance-op-purpose ${meta.purpose.tone==="warn"?"warn":""}">${escapeHtml(meta.line)}</span>${showComment?`<span class="finance-op-comment">${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
     }).join("")}</details>`;
   }).join("")}</div>`;
 }
