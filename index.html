@@ -1161,6 +1161,60 @@
   margin:8px 0;
 }
 
+
+  /* Finance summary: two monthly metrics + daily budget */
+  .finance-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .finance-budget-card{
+    border:1px solid var(--line);
+    background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(240,232,219,.72));
+    border-radius:12px;
+    padding:14px;
+    display:grid;
+    gap:10px;
+  }
+  .finance-budget-head{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .finance-budget-main span{
+    display:block;
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.07em;
+  }
+  .finance-budget-main b{
+    display:block;
+    margin-top:5px;
+    font-size:24px;
+    line-height:1.05;
+  }
+  .finance-budget-meta{
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.45;
+  }
+  .finance-budget-btn{
+    border:1px solid var(--line);
+    background:var(--paper);
+    color:var(--gold2);
+    border-radius:9px;
+    padding:8px 10px;
+    font-size:10px;
+    font-weight:800;
+    white-space:nowrap;
+  }
+  @media (max-width:560px){
+    .finance-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+    .finance-kpi{padding:10px 9px}
+    .finance-kpi span{font-size:9px}
+    .finance-kpi b{font-size:17px}
+    .finance-budget-card{padding:12px}
+    .finance-budget-main b{font-size:22px}
+  }
+
 </style>
 
 <script>
@@ -1445,9 +1499,9 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 
       <section class="card">
         <div class="section-head">
-          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 10h14M7 17h10"></path></svg></div><h2>Сегодня</h2></div>
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3v18M5 10h14M7 17h10"></path></svg></div><h2>Бюджет на сегодня</h2></div>
         </div>
-        <div class="finance-signal-grid" id="financeToday"></div>
+        <div id="financeToday"></div>
       </section>
 
       <div class="finance-layout">
@@ -3044,6 +3098,48 @@ function financeStatusText(){
   if(financeSheet.source==="google-sheets")return `Fallback Google Sheets. ${financeNextRefreshText()}.`;
   return "MCP URL не найден: используется локальный или резервный источник.";
 }
+
+function financeCurrentMonthLabel(){
+  try{
+    return new Intl.DateTimeFormat("ru-RU",{month:"long"}).format(new Date());
+  }catch(_){
+    return "месяц";
+  }
+}
+const FINANCE_DAILY_BUDGET_PREFIX="lifeos.finance.dailyBudget.";
+function financeTodayStorageKey(){
+  const d=new Date();
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,"0");
+  const day=String(d.getDate()).padStart(2,"0");
+  return `${FINANCE_DAILY_BUDGET_PREFIX}${y}-${m}-${day}`;
+}
+function getFinanceDailyBudget(){
+  try{
+    const raw=localStorage.getItem(financeTodayStorageKey());
+    if(raw===null||raw==="")return null;
+    const value=Number(raw);
+    return Number.isFinite(value)&&value>=0?value:null;
+  }catch(_){
+    return null;
+  }
+}
+function setFinanceDailyBudget(){
+  const current=getFinanceDailyBudget();
+  const raw=window.prompt("Бюджет на сегодня, ₽",current===null?"":String(Math.round(current)));
+  if(raw===null)return;
+  const value=Number(String(raw).replace(/\s+/g,"").replace(",","."));
+  if(!Number.isFinite(value)||value<0){
+    window.alert("Введите сумму бюджета числом.");
+    return;
+  }
+  try{
+    localStorage.setItem(financeTodayStorageKey(),String(value));
+  }catch(_){}
+  const data=financeDashboardData();
+  if(data)renderFinanceToday(data);
+}
+
 function financeDashboardData(day=todayDay()){
   if(financeSheet.loading||financeSheet.source==="zenmoney-error")return null;
   const operations=financeRows("operations");
@@ -3141,11 +3237,10 @@ function renderFinanceDashboard(){
   if(statusRoot){
     statusRoot.textContent=financeStatusText();
   }
+  const monthLabel=financeCurrentMonthLabel();
   root.innerHTML=[
-    financeKpi("Свободно сейчас",netWorth,netWorth>=0?"finance-positive":"finance-negative"),
-    financeKpi("Итог сегодня",income-expense,income-expense>=0?"finance-positive":"finance-negative"),
-    financeKpi("Доход за месяц",monthIncome,"finance-positive"),
-    financeKpi("Расход за месяц",monthExpense,"finance-negative")
+    financeKpi(`Доход за ${monthLabel}`,monthIncome,"finance-positive"),
+    financeKpi(`Расход за ${monthLabel}`,monthExpense,"finance-negative")
   ].join("");
   renderFinanceToday(data);
   renderFinanceOperations(operations);
@@ -3200,11 +3295,14 @@ function financeAccountDebts(accounts){
 function renderFinanceToday(data){
   const root=document.getElementById("financeToday");
   if(!root)return;
-  root.innerHTML=[
-    financeSignal("Доход",moneyText(data.income),"finance-positive"),
-    financeSignal("Расход",moneyText(data.expense),"finance-negative"),
-    financeSignal("Итог",moneyText(data.income-data.expense),data.income-data.expense>=0?"finance-positive":"finance-negative")
-  ].join("");
+  const budget=getFinanceDailyBudget();
+  if(budget===null){
+    root.innerHTML=`<div class="finance-budget-card"><div class="finance-budget-head"><div class="finance-budget-main"><span>Лимит на день</span><b>Не задан</b></div><button class="finance-budget-btn" type="button" onclick="setFinanceDailyBudget()">Задать бюджет</button></div><div class="finance-budget-meta">После установки сумма будет автоматически уменьшаться на фактические расходы сегодняшнего дня.</div></div>`;
+    return;
+  }
+  const spent=Math.max(0,Number(data.expense)||0);
+  const left=budget-spent;
+  root.innerHTML=`<div class="finance-budget-card"><div class="finance-budget-head"><div class="finance-budget-main"><span>Осталось сегодня</span><b class="${left>=0?"finance-positive":"finance-negative"}">${moneyText(left)}</b></div><button class="finance-budget-btn" type="button" onclick="setFinanceDailyBudget()">Изменить</button></div><div class="finance-budget-meta">Лимит ${moneyText(budget)} · потрачено ${moneyText(spent)}</div></div>`;
 }
 function financeBarRow({title,amount,meta,progress,tone=""}){
   const width=Math.max(2,Math.min(100,Number(progress)||0));
