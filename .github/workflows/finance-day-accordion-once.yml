@@ -1,0 +1,151 @@
+name: Apply finance day accordion once
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index and remove this workflow
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          begin = '<!-- FINANCE_DAY_ACCORDION_BEGIN -->'
+          end = '<!-- FINANCE_DAY_ACCORDION_END -->'
+
+          if begin in text and end in text:
+              a = text.index(begin)
+              b = text.index(end, a) + len(end)
+              text = text[:a] + text[b:]
+
+          block = r'''<!-- FINANCE_DAY_ACCORDION_BEGIN -->
+<style>
+  #financeOperations details.finance-day{
+    overflow:clip;
+  }
+  #financeOperations details.finance-day.finance-day-animating{
+    overflow:hidden;
+    will-change:height;
+  }
+  #financeOperations details.finance-day > summary.finance-day-head{
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #financeOperations details.finance-day[open] > summary.finance-day-head{
+    background:rgba(255,255,255,.16);
+  }
+</style>
+<script>
+(function(){
+  const DURATION=300;
+  const EASING='cubic-bezier(.22,.78,.24,1)';
+  const animations=new WeakMap();
+
+  function cleanup(day){
+    day.classList.remove('finance-day-animating');
+    day.style.height='';
+    day.style.overflow='';
+    day.style.willChange='';
+    animations.delete(day);
+  }
+
+  function cancelRunning(day){
+    const current=animations.get(day);
+    if(current){
+      try{current.cancel();}catch(_){}
+      cleanup(day);
+    }
+  }
+
+  function closeDay(day){
+    if(!day || !day.open) return Promise.resolve();
+    cancelRunning(day);
+    const summary=day.querySelector(':scope > summary.finance-day-head');
+    if(!summary){day.open=false;return Promise.resolve();}
+    const start=day.getBoundingClientRect().height;
+    const end=summary.getBoundingClientRect().height;
+    day.classList.add('finance-day-animating');
+    day.style.height=start+'px';
+    const animation=day.animate([{height:start+'px'},{height:end+'px'}],{duration:DURATION,easing:EASING});
+    animations.set(day,animation);
+    return animation.finished.catch(()=>{}).then(()=>{
+      if(animations.get(day)!==animation)return;
+      day.open=false;
+      cleanup(day);
+    });
+  }
+
+  function openDay(day){
+    if(!day || day.open) return Promise.resolve();
+    cancelRunning(day);
+    const summary=day.querySelector(':scope > summary.finance-day-head');
+    if(!summary){day.open=true;return Promise.resolve();}
+    const start=summary.getBoundingClientRect().height;
+    day.open=true;
+    const end=day.scrollHeight;
+    day.classList.add('finance-day-animating');
+    day.style.height=start+'px';
+    const animation=day.animate([{height:start+'px'},{height:end+'px'}],{duration:DURATION,easing:EASING});
+    animations.set(day,animation);
+    return animation.finished.catch(()=>{}).then(()=>{
+      if(animations.get(day)!==animation)return;
+      cleanup(day);
+    });
+  }
+
+  function toggleDay(day){
+    const root=document.getElementById('financeOperations');
+    if(!root || !day)return;
+    if(day.open){
+      closeDay(day);
+      return;
+    }
+    const others=[...root.querySelectorAll('details.finance-day[open]')].filter(item=>item!==day);
+    others.forEach(closeDay);
+    openDay(day);
+  }
+
+  document.addEventListener('click',function(event){
+    const summary=event.target.closest && event.target.closest('summary.finance-day-head');
+    if(!summary)return;
+    const day=summary.parentElement;
+    if(!day || !day.matches('details.finance-day') || !day.closest('#financeOperations'))return;
+    event.preventDefault();
+    toggleDay(day);
+  },true);
+
+  document.addEventListener('toggle',function(event){
+    const day=event.target;
+    if(!day || !day.matches || !day.matches('#financeOperations details.finance-day[open]'))return;
+    const root=document.getElementById('financeOperations');
+    if(!root)return;
+    root.querySelectorAll('details.finance-day[open]').forEach(other=>{
+      if(other!==day && !other.classList.contains('finance-day-animating'))other.open=false;
+    });
+  },true);
+})();
+</script>
+<!-- FINANCE_DAY_ACCORDION_END -->'''
+
+          pos = text.rfind('</body>')
+          if pos < 0:
+              raise SystemExit('Closing body tag not found')
+          text = text[:pos] + block + '\n' + text[pos:]
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/finance-day-accordion-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/finance-day-accordion-once.yml
+          git commit -m "Smooth finance day accordion"
+          git push
