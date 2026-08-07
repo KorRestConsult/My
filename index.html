@@ -1430,6 +1430,103 @@
     .finance-op span.finance-op-comment{font-size:8.2px!important}
   }
 
+
+  /* Finance month archive */
+  .finance-months{
+    display:grid;
+    gap:7px;
+    margin-top:8px;
+  }
+  .finance-month{
+    border:1px solid rgba(116,91,57,.24);
+    border-radius:10px;
+    overflow:hidden;
+    background:linear-gradient(145deg,#eee2cf,#f8f1e5);
+  }
+  .finance-month summary{
+    list-style:none;
+    cursor:pointer;
+  }
+  .finance-month summary::-webkit-details-marker{display:none}
+  .finance-month-head{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    gap:8px;
+    align-items:center;
+    padding:9px 10px;
+  }
+  .finance-month[open] .finance-month-head{
+    border-bottom:1px solid var(--line);
+  }
+  .finance-month-title{
+    min-width:0;
+  }
+  .finance-month-title b{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    color:#65451f;
+    font-size:12px;
+    line-height:1.05;
+  }
+  .finance-month-title span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:9px;
+  }
+  .finance-month-toggle{
+    display:inline-block;
+    color:var(--gold2);
+    font-size:11px;
+    font-weight:900;
+    transition:transform .18s;
+  }
+  .finance-month[open] .finance-month-toggle{
+    transform:rotate(90deg);
+  }
+  .finance-month-total{
+    text-align:right;
+    font-weight:900;
+    white-space:nowrap;
+    font-size:12px;
+  }
+  .finance-month-total span{
+    display:block;
+    margin-top:3px;
+    color:var(--muted);
+    font-size:8.5px;
+    font-weight:700;
+  }
+  .finance-month-days{
+    display:grid;
+    gap:6px;
+    padding:7px;
+    background:rgba(255,250,242,.46);
+  }
+  .finance-month-days .finance-day{
+    margin:0;
+  }
+  .finance-archive-label{
+    margin:10px 2px 2px;
+    color:#877767;
+    font-size:9px;
+    font-weight:850;
+    text-transform:uppercase;
+    letter-spacing:.09em;
+  }
+  @media (max-width:560px){
+    .finance-month-head{
+      padding:8px;
+      gap:6px;
+    }
+    .finance-month-title b{font-size:11px}
+    .finance-month-title span{font-size:8.5px}
+    .finance-month-total{font-size:11px}
+    .finance-month-total span{font-size:8px}
+    .finance-month-days{padding:6px;gap:5px}
+  }
+
 </style>
 
 <script>
@@ -3624,41 +3721,96 @@ function financeDebtRow(row){
   const width=Math.max(2,Math.min(100,debt.progress));
   return `<div class="finance-bar-row ${tone}"><div class="finance-bar-top"><b>${escapeHtml(title)}</b><strong>${moneyText(debt.left)}</strong></div><span class="finance-due ${dueInfo.tone}">${escapeHtml(dueInfo.text)}</span><div class="finance-bar-track" aria-label="Шкала победы ${debt.progress}%"><div style="width:${width}%"></div></div><div class="finance-bar-meta">${escapeHtml(meta)}</div></div>`;
 }
+function financeCurrentMonthKey(){
+  const now=new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+}
+function financeMonthKeyFromDayKey(dayKey){
+  if(!dayKey||dayKey==="no-date")return "no-date";
+  return dayKey.slice(0,7);
+}
+function financeMonthLabel(monthKey){
+  if(monthKey==="no-date")return "Без даты";
+  const match=monthKey.match(/^(\d{4})-(\d{2})$/);
+  if(!match)return monthKey;
+  const months=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+  return `${months[Number(match[2])-1]} ${match[1]}`;
+}
+function financeDaySummary(items){
+  const income=items.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0);
+  const expense=Math.abs(items.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
+  return {
+    income,
+    expense,
+    net:income-expense,
+    tone:income>0&&expense>0?"mixed":income>0?"income":"expense"
+  };
+}
+function renderFinanceDayBlock(key,items,open=false){
+  const sums=financeDaySummary(items);
+  const label=financeDateLabel(key);
+  return `<details class="finance-day ${sums.tone}" data-date="${escapeHtml(key)}" ${open?"open":""}><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span><span class="finance-weekday">${escapeHtml(label.weekday)}</span><span class="finance-calendar-date">${escapeHtml(label.dateText)}</span></b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${sums.net>=0?"finance-positive":"finance-negative"}">${moneyText(sums.net)}<span>+${formatNumber(sums.income)} / −${formatNumber(sums.expense)}</span></div></summary>${items.map(row=>{
+    const amount=financeOperationAmount(row);
+    const type=pick(row,["type","тип"]).toLowerCase();
+    const tone=type.includes("долг")?"debt":amount>=0?"income":"expense";
+    const title=financeOperationTitle(row,amount);
+    const meta=financeOperationMeta(row);
+    const comment=cleanFinanceText(pick(row,["comment","комментарий"]));
+    const showComment=comment&&comment!==meta.purpose.text;
+    return `<div class="finance-op ${tone}"><div class="finance-op-main"><div class="finance-op-head"><b>${escapeHtml(title)}</b></div><span class="finance-op-purpose ${meta.purpose.tone==="warn"?"warn":""}">${escapeHtml(meta.line)}</span>${showComment?`<span class="finance-op-comment">${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
+  }).join("")}</details>`;
+}
 function renderFinanceOperations(rows){
   const root=document.getElementById("financeOperations");
   if(!root)return;
+
   const list=[...(rows||[])].sort((a,b)=>{
     const left=parseFinanceDate(pick(a,["date","дата"]));
     const right=parseFinanceDate(pick(b,["date","дата"]));
     return (right?right.getTime():0)-(left?left.getTime():0);
   });
+
   if(!list.length){
     root.innerHTML=`<div class="finance-status">Операции появятся после подключения вкладки operations.</div>`;
     return;
   }
-  const groups=new Map();
+
+  const dayGroups=new Map();
   list.forEach(row=>{
-    const key=financeDateKey(row);
-    if(!groups.has(key))groups.set(key,[]);
-    groups.get(key).push(row);
+    const dayKey=financeDateKey(row);
+    if(!dayGroups.has(dayKey))dayGroups.set(dayKey,[]);
+    dayGroups.get(dayKey).push(row);
   });
-  root.innerHTML=`<div class="finance-days">${[...groups.entries()].map(([key,items],groupIndex)=>{
-    const income=items.filter(row=>financeOperationAmount(row)>0).reduce((sum,row)=>sum+financeOperationAmount(row),0);
-    const expense=Math.abs(items.filter(row=>financeOperationAmount(row)<0).reduce((sum,row)=>sum+financeOperationAmount(row),0));
-    const net=income-expense;
-    const label=financeDateLabel(key);
-    const dayTone=income>0&&expense>0?"mixed":income>0?"income":"expense";
-    return `<details class="finance-day ${dayTone}" data-date="${escapeHtml(key)}" ${groupIndex===0?"open":""}><summary class="finance-day-head"><div class="finance-day-title"><b><span class="finance-day-toggle">›</span><span class="finance-weekday">${escapeHtml(label.weekday)}</span><span class="finance-calendar-date">${escapeHtml(label.dateText)}</span></b><span>${escapeHtml(label.sub)} · ${items.length} операций</span></div><div class="finance-day-total ${net>=0?"finance-positive":"finance-negative"}">${moneyText(net)}<span>+${formatNumber(income)} / −${formatNumber(expense)}</span></div></summary>${items.map(row=>{
-      const amount=financeOperationAmount(row);
-      const type=pick(row,["type","тип"]).toLowerCase();
-      const tone=type.includes("долг")?"debt":amount>=0?"income":"expense";
-      const title=financeOperationTitle(row,amount);
-      const meta=financeOperationMeta(row);
-      const comment=cleanFinanceText(pick(row,["comment","комментарий"]));
-      const showComment=comment&&comment!==meta.purpose.text;
-      return `<div class="finance-op ${tone}"><div class="finance-op-main"><div class="finance-op-head"><b>${escapeHtml(title)}</b></div><span class="finance-op-purpose ${meta.purpose.tone==="warn"?"warn":""}">${escapeHtml(meta.line)}</span>${showComment?`<span class="finance-op-comment">${escapeHtml(comment)}</span>`:""}</div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
-    }).join("")}</details>`;
-  }).join("")}</div>`;
+
+  const monthGroups=new Map();
+  [...dayGroups.entries()].forEach(([dayKey,items])=>{
+    const monthKey=financeMonthKeyFromDayKey(dayKey);
+    if(!monthGroups.has(monthKey))monthGroups.set(monthKey,[]);
+    monthGroups.get(monthKey).push([dayKey,items]);
+  });
+
+  const currentMonthKey=financeCurrentMonthKey();
+  const currentDays=monthGroups.get(currentMonthKey)||[];
+  const archiveMonths=[...monthGroups.entries()].filter(([monthKey])=>monthKey!==currentMonthKey);
+
+  const currentHtml=currentDays.map(([dayKey,items],index)=>
+    renderFinanceDayBlock(dayKey,items,index===0)
+  ).join("");
+
+  const archiveHtml=archiveMonths.map(([monthKey,days])=>{
+    const allItems=days.flatMap(([,items])=>items);
+    const sums=financeDaySummary(allItems);
+    const monthTone=sums.income>0&&sums.expense>0?"mixed":sums.income>0?"income":"expense";
+    const dayCount=days.filter(([dayKey])=>dayKey!=="no-date").length;
+    const monthName=financeMonthLabel(monthKey);
+
+    return `<details class="finance-month ${monthTone}" data-month="${escapeHtml(monthKey)}"><summary class="finance-month-head"><div class="finance-month-title"><b><span class="finance-month-toggle">›</span>${escapeHtml(monthName)}</b><span>${dayCount} дн. · ${allItems.length} операций</span></div><div class="finance-month-total ${sums.net>=0?"finance-positive":"finance-negative"}">${moneyText(sums.net)}<span>+${formatNumber(sums.income)} / −${formatNumber(sums.expense)}</span></div></summary><div class="finance-month-days">${days.map(([dayKey,items])=>renderFinanceDayBlock(dayKey,items,false)).join("")}</div></details>`;
+  }).join("");
+
+  root.innerHTML=[
+    currentHtml,
+    archiveHtml?`<div class="finance-archive-label">Прошлые месяцы</div><div class="finance-months">${archiveHtml}</div>`:""
+  ].filter(Boolean).join("");
 }
 function renderFinanceInsights(operations,monthOps,debts,goals){
   const root=document.getElementById("financeInsights");
