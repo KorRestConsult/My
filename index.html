@@ -1558,6 +1558,29 @@
     .finance-current-month{gap:8px}
   }
 
+
+  /* Live gold account */
+  .finance-gold-live{
+    border-color:rgba(185,133,62,.38)!important;
+    background:linear-gradient(145deg,rgba(185,133,62,.12),rgba(255,250,242,.78))!important;
+  }
+  .finance-gold-live .finance-gold-line{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .finance-gold-live .finance-gold-line b{font-size:12px;color:#5f421f}
+  .finance-gold-live .finance-gold-live-value{
+    font-size:13px;font-weight:900;white-space:nowrap;color:#6d4a21
+  }
+  .finance-gold-live .finance-gold-meta{
+    margin-top:4px;color:var(--muted);font-size:9px;line-height:1.35
+  }
+  @media (max-width:560px){
+    .finance-gold-live .finance-gold-live-value{font-size:12px}
+  }
+
 </style>
 
 <script>
@@ -3057,7 +3080,7 @@ function googleSheetRows(url){
 function cbrDate(value){
   return `${String(value.getDate()).padStart(2,"0")}/${String(value.getMonth()+1).padStart(2,"0")}/${value.getFullYear()}`;
 }
-async function loadCbrGoldPrice(){
+async function loadCbrGoldPriceFallback(){
   const to=new Date();
   const from=new Date();
   from.setDate(to.getDate()-45);
@@ -3069,11 +3092,34 @@ async function loadCbrGoldPrice(){
     const record=records[records.length-1];
     const value=parseMoney(record&&record.querySelector("Buy")&&record.querySelector("Buy").textContent);
     if(value>0){
-      financeGoldPrice={value,date:record.getAttribute("Date")||"",source:"ЦБ РФ"};
+      financeGoldPrice={value,date:record.getAttribute("Date")||"",source:"ЦБ РФ · учетная цена"};
+      return true;
     }
-  }catch(e){
-    financeGoldPrice=financeGoldPrice.value?financeGoldPrice:{value:null,date:"",source:""};
-  }
+  }catch(e){}
+  return false;
+}
+async function loadLiveGoldPrice(){
+  try{
+    const [goldResponse,fxResponse]=await Promise.all([
+      fetch("https://api.gold-api.com/price/XAU",{cache:"no-store"}),
+      fetch("https://api.frankfurter.dev/v2/rate/USD/RUB?providers=CBR",{cache:"no-store"})
+    ]);
+    if(!goldResponse.ok||!fxResponse.ok)throw new Error("gold quote unavailable");
+    const gold=await goldResponse.json();
+    const fx=await fxResponse.json();
+    const usdPerOunce=Number(gold&&gold.price);
+    const rubPerUsd=Number(fx&&fx.rate);
+    const rubPerGram=usdPerOunce>0&&rubPerUsd>0?usdPerOunce*rubPerUsd/31.1034768:0;
+    if(!(rubPerGram>0))throw new Error("invalid gold quote");
+    financeGoldPrice={
+      value:rubPerGram,
+      date:new Date().toLocaleString("ru-RU",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"}),
+      source:"мировая XAU · курс USD/RUB ЦБ РФ"
+    };
+    return;
+  }catch(e){}
+  const ok=await loadCbrGoldPriceFallback();
+  if(!ok)financeGoldPrice=financeGoldPrice.value?financeGoldPrice:{value:null,date:"",source:""};
 }
 async function loadFinanceSheet(){
   if(financeLoadPromise)return financeLoadPromise;
@@ -3085,7 +3131,7 @@ async function loadFinanceSheet(){
   }
 }
 async function loadFinanceSheetNow(){
-  await loadCbrGoldPrice();
+  await loadLiveGoldPrice();
   const zenMoneyMcpUrl=getZenMoneyMcpUrl();
   if(zenMoneyMcpUrl){
     await loadZenMoneyFinance(zenMoneyMcpUrl);
@@ -3429,11 +3475,14 @@ function normalizeFinanceAccountName(value){
   return raw;
 }
 function financeAccountAmount(row){
+  const name=normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account);
+  if(name==="Золото"){
+    const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
+    const price=Number(financeGoldPrice.value)||0;
+    return grams>0&&price>0?grams*price:0;
+  }
   const display=pick(row,["displayBalance","display_balance","availableCredit","available_credit","доступно"]);
   if(display!=="")return parseMoney(display);
-  const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
-  const price=parseMoney(pick(row,["gold_price_rub","цена_грамм","цена_за_грамм","руб_за_грамм","price_gram"]));
-  if(grams&&price)return grams*price;
   return parseMoney(pick(row,["balance","баланс","остаток","amount","сумма"]));
 }
 function financeAccountMeta(row){
@@ -3611,6 +3660,31 @@ function renderFinanceAccountKpis(accounts){
   ].join("");
 }
 
+
+function renderFinanceAccountsLive(accounts){
+  const root=document.getElementById("financeAccounts");
+  if(!root)return;
+  const list=accounts||[];
+  if(!list.length){
+    root.innerHTML=`<div class="finance-status">Заполните вкладку Счета в Google Sheets.</div>`;
+    return;
+  }
+  root.innerHTML=list.map(row=>{
+    const name=normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account);
+    if(name==="Золото"){
+      const grams=parseMoney(pick(row,["grams","граммы","г","weight","вес"]));
+      const price=Number(financeGoldPrice.value)||0;
+      const value=grams>0&&price>0?grams*price:0;
+      const gramsText=grams>0?`${formatNumber(grams)} г`:"вес не указан";
+      const valueText=value>0?moneyText(value):"—";
+      const meta=price>0?`${formatNumber(price)} ₽/г · ${financeGoldPrice.source}${financeGoldPrice.date?` · ${financeGoldPrice.date}`:""}`:"цена золота загружается";
+      return `<div class="finance-row finance-gold-live"><div><div class="finance-gold-line"><b>Золото</b><strong class="finance-gold-live-value">${escapeHtml(gramsText)} / ${escapeHtml(valueText)}</strong></div><span class="finance-gold-meta">${escapeHtml(meta)}</span></div></div>`;
+    }
+    const amount=financeAccountAmount(row);
+    return `<div class="finance-row ${amount>=0?"income":"expense"}"><div><b>${escapeHtml(name)}</b><span>${escapeHtml(financeAccountMeta(row))}</span></div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
+  }).join("");
+}
+
 function renderFinanceDashboard(){
   const root=document.getElementById("financeKpis");
   if(!root)return;
@@ -3658,12 +3732,7 @@ function renderFinanceDashboard(){
   renderFinanceAccountKpis(accounts);
   renderFinanceToday(data);
   renderFinanceOperations(operations);
-  renderFinanceCards("financeAccounts",accounts,row=>({
-    title:normalizeFinanceAccountName(pick(row,["account","счет","name","название"])||row.account),
-    meta:financeAccountMeta(row),
-    amount:financeAccountAmount(row),
-    tone:financeAccountAmount(row)>=0?"income":"expense"
-  }),financeSheet.source==="zenmoney"?"Счета появятся после синхронизации ZenMoney.":financeSheet.loaded?"Заполните вкладку Счета в Google Sheets. Баланс больше не вычисляется из операций.":"Счета появятся после подключения вкладки Счета.");
+  renderFinanceAccountsLive(accounts);
   renderFinanceDebts([...financeAccountDebts(accounts),...debts.map(row=>Object.assign({kind:"Долг"},row))]);
   renderFinanceGoals(goals.map(row=>Object.assign({kind:"Цель"},row)));
   renderHomeFinanceWidget();
