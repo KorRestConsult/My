@@ -1,0 +1,464 @@
+name: Finance period picker one-shot
+on:
+  push:
+    branches:
+      - main
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add stable finance month and year picker
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          begin = '<!-- FINANCE_PERIOD_PICKER_BEGIN -->'
+          end = '<!-- FINANCE_PERIOD_PICKER_END -->'
+
+          if begin in text and end in text:
+              a = text.index(begin)
+              b = text.index(end, a) + len(end)
+              text = text[:a] + text[b:]
+
+          block = r'''<!-- FINANCE_PERIOD_PICKER_BEGIN -->
+<style id="financePeriodPickerStyles">
+  #financeKpis .finance-kpi.finance-period-trigger{
+    cursor:pointer;
+    position:relative;
+    transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease;
+  }
+  #financeKpis .finance-kpi.finance-period-trigger::after{
+    content:"⌄";
+    position:absolute;
+    top:9px;
+    right:10px;
+    color:var(--gold2);
+    font-size:13px;
+    line-height:1;
+    opacity:.72;
+  }
+  #financeKpis .finance-kpi.finance-period-trigger:active{transform:scale(.985)}
+  #financeKpis .finance-kpi.finance-period-trigger:focus-visible{
+    outline:2px solid rgba(185,133,62,.55);
+    outline-offset:2px;
+  }
+  .finance-period-backdrop[hidden]{display:none!important}
+  .finance-period-backdrop{
+    position:fixed;
+    inset:0;
+    z-index:10000;
+    display:grid;
+    place-items:center;
+    padding:16px;
+    background:rgba(36,32,26,.30);
+    -webkit-backdrop-filter:blur(7px);
+    backdrop-filter:blur(7px);
+    overscroll-behavior:contain;
+    touch-action:none;
+  }
+  .finance-period-dialog{
+    width:min(382px,calc(100vw - 28px));
+    min-height:386px;
+    max-height:calc(100dvh - 28px);
+    overflow:auto;
+    overscroll-behavior:contain;
+    background:linear-gradient(155deg,#fffdf8 0%,#f5ecdd 100%);
+    border:1px solid rgba(116,91,57,.20);
+    border-radius:18px;
+    box-shadow:0 28px 80px rgba(50,37,21,.28);
+    padding:16px;
+    transform:translateZ(0);
+    -webkit-overflow-scrolling:touch;
+  }
+  .finance-period-top{
+    display:grid;
+    grid-template-columns:1fr 34px;
+    gap:10px;
+    align-items:center;
+    min-height:38px;
+  }
+  .finance-period-kicker{
+    color:var(--muted);
+    font-size:9px;
+    text-transform:uppercase;
+    letter-spacing:.11em;
+    font-weight:800;
+  }
+  .finance-period-title{
+    margin-top:3px;
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--ink);
+    font-size:20px;
+    line-height:1.1;
+  }
+  .finance-period-close{
+    width:34px;
+    height:34px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    background:rgba(255,255,255,.62);
+    color:var(--ink);
+    font-size:20px;
+    line-height:1;
+    display:grid;
+    place-items:center;
+    padding:0 0 2px;
+  }
+  .finance-period-year{
+    display:grid;
+    grid-template-columns:38px 1fr 38px;
+    align-items:center;
+    gap:8px;
+    margin-top:16px;
+    height:42px;
+  }
+  .finance-period-year button{
+    width:38px;
+    height:38px;
+    border:1px solid var(--line);
+    border-radius:11px;
+    background:rgba(255,255,255,.60);
+    color:var(--gold2);
+    font-size:20px;
+    display:grid;
+    place-items:center;
+  }
+  .finance-period-year button:disabled{
+    opacity:.24;
+    cursor:default;
+  }
+  .finance-period-year-value{
+    text-align:center;
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--ink);
+    font-size:22px;
+    font-weight:700;
+    font-variant-numeric:tabular-nums;
+  }
+  .finance-period-months{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-auto-rows:52px;
+    gap:8px;
+    margin-top:14px;
+  }
+  .finance-period-month{
+    min-width:0;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:rgba(255,255,255,.58);
+    color:var(--ink);
+    font-size:12px;
+    font-weight:800;
+    padding:0 6px;
+    display:grid;
+    place-items:center;
+    transition:transform .14s ease,border-color .14s ease,background .14s ease;
+  }
+  .finance-period-month:not(:disabled):active{transform:scale(.97)}
+  .finance-period-month.is-selected{
+    background:var(--green);
+    border-color:var(--green);
+    color:#fffaf2;
+  }
+  .finance-period-month:disabled{
+    background:rgba(116,91,57,.045);
+    border-color:rgba(116,91,57,.09);
+    color:rgba(117,107,95,.32);
+    cursor:default;
+  }
+  .finance-period-note{
+    height:20px;
+    margin-top:12px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:20px;
+    text-align:center;
+  }
+  @media(max-width:430px){
+    .finance-period-backdrop{padding:10px}
+    .finance-period-dialog{width:100%;min-height:374px;border-radius:16px;padding:14px}
+    .finance-period-months{grid-auto-rows:50px;gap:7px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    #financeKpis .finance-kpi.finance-period-trigger,.finance-period-month{transition:none}
+  }
+</style>
+<div class="finance-period-backdrop" id="financePeriodBackdrop" hidden aria-hidden="true">
+  <section class="finance-period-dialog" role="dialog" aria-modal="true" aria-labelledby="financePeriodTitle">
+    <div class="finance-period-top">
+      <div>
+        <div class="finance-period-kicker">Финансовый период</div>
+        <div class="finance-period-title" id="financePeriodTitle">Выберите месяц</div>
+      </div>
+      <button class="finance-period-close" id="financePeriodClose" type="button" aria-label="Закрыть">×</button>
+    </div>
+    <div class="finance-period-year">
+      <button id="financePeriodPrevYear" type="button" aria-label="Предыдущий год">‹</button>
+      <div class="finance-period-year-value" id="financePeriodYear">2026</div>
+      <button id="financePeriodNextYear" type="button" aria-label="Следующий год">›</button>
+    </div>
+    <div class="finance-period-months" id="financePeriodMonths"></div>
+    <div class="finance-period-note" id="financePeriodNote">Будущие месяцы недоступны</div>
+  </section>
+</div>
+<script id="financePeriodPickerScript">
+(function(){
+  if(window.__financePeriodPickerInstalled)return;
+  window.__financePeriodPickerInstalled=true;
+
+  const now=new Date();
+  const state=window.__financePeriodState||(window.__financePeriodState={
+    year:now.getFullYear(),
+    month:now.getMonth(),
+    pickerYear:now.getFullYear(),
+    scrollY:0,
+    locked:false,
+    previousBodyStyle:null,
+    previousHtmlOverflow:""
+  });
+  const MONTHS=["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+
+  function getData(){
+    try{
+      if(typeof financeDashboardData!=="function")return null;
+      return typeof todayDay==="function"?financeDashboardData(todayDay()):financeDashboardData();
+    }catch(_){return null;}
+  }
+
+  function periodLabel(year,month){
+    let name=MONTHS[month].toLocaleLowerCase("ru-RU");
+    if(year!==new Date().getFullYear())name+=" "+year;
+    return name;
+  }
+
+  function operationDate(row){
+    try{
+      const raw=typeof pick==="function"?pick(row,["date","дата"]):(row.date||row["дата"]);
+      return typeof parseFinanceDate==="function"?parseFinanceDate(raw):new Date(raw);
+    }catch(_){return null;}
+  }
+
+  function amountOf(row){
+    try{return typeof financeOperationAmount==="function"?financeOperationAmount(row):Number(row.amount||row["сумма"]||0)||0}catch(_){return 0}
+  }
+
+  function totalsFor(year,month){
+    const data=getData();
+    if(!data)return {income:0,expense:0,minYear:year};
+    const runtimeNow=new Date();
+    if(year===runtimeNow.getFullYear()&&month===runtimeNow.getMonth()){
+      return {
+        income:Number(data.monthIncome)||0,
+        expense:Number(data.monthExpense)||0,
+        minYear:minYearFrom(data.operations,runtimeNow.getFullYear())
+      };
+    }
+    let income=0,expense=0;
+    (data.operations||[]).forEach(row=>{
+      const d=operationDate(row);
+      if(!d||Number.isNaN(d.getTime())||d.getFullYear()!==year||d.getMonth()!==month)return;
+      const amount=amountOf(row);
+      if(amount>0)income+=amount;
+      if(amount<0)expense+=Math.abs(amount);
+    });
+    return {income,expense,minYear:minYearFrom(data.operations,runtimeNow.getFullYear())};
+  }
+
+  function minYearFrom(operations,fallback){
+    let min=fallback;
+    (operations||[]).forEach(row=>{
+      const d=operationDate(row);
+      if(d&&!Number.isNaN(d.getTime())&&d.getFullYear()<=fallback)min=Math.min(min,d.getFullYear());
+    });
+    return min;
+  }
+
+  function money(value){
+    try{return typeof moneyText==="function"?moneyText(value):new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB",maximumFractionDigits:0}).format(value)}
+    catch(_){return Math.round(value)+" ₽"}
+  }
+
+  function markCard(card,metric){
+    if(!card)return;
+    card.classList.add("finance-period-trigger");
+    card.dataset.financePeriodMetric=metric;
+    card.setAttribute("role","button");
+    card.setAttribute("tabindex","0");
+    card.setAttribute("aria-haspopup","dialog");
+    card.setAttribute("aria-label",metric==="income"?"Выбрать месяц и год дохода":"Выбрать месяц и год расхода");
+  }
+
+  function enhanceKpis(){
+    const root=document.getElementById("financeKpis");
+    if(!root)return;
+    const cards=[...root.querySelectorAll(":scope > .finance-kpi")];
+    const incomeCard=cards.find(card=>((card.querySelector("span")||{}).textContent||"").trim().toLocaleLowerCase("ru-RU").startsWith("доход за"));
+    const expenseCard=cards.find(card=>((card.querySelector("span")||{}).textContent||"").trim().toLocaleLowerCase("ru-RU").startsWith("расход за"));
+    if(!incomeCard||!expenseCard)return;
+
+    markCard(incomeCard,"income");
+    markCard(expenseCard,"expense");
+
+    const totals=totalsFor(state.year,state.month);
+    const label=periodLabel(state.year,state.month);
+    const incomeLabel=incomeCard.querySelector("span");
+    const expenseLabel=expenseCard.querySelector("span");
+    const incomeValue=incomeCard.querySelector("b");
+    const expenseValue=expenseCard.querySelector("b");
+    if(incomeLabel)incomeLabel.textContent="Доход за "+label;
+    if(expenseLabel)expenseLabel.textContent="Расход за "+label;
+    if(incomeValue)incomeValue.textContent=money(totals.income);
+    if(expenseValue)expenseValue.textContent=money(totals.expense);
+  }
+
+  function lockPage(){
+    if(state.locked)return;
+    state.locked=true;
+    state.scrollY=window.scrollY||window.pageYOffset||0;
+    state.previousBodyStyle=document.body.getAttribute("style");
+    state.previousHtmlOverflow=document.documentElement.style.overflow||"";
+    document.documentElement.style.overflow="hidden";
+    document.body.style.position="fixed";
+    document.body.style.top=(-state.scrollY)+"px";
+    document.body.style.left="0";
+    document.body.style.right="0";
+    document.body.style.width="100%";
+    document.body.style.overflow="hidden";
+  }
+
+  function unlockPage(){
+    if(!state.locked)return;
+    state.locked=false;
+    if(state.previousBodyStyle===null)document.body.removeAttribute("style");
+    else document.body.setAttribute("style",state.previousBodyStyle);
+    document.documentElement.style.overflow=state.previousHtmlOverflow;
+    window.scrollTo(0,state.scrollY||0);
+  }
+
+  function renderPicker(){
+    const yearEl=document.getElementById("financePeriodYear");
+    const monthsEl=document.getElementById("financePeriodMonths");
+    const prev=document.getElementById("financePeriodPrevYear");
+    const next=document.getElementById("financePeriodNextYear");
+    if(!yearEl||!monthsEl||!prev||!next)return;
+
+    const runtimeNow=new Date();
+    const totals=totalsFor(state.year,state.month);
+    const minYear=totals.minYear;
+    if(state.pickerYear<minYear)state.pickerYear=minYear;
+    if(state.pickerYear>runtimeNow.getFullYear())state.pickerYear=runtimeNow.getFullYear();
+
+    yearEl.textContent=String(state.pickerYear);
+    prev.disabled=state.pickerYear<=minYear;
+    next.disabled=state.pickerYear>=runtimeNow.getFullYear();
+
+    monthsEl.innerHTML=MONTHS.map((name,index)=>{
+      const future=state.pickerYear>runtimeNow.getFullYear()||(state.pickerYear===runtimeNow.getFullYear()&&index>runtimeNow.getMonth());
+      const selected=state.pickerYear===state.year&&index===state.month;
+      return `<button type="button" class="finance-period-month${selected?" is-selected":""}" data-month="${index}" ${future?"disabled aria-disabled=\"true\"":""}>${name}</button>`;
+    }).join("");
+  }
+
+  function openPicker(){
+    const backdrop=document.getElementById("financePeriodBackdrop");
+    if(!backdrop)return;
+    state.pickerYear=state.year;
+    renderPicker();
+    lockPage();
+    backdrop.hidden=false;
+    backdrop.setAttribute("aria-hidden","false");
+    requestAnimationFrame(()=>{
+      const selected=backdrop.querySelector(".finance-period-month.is-selected")||document.getElementById("financePeriodClose");
+      if(selected)selected.focus({preventScroll:true});
+    });
+  }
+
+  function closePicker(){
+    const backdrop=document.getElementById("financePeriodBackdrop");
+    if(!backdrop||backdrop.hidden)return;
+    backdrop.hidden=true;
+    backdrop.setAttribute("aria-hidden","true");
+    unlockPage();
+  }
+
+  document.addEventListener("click",function(event){
+    const trigger=event.target.closest&&event.target.closest("#financeKpis .finance-period-trigger");
+    if(trigger){
+      event.preventDefault();
+      openPicker();
+      return;
+    }
+    if(event.target.id==="financePeriodClose"){
+      closePicker();
+      return;
+    }
+    if(event.target.id==="financePeriodPrevYear"){
+      state.pickerYear--;
+      renderPicker();
+      return;
+    }
+    if(event.target.id==="financePeriodNextYear"){
+      const runtimeNow=new Date();
+      if(state.pickerYear<runtimeNow.getFullYear())state.pickerYear++;
+      renderPicker();
+      return;
+    }
+    const monthButton=event.target.closest&&event.target.closest("#financePeriodMonths .finance-period-month:not(:disabled)");
+    if(monthButton){
+      state.year=state.pickerYear;
+      state.month=Number(monthButton.dataset.month);
+      enhanceKpis();
+      closePicker();
+      return;
+    }
+    if(event.target.id==="financePeriodBackdrop")closePicker();
+  },true);
+
+  document.addEventListener("keydown",function(event){
+    const trigger=event.target.closest&&event.target.closest("#financeKpis .finance-period-trigger");
+    if(trigger&&(event.key==="Enter"||event.key===" ")){
+      event.preventDefault();
+      openPicker();
+      return;
+    }
+    if(event.key==="Escape")closePicker();
+  },true);
+
+  function installObserver(){
+    const root=document.getElementById("financeKpis");
+    if(!root)return false;
+    const observer=new MutationObserver(()=>requestAnimationFrame(enhanceKpis));
+    observer.observe(root,{childList:true});
+    enhanceKpis();
+    return true;
+  }
+
+  if(!installObserver()){
+    const bootObserver=new MutationObserver(()=>{
+      if(installObserver())bootObserver.disconnect();
+    });
+    bootObserver.observe(document.documentElement,{childList:true,subtree:true});
+  }
+})();
+</script>
+<!-- FINANCE_PERIOD_PICKER_END -->'''
+
+          pos = text.rfind('</body>')
+          if pos < 0:
+              raise SystemExit('Closing body tag not found')
+          text = text[:pos] + block + '\n' + text[pos:]
+          path.write_text(text, encoding='utf-8')
+          PY
+          rm -f .github/workflows/finance-period-picker-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/finance-period-picker-once.yml
+          git commit -m "Add stable finance month and year picker"
+          git push
