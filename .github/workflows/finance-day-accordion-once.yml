@@ -15,133 +15,22 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
-          path = Path('index.html')
-          text = path.read_text(encoding='utf-8')
-          begin = '<!-- FINANCE_DAY_ACCORDION_BEGIN -->'
-          end = '<!-- FINANCE_DAY_ACCORDION_END -->'
-
+          import base64
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+          begin='<!-- FINANCE_DAY_ACCORDION_BEGIN -->'
+          end='<!-- FINANCE_DAY_ACCORDION_END -->'
           if begin in text and end in text:
-              a = text.index(begin)
-              b = text.index(end, a) + len(end)
-              text = text[:a] + text[b:]
-
-          block = r'''<!-- FINANCE_DAY_ACCORDION_BEGIN -->
-<style>
-  #financeOperations details.finance-day{
-    overflow:clip;
-  }
-  #financeOperations details.finance-day.finance-day-animating{
-    overflow:hidden;
-    will-change:height;
-  }
-  #financeOperations details.finance-day > summary.finance-day-head{
-    cursor:pointer;
-    user-select:none;
-    -webkit-user-select:none;
-    -webkit-tap-highlight-color:transparent;
-  }
-  #financeOperations details.finance-day[open] > summary.finance-day-head{
-    background:rgba(255,255,255,.16);
-  }
-</style>
-<script>
-(function(){
-  const DURATION=300;
-  const EASING='cubic-bezier(.22,.78,.24,1)';
-  const animations=new WeakMap();
-
-  function cleanup(day){
-    day.classList.remove('finance-day-animating');
-    day.style.height='';
-    day.style.overflow='';
-    day.style.willChange='';
-    animations.delete(day);
-  }
-
-  function cancelRunning(day){
-    const current=animations.get(day);
-    if(current){
-      try{current.cancel();}catch(_){}
-      cleanup(day);
-    }
-  }
-
-  function closeDay(day){
-    if(!day || !day.open) return Promise.resolve();
-    cancelRunning(day);
-    const summary=day.querySelector(':scope > summary.finance-day-head');
-    if(!summary){day.open=false;return Promise.resolve();}
-    const start=day.getBoundingClientRect().height;
-    const end=summary.getBoundingClientRect().height;
-    day.classList.add('finance-day-animating');
-    day.style.height=start+'px';
-    const animation=day.animate([{height:start+'px'},{height:end+'px'}],{duration:DURATION,easing:EASING});
-    animations.set(day,animation);
-    return animation.finished.catch(()=>{}).then(()=>{
-      if(animations.get(day)!==animation)return;
-      day.open=false;
-      cleanup(day);
-    });
-  }
-
-  function openDay(day){
-    if(!day || day.open) return Promise.resolve();
-    cancelRunning(day);
-    const summary=day.querySelector(':scope > summary.finance-day-head');
-    if(!summary){day.open=true;return Promise.resolve();}
-    const start=summary.getBoundingClientRect().height;
-    day.open=true;
-    const end=day.scrollHeight;
-    day.classList.add('finance-day-animating');
-    day.style.height=start+'px';
-    const animation=day.animate([{height:start+'px'},{height:end+'px'}],{duration:DURATION,easing:EASING});
-    animations.set(day,animation);
-    return animation.finished.catch(()=>{}).then(()=>{
-      if(animations.get(day)!==animation)return;
-      cleanup(day);
-    });
-  }
-
-  function toggleDay(day){
-    const root=document.getElementById('financeOperations');
-    if(!root || !day)return;
-    if(day.open){
-      closeDay(day);
-      return;
-    }
-    const others=[...root.querySelectorAll('details.finance-day[open]')].filter(item=>item!==day);
-    others.forEach(closeDay);
-    openDay(day);
-  }
-
-  document.addEventListener('click',function(event){
-    const summary=event.target.closest && event.target.closest('summary.finance-day-head');
-    if(!summary)return;
-    const day=summary.parentElement;
-    if(!day || !day.matches('details.finance-day') || !day.closest('#financeOperations'))return;
-    event.preventDefault();
-    toggleDay(day);
-  },true);
-
-  document.addEventListener('toggle',function(event){
-    const day=event.target;
-    if(!day || !day.matches || !day.matches('#financeOperations details.finance-day[open]'))return;
-    const root=document.getElementById('financeOperations');
-    if(!root)return;
-    root.querySelectorAll('details.finance-day[open]').forEach(other=>{
-      if(other!==day && !other.classList.contains('finance-day-animating'))other.open=false;
-    });
-  },true);
-})();
-</script>
-<!-- FINANCE_DAY_ACCORDION_END -->'''
-
-          pos = text.rfind('</body>')
+              a=text.index(begin)
+              b=text.index(end,a)+len(end)
+              text=text[:a]+text[b:]
+          payload='PCEtLSBGSU5BTkNFX0RBWV9BQ0NPUkRJT05fQkVHSU4gLS0+CjxzdHlsZT4KICAjZmluYW5jZU9wZXJhdGlvbnMgZGV0YWlscy5maW5hbmNlLWRheXsKICAgIG92ZXJmbG93OmNsaXA7CiAgfQogICNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5LmZpbmFuY2UtZGF5LWFuaW1hdGluZ3sKICAgIG92ZXJmbG93OmhpZGRlbjsKICAgIHdpbGwtY2hhbmdlOmhlaWdodDsKICB9CiAgI2ZpbmFuY2VPcGVyYXRpb25zIGRldGFpbHMuZmluYW5jZS1kYXkgPiBzdW1tYXJ5LmZpbmFuY2UtZGF5LWhlYWR7CiAgICBjdXJzb3I6cG9pbnRlcjsKICAgIHVzZXItc2VsZWN0Om5vbmU7CiAgICAtd2Via2l0LXVzZXItc2VsZWN0Om5vbmU7CiAgICAtd2Via2l0LXRhcC1oaWdobGlnaHQtY29sb3I6dHJhbnNwYXJlbnQ7CiAgfQogICNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5W29wZW5dID4gc3VtbWFyeS5maW5hbmNlLWRheS1oZWFkewogICAgYmFja2dyb3VuZDpyZ2JhKDI1NSwyNTUsMjU1LC4xNik7CiAgfQo8L3N0eWxlPgo8c2NyaXB0PgooZnVuY3Rpb24oKXsKICBjb25zdCBEVVJBVElPTj0zMDA7CiAgY29uc3QgRUFTSU5HPSdjdWJpYy1iZXppZXIoLjIyLC43OCwuMjQsMSknOwogIGNvbnN0IGFuaW1hdGlvbnM9bmV3IFdlYWtNYXAoKTsKCiAgZnVuY3Rpb24gY2xlYW51cChkYXkpewogICAgZGF5LmNsYXNzTGlzdC5yZW1vdmUoJ2ZpbmFuY2UtZGF5LWFuaW1hdGluZycpOwogICAgZGF5LnN0eWxlLmhlaWdodD0nJzsKICAgIGRheS5zdHlsZS5vdmVyZmxvdz0nJzsKICAgIGRheS5zdHlsZS53aWxsQ2hhbmdlPScnOwogICAgYW5pbWF0aW9ucy5kZWxldGUoZGF5KTsKICB9CgogIGZ1bmN0aW9uIGNhbmNlbFJ1bm5pbmcoZGF5KXsKICAgIGNvbnN0IGN1cnJlbnQ9YW5pbWF0aW9ucy5nZXQoZGF5KTsKICAgIGlmKGN1cnJlbnQpewogICAgICB0cnl7Y3VycmVudC5jYW5jZWwoKTt9Y2F0Y2goXyl7fQogICAgICBjbGVhbnVwKGRheSk7CiAgICB9CiAgfQoKICBmdW5jdGlvbiBjbG9zZURheShkYXkpewogICAgaWYoIWRheSB8fCAhZGF5Lm9wZW4pIHJldHVybiBQcm9taXNlLnJlc29sdmUoKTsKICAgIGNhbmNlbFJ1bm5pbmcoZGF5KTsKICAgIGNvbnN0IHN1bW1hcnk9ZGF5LnF1ZXJ5U2VsZWN0b3IoJzpzY29wZSA+IHN1bW1hcnkuZmluYW5jZS1kYXktaGVhZCcpOwogICAgaWYoIXN1bW1hcnkpe2RheS5vcGVuPWZhbHNlO3JldHVybiBQcm9taXNlLnJlc29sdmUoKTt9CiAgICBjb25zdCBzdGFydD1kYXkuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCkuaGVpZ2h0OwogICAgY29uc3QgZW5kPXN1bW1hcnkuZ2V0Qm91bmRpbmdDbGllbnRSZWN0KCkuaGVpZ2h0OwogICAgZGF5LmNsYXNzTGlzdC5hZGQoJ2ZpbmFuY2UtZGF5LWFuaW1hdGluZycpOwogICAgZGF5LnN0eWxlLmhlaWdodD1zdGFydCsncHgnOwogICAgY29uc3QgYW5pbWF0aW9uPWRheS5hbmltYXRlKFt7aGVpZ2h0OnN0YXJ0KydweCd9LHtoZWlnaHQ6ZW5kKydweCd9XSx7ZHVyYXRpb246RFVSQVRJT04sZWFzaW5nOkVBU0lOR30pOwogICAgYW5pbWF0aW9ucy5zZXQoZGF5LGFuaW1hdGlvbik7CiAgICByZXR1cm4gYW5pbWF0aW9uLmZpbmlzaGVkLmNhdGNoKCgpPT57fSkudGhlbigoKT0+ewogICAgICBpZihhbmltYXRpb25zLmdldChkYXkpIT09YW5pbWF0aW9uKXJldHVybjsKICAgICAgZGF5Lm9wZW49ZmFsc2U7CiAgICAgIGNsZWFudXAoZGF5KTsKICAgIH0pOwogIH0KCiAgZnVuY3Rpb24gb3BlbkRheShkYXkpewogICAgaWYoIWRheSB8fCBkYXkub3BlbikgcmV0dXJuIFByb21pc2UucmVzb2x2ZSgpOwogICAgY2FuY2VsUnVubmluZyhkYXkpOwogICAgY29uc3Qgc3VtbWFyeT1kYXkucXVlcnlTZWxlY3RvcignOnNjb3BlID4gc3VtbWFyeS5maW5hbmNlLWRheS1oZWFkJyk7CiAgICBpZighc3VtbWFyeSl7ZGF5Lm9wZW49dHJ1ZTtyZXR1cm4gUHJvbWlzZS5yZXNvbHZlKCk7fQogICAgY29uc3Qgc3RhcnQ9c3VtbWFyeS5nZXRCb3VuZGluZ0NsaWVudFJlY3QoKS5oZWlnaHQ7CiAgICBkYXkub3Blbj10cnVlOwogICAgY29uc3QgZW5kPWRheS5zY3JvbGxIZWlnaHQ7CiAgICBkYXkuY2xhc3NMaXN0LmFkZCgnZmluYW5jZS1kYXktYW5pbWF0aW5nJyk7CiAgICBkYXkuc3R5bGUuaGVpZ2h0PXN0YXJ0KydweCc7CiAgICBjb25zdCBhbmltYXRpb249ZGF5LmFuaW1hdGUoW3toZWlnaHQ6c3RhcnQrJ3B4J30se2hlaWdodDplbmQrJ3B4J31dLHtkdXJhdGlvbjpEVVJBVElPTixlYXNpbmc6RUFTSU5HfSk7CiAgICBhbmltYXRpb25zLnNldChkYXksYW5pbWF0aW9uKTsKICAgIHJldHVybiBhbmltYXRpb24uZmluaXNoZWQuY2F0Y2goKCk9Pnt9KS50aGVuKCgpPT57CiAgICAgIGlmKGFuaW1hdGlvbnMuZ2V0KGRheSkhPT1hbmltYXRpb24pcmV0dXJuOwogICAgICBjbGVhbnVwKGRheSk7CiAgICB9KTsKICB9CgogIGZ1bmN0aW9uIHRvZ2dsZURheShkYXkpewogICAgY29uc3Qgcm9vdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZmluYW5jZU9wZXJhdGlvbnMnKTsKICAgIGlmKCFyb290IHx8ICFkYXkpcmV0dXJuOwogICAgaWYoZGF5Lm9wZW4pewogICAgICBjbG9zZURheShkYXkpOwogICAgICByZXR1cm47CiAgICB9CiAgICBjb25zdCBvdGhlcnM9Wy4uLnJvb3QucXVlcnlTZWxlY3RvckFsbCgnZGV0YWlscy5maW5hbmNlLWRheVtvcGVuXScpXS5maWx0ZXIoaXRlbT0+aXRlbSE9PWRheSk7CiAgICBvdGhlcnMuZm9yRWFjaChjbG9zZURheSk7CiAgICBvcGVuRGF5KGRheSk7CiAgfQoKICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsZnVuY3Rpb24oZXZlbnQpewogICAgY29uc3Qgc3VtbWFyeT1ldmVudC50YXJnZXQuY2xvc2VzdCAmJiBldmVudC50YXJnZXQuY2xvc2VzdCgnc3VtbWFyeS5maW5hbmNlLWRheS1oZWFkJyk7CiAgICBpZighc3VtbWFyeSlyZXR1cm47CiAgICBjb25zdCBkYXk9c3VtbWFyeS5wYXJlbnRFbGVtZW50OwogICAgaWYoIWRheSB8fCAhZGF5Lm1hdGNoZXMoJ2RldGFpbHMuZmluYW5jZS1kYXknKSB8fCAhZGF5LmNsb3Nlc3QoJyNmaW5hbmNlT3BlcmF0aW9ucycpKXJldHVybjsKICAgIGV2ZW50LnByZXZlbnREZWZhdWx0KCk7CiAgICB0b2dnbGVEYXkoZGF5KTsKICB9LHRydWUpOwoKICBkb2N1bWVudC5hZGRFdmVudExpc3RlbmVyKCd0b2dnbGUnLGZ1bmN0aW9uKGV2ZW50KXsKICAgIGNvbnN0IGRheT1ldmVudC50YXJnZXQ7CiAgICBpZighZGF5IHx8ICFkYXkubWF0Y2hlcyB8fCAhZGF5Lm1hdGNoZXMoJyNmaW5hbmNlT3BlcmF0aW9ucyBkZXRhaWxzLmZpbmFuY2UtZGF5W29wZW5dJykpcmV0dXJuOwogICAgY29uc3Qgcm9vdD1kb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZmluYW5jZU9wZXJhdGlvbnMnKTsKICAgIGlmKCFyb290KXJldHVybjsKICAgIHJvb3QucXVlcnlTZWxlY3RvckFsbCgnZGV0YWlscy5maW5hbmNlLWRheVtvcGVuXScpLmZvckVhY2gob3RoZXI9PnsKICAgICAgaWYob3RoZXIhPT1kYXkgJiYgIW90aGVyLmNsYXNzTGlzdC5jb250YWlucygnZmluYW5jZS1kYXktYW5pbWF0aW5nJykpb3RoZXIub3Blbj1mYWxzZTsKICAgIH0pOwogIH0sdHJ1ZSk7Cn0pKCk7Cjwvc2NyaXB0Pgo8IS0tIEZJTkFOQ0VfREFZX0FDQ09SRElPTl9FTkQgLS0+'
+          block=base64.b64decode(payload).decode('utf-8')
+          pos=text.rfind('</body>')
           if pos < 0:
               raise SystemExit('Closing body tag not found')
-          text = text[:pos] + block + '\n' + text[pos:]
-          path.write_text(text, encoding='utf-8')
+          text=text[:pos]+block+'\n'+text[pos:]
+          path.write_text(text,encoding='utf-8')
           PY
           rm -f .github/workflows/finance-day-accordion-once.yml
           git config user.name "github-actions[bot]"
