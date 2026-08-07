@@ -1267,6 +1267,49 @@
     .finance-budget-stat b{font-size:18px}
   }
 
+
+  /* Dynamic page heading above navigation */
+  .page-heading{
+    width:100%;
+    min-height:48px;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    padding:4px 4px 8px;
+    color:#fff4df;
+  }
+  .page-heading-mark{
+    width:3px;
+    height:24px;
+    flex:0 0 3px;
+    border-radius:99px;
+    background:linear-gradient(180deg,#d9a34d,#7b5223);
+    box-shadow:0 0 16px rgba(185,133,62,.22);
+  }
+  .page-heading strong{
+    font-family:"Playfair Display",Georgia,"Times New Roman",serif;
+    font-size:24px;
+    line-height:1;
+    font-weight:700;
+    letter-spacing:.01em;
+    color:#fff4df;
+  }
+  .topbar .shell{
+    align-items:stretch!important;
+  }
+  @media (max-width:560px){
+    .page-heading{
+      min-height:52px;
+      padding:7px 5px 9px;
+    }
+    .page-heading-mark{
+      height:26px;
+    }
+    .page-heading strong{
+      font-size:25px;
+    }
+  }
+
 </style>
 
 <script>
@@ -1294,6 +1337,10 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 <body>
 <header class="topbar">
   <div class="shell">
+    <div class="page-heading" aria-live="polite">
+      <span class="page-heading-mark"></span>
+      <strong id="pageHeadingTitle">Штаб</strong>
+    </div>
     <nav class="nav" id="nav"></nav>
   </div>
 </header>
@@ -2358,10 +2405,14 @@ function buildNav(){
 }
 function showView(id,updateHash=false){
   if(!views.some(view=>view[0]===id))id="home";
+  const viewIndex=views.findIndex(view=>view[0]===id);
+  const viewLabel=views[viewIndex][1];
   document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
   document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  document.querySelectorAll(".nav-btn")[views.findIndex(v=>v[0]===id)].classList.add("active");
+  document.querySelectorAll(".nav-btn")[viewIndex].classList.add("active");
+  const pageHeadingTitle=document.getElementById("pageHeadingTitle");
+  if(pageHeadingTitle)pageHeadingTitle.textContent=viewLabel;
   if(updateHash)history.replaceState(null,"",`#${id}`);
   if(id==="finance")refreshFinanceSheet();
   window.scrollTo({top:0,behavior:"auto"});
