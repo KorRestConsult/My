@@ -1581,6 +1581,122 @@
     .finance-gold-live .finance-gold-live-value{font-size:12px}
   }
 
+
+  .finance-gold-live .finance-gold-live-value{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+  .finance-gold-divider{
+    display:inline-block;
+    width:1px;
+    height:15px;
+    background:linear-gradient(180deg,rgba(185,133,62,.25),#8b5e2a,rgba(185,133,62,.25));
+    border-radius:99px;
+    flex:0 0 1px;
+  }
+
+
+  /* Finance palette & gold layout v4 */
+  :root{
+    --gold:#c1812f;
+    --gold2:#7a4a16;
+    --green2:#2f865d;
+    --red:#c44f43;
+  }
+
+  .finance-positive{
+    color:#2f8a60!important;
+    font-weight:500!important;
+  }
+  .finance-negative{
+    color:#c04439!important;
+    font-weight:500!important;
+  }
+
+  .finance-row.income{
+    border-color:rgba(47,138,96,.42)!important;
+    background:linear-gradient(145deg,rgba(47,138,96,.15),rgba(255,255,255,.20))!important;
+  }
+  .finance-row.expense{
+    border-color:rgba(192,68,57,.42)!important;
+    background:linear-gradient(145deg,rgba(192,68,57,.14),rgba(255,255,255,.20))!important;
+  }
+  .finance-row.debt{
+    border-color:rgba(193,129,47,.48)!important;
+    background:linear-gradient(145deg,rgba(193,129,47,.16),rgba(255,255,255,.20))!important;
+  }
+
+  .finance-day.income,
+  .finance-month.income{
+    border-color:rgba(47,138,96,.38)!important;
+    background:linear-gradient(145deg,rgba(47,138,96,.10),rgba(255,250,242,.78))!important;
+  }
+  .finance-day.expense,
+  .finance-month.expense{
+    border-color:rgba(192,68,57,.36)!important;
+    background:linear-gradient(145deg,rgba(192,68,57,.09),rgba(255,250,242,.78))!important;
+  }
+  .finance-day.mixed,
+  .finance-month.mixed{
+    border-color:rgba(193,129,47,.38)!important;
+    background:linear-gradient(145deg,rgba(193,129,47,.10),rgba(255,250,242,.78))!important;
+  }
+
+  .finance-kpi b,
+  .finance-day-total,
+  .finance-month-total,
+  .finance-op strong{
+    font-weight:500!important;
+  }
+
+  .finance-gold-live{
+    border-color:rgba(193,129,47,.44)!important;
+    background:linear-gradient(145deg,rgba(193,129,47,.16),rgba(255,250,242,.80))!important;
+    align-items:center!important;
+  }
+  .finance-gold-left{
+    min-width:0;
+  }
+  .finance-gold-left>b{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .finance-gold-weight{
+    display:block!important;
+    margin-top:3px!important;
+    color:#7a4a16!important;
+    font-size:10px!important;
+    font-weight:500!important;
+  }
+  .finance-gold-meta{
+    margin-top:3px!important;
+    color:#74695d!important;
+    font-size:8.8px!important;
+    line-height:1.3!important;
+  }
+  .finance-gold-live-value{
+    display:block!important;
+    align-self:center;
+    text-align:right;
+    white-space:nowrap;
+    color:#6c4318!important;
+    font-size:14px!important;
+    font-weight:500!important;
+    letter-spacing:.01em;
+  }
+
+  /* Старый разделитель больше не нужен */
+  .finance-gold-divider{display:none!important}
+
+  @media (max-width:560px){
+    .finance-gold-live-value{
+      font-size:13px!important;
+    }
+  }
+
 </style>
 
 <script>
@@ -3678,7 +3794,7 @@ function renderFinanceAccountsLive(accounts){
       const gramsText=grams>0?`${formatNumber(grams)} г`:"вес не указан";
       const valueText=value>0?moneyText(value):"—";
       const meta=price>0?`${formatNumber(price)} ₽/г · ${financeGoldPrice.source}${financeGoldPrice.date?` · ${financeGoldPrice.date}`:""}`:"цена золота загружается";
-      return `<div class="finance-row finance-gold-live"><div><div class="finance-gold-line"><b>Золото</b><strong class="finance-gold-live-value">${escapeHtml(gramsText)} / ${escapeHtml(valueText)}</strong></div><span class="finance-gold-meta">${escapeHtml(meta)}</span></div></div>`;
+      return `<div class="finance-row finance-gold-live"><div class="finance-gold-left"><b>Золото</b><span class="finance-gold-weight">${escapeHtml(gramsText)}</span><span class="finance-gold-meta">${escapeHtml(meta)}</span></div><div class="finance-gold-live-value">${escapeHtml(valueText)}</div></div>`;
     }
     const amount=financeAccountAmount(row);
     return `<div class="finance-row ${amount>=0?"income":"expense"}"><div><b>${escapeHtml(name)}</b><span>${escapeHtml(financeAccountMeta(row))}</span></div><strong class="${amount>=0?"finance-positive":"finance-negative"}">${moneyText(amount)}</strong></div>`;
