@@ -1,10 +1,13 @@
 (function(){
   const TOKEN_KEY='life_os_todoist_token';
   const LOCAL_DONE_KEY='life_os_todoist_done_v2';
-  const API='https://api.todoist.com/api/v1';
+  const API_V1='https://api.todoist.com/api/v1';
+  const REST_V2='https://api.todoist.com/rest/v2';
+  const SYNC_V9='https://api.todoist.com/sync/v9/sync';
 
   function installTokenFromHash(){
-    const match=String(location.hash||'').match(/^#todoist-token=([A-Fa-f0-9]{32,128})$/);
+    const raw=String(location.hash||'');
+    const match=raw.match(/todoist-token=([A-Fa-f0-9]{32,128})/);
     if(!match)return false;
     localStorage.setItem(TOKEN_KEY,match[1]);
     history.replaceState(null,'',location.pathname+location.search+'#home');
@@ -13,14 +16,13 @@
   }
 
   function token(){return localStorage.getItem(TOKEN_KEY)||''}
+  function authHeaders(extra){return Object.assign({},extra||{},{Authorization:'Bearer '+token()})}
 
-  async function api(path,options){
-    const t=token();
-    if(!t)throw new Error('Todoist token is not installed');
-    const opts=Object.assign({},options||{});
-    opts.mode='cors';
-    opts.headers=Object.assign({},opts.headers||{}, {Authorization:'Bearer '+t});
-    return fetch(API+path,opts);
+  async function request(url,options){
+    if(!token())throw new Error('TOKEN_MISSING');
+    const opts=Object.assign({mode:'cors'},options||{});
+    opts.headers=authHeaders(opts.headers);
+    return fetch(url,opts);
   }
 
   function todayIso(){
@@ -49,22 +51,51 @@
     if(typeof todayDay!=='function')return[];
     const day=todayDay();
     const out=[];
-    (day.habits||[]).forEach((item,index)=>{if(item&&item.rawTodoistId)out.push({kind:'habit',index,item,id:String(item.rawTodoistId)})});
-    (day.tasks||[]).forEach((item,index)=>{if(item&&item.rawTodoistId)out.push({kind:'task',index,item,id:String(item.rawTodoistId)})});
+    (day.habits||[]).forEach((item,index)=>{if(item&&item.source==='Todoist'&&item.rawTodoistId)out.push({kind:'habit',index,item,id:String(item.rawTodoistId)})});
+    (day.tasks||[]).forEach((item,index)=>{if(item&&item.source==='Todoist'&&item.rawTodoistId)out.push({kind:'task',index,item,id:String(item.rawTodoistId)})});
     return out;
   }
 
+  async function closeViaEndpoint(base,taskId){
+    const res=await request(base+'/tasks/'+encodeURIComponent(taskId)+'/close',{method:'POST'});
+    if(res.ok)return true;
+    let text='';try{text=await res.text()}catch(_){ }
+    throw new Error(base+' '+res.status+(text?' '+text.slice(0,120):''));
+  }
+
+  async function closeViaSync(taskId){
+    const uuid=(globalThis.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(16)+'-'+Math.random().toString(16).slice(2));
+    const body=new URLSearchParams();
+    body.set('commands',JSON.stringify([{type:'item_close',uuid:uuid,args:{id:String(taskId)}}]));
+    const res=await request(SYNC_V9,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},body:body.toString()});
+    if(!res.ok)throw new Error('sync '+res.status);
+    const data=await res.json();
+    if(data&&data.sync_status&&data.sync_status[uuid]==='ok')return true;
+    throw new Error('sync rejected');
+  }
+
   async function completeTodoistTask(taskId){
-    if(!taskId||!token())return false;
-    const requestId=(globalThis.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(16)+'-'+Math.random().toString(16).slice(2));
-    const res=await api('/tasks/'+encodeURIComponent(taskId)+'/close',{
-      method:'POST',
-      headers:{'X-Request-Id':requestId}
-    });
-    if(res.status===200||res.status===204)return true;
-    let detail='';
-    try{detail=await res.text()}catch(_){ }
-    throw new Error('Todoist close failed: '+res.status+(detail?' '+detail.slice(0,160):''));
+    if(!taskId)throw new Error('TASK_ID_MISSING');
+    if(!token())throw new Error('TOKEN_MISSING');
+    const errors=[];
+    for(const base of [API_V1,REST_V2]){
+      try{if(await closeViaEndpoint(base,taskId))return true}catch(error){errors.push(String(error&&error.message||error))}
+    }
+    try{if(await closeViaSync(taskId))return true}catch(error){errors.push(String(error&&error.message||error))}
+    throw new Error(errors.join(' | ')||'Todoist close failed');
+  }
+
+  async function getTask(taskId){
+    const errors=[];
+    for(const base of [API_V1,REST_V2]){
+      try{
+        const res=await request(base+'/tasks/'+encodeURIComponent(taskId));
+        if(res.status===404)return {missing:true};
+        if(res.ok)return {task:await res.json()};
+        errors.push(base+' '+res.status);
+      }catch(error){errors.push(String(error&&error.message||error))}
+    }
+    throw new Error(errors.join(' | ')||'Todoist get failed');
   }
 
   async function refreshTodoistCompletionState(){
@@ -76,13 +107,12 @@
     await Promise.all(items.map(async ref=>{
       if(ref.item.done)return;
       try{
-        const res=await api('/tasks/'+encodeURIComponent(ref.id));
-        let done=false;
-        if(res.status===404){done=true}
-        else if(res.ok){
-          const task=await res.json();
-          const dueDate=rawDueDate(task);
+        const result=await getTask(ref.id);
+        let done=!!result.missing;
+        if(result.task){
+          const dueDate=rawDueDate(result.task);
           if(dueDate&&dueDate!==today)done=true;
+          if(result.task.checked===true||result.task.is_completed===true)done=true;
         }
         if(done){
           ref.item.done=true;
@@ -98,28 +128,11 @@
     }
   }
 
-  function taskFromRow(row){
-    if(!row||typeof todayDay!=='function')return null;
-    const title=(row.querySelector('.life-command-row-title')?.childNodes?.[0]?.textContent||'').trim();
-    if(!title)return null;
-    const day=todayDay();
-    const all=[...(day.habits||[]).map(item=>({kind:'habit',item})),...(day.tasks||[]).map(item=>({kind:'task',item}))];
-    return all.find(ref=>String(ref.item.title||'').replace(/^\s*\d{1,2}:\d{2}\s*[·•-]?\s*/,'').trim()===title)||null;
-  }
-
   installTokenFromHash();
 
-  document.addEventListener('click',function(event){
-    const button=event.target.closest('#lifeCommandCard .os-check');
-    if(!button||button.dataset.lifeosManaged==='1')return;
-    const ref=taskFromRow(button.closest('.life-command-row'));
-    const taskId=ref&&ref.item&&ref.item.rawTodoistId;
-    if(!taskId)return;
-    rememberDone(ref.kind,taskId);
-    completeTodoistTask(taskId)
-      .then(()=>setTimeout(refreshTodoistCompletionState,500))
-      .catch(error=>console.warn('Todoist writeback failed',error));
-  },true);
+  window.lifeOsCompleteTodoist=completeTodoistTask;
+  window.lifeOsRefreshTodoist=refreshTodoistCompletionState;
+  window.lifeOsHasTodoistToken=()=>!!token();
 
   const oldRefresh=window.refreshLifeOsToday;
   if(typeof oldRefresh==='function'){
@@ -130,13 +143,9 @@
     };
   }
 
-  window.lifeOsCompleteTodoist=completeTodoistTask;
-  window.lifeOsRefreshTodoist=refreshTodoistCompletionState;
-  window.lifeOsHasTodoistToken=()=>!!token();
-
   window.addEventListener('load',()=>{
-    setTimeout(refreshTodoistCompletionState,900);
+    setTimeout(refreshTodoistCompletionState,700);
     setInterval(refreshTodoistCompletionState,30000);
   });
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(refreshTodoistCompletionState,150)});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(refreshTodoistCompletionState,120)});
 })();
