@@ -4,7 +4,7 @@
     "city": "Рязань",
     "timezone": "Europe/Moscow",
     "source": "Google Calendar + Todoist",
-    "updatedAt": "2026-08-11T18:53:00+03:00",
+    "updatedAt": "2026-08-11T20:02:00+03:00",
     "syncMode": "snapshot"
   },
   "calendarToday": [
@@ -13,10 +13,6 @@
   "todoist": {
     "project": "Штаб",
     "today": [
-      {"id":"6hG8W8Xc2vMc4GWX","time":"17:30","title":"Поесть перед залом","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
-      {"id":"6hG8W8hW49qXv855","time":"18:00","title":"Душ · перезагрузка","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
-      {"id":"6hG8W8mGMmw3MH25","time":"18:30","title":"Переодеться и собраться в зал","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
-      {"id":"6hG8W8rGQ9rGfG75","time":"19:00","title":"Выйти в зал","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
       {"id":"6hG8W8v6m2pHJJ95","time":"19:20","title":"Тренировка · 2 часа","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
       {"id":"6hG8W8x492G76Q7X","time":"21:20","title":"Домой после зала","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
       {"id":"6hG8fP9CfgH64Xr5","time":"21:45","title":"Дом · 15 минут порядка","section":"Блок | Дом и быт","labels":[],"done":false},
