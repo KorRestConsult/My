@@ -1,0 +1,60 @@
+name: Clean home labels
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/clean-home-labels-20260811.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch labels and routine grouping
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path=Path('index.html')
+          text=path.read_text(encoding='utf-8')
+
+          replacements=[
+            ("return section.startsWith('Привычки |');", "return section.startsWith('Привычки |')||section.startsWith('Блок |');"),
+            ("if(calendarTitle)calendarTitle.textContent='Расписание · Google Calendar';", "if(calendarTitle)calendarTitle.textContent='Расписание';"),
+            ("if(tasksTitle)tasksTitle.textContent='Дела · Todoist';", "if(tasksTitle)tasksTitle.textContent='Дела';"),
+            ("if(habitsTitle)habitsTitle.textContent='Привычки · Todoist';", "if(habitsTitle)habitsTitle.textContent='Привычки';"),
+          ]
+          for old,new in replacements:
+              if old not in text:
+                  raise SystemExit(f'pattern not found: {old}')
+              text=text.replace(old,new,1)
+
+          marker='<!-- LIFE_OS_CLEAN_LABELS_START -->'
+          if marker not in text:
+              css='''
+<!-- LIFE_OS_CLEAN_LABELS_START -->
+<style>
+#home #secretaryPanel>.secretary-top{display:none!important}
+#home #secretaryPanel{padding-top:12px!important}
+</style>
+<!-- LIFE_OS_CLEAN_LABELS_END -->
+'''
+              text=text.replace('</body>',css+'\n</body>',1)
+
+          path.write_text(text,encoding='utf-8')
+
+          wf=Path('.github/workflows/clean-home-labels-20260811.yml')
+          if wf.exists(): wf.unlink()
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Упростить главную: Дела, Расписание, Привычки"
+          git push origin main
