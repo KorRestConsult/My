@@ -4114,7 +4114,8 @@ function eventRow(event,index){
   return `<div class="event-row"><div class="event-dot" style="--cat:${color}"></div><div class="event-time">${escapeHtml(start)}${end?` - ${escapeHtml(end)}`:""}</div><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category||event.place||"")}</div></div><div class="duration">${eventDuration(event)}</div><button class="menu-btn" onclick="editEvent(${index})">⋮</button></div>`;
 }
 function taskRow(task,index){
-  return `<div class="task-row${task.done?" done":""}"><button class="os-check" onclick="toggleDayItem('task',${index})" aria-label="Отметить дело"></button><div class="task-title" onclick="toggleDayItem('task',${index})">${escapeHtml(task.title)}</div><button class="menu-btn" onclick="editTask(${index})">⋮</button></div>`;
+  if(task.done)return '';
+  return `<div class="task-row"><button class="os-check" onclick="toggleDayItem('task',${index})" aria-label="Отметить дело"></button><div class="task-title" onclick="toggleDayItem('task',${index})">${escapeHtml(task.title)}</div><button class="menu-btn" onclick="editTask(${index})">⋮</button></div>`;
 }
 function goalStepRow(step,index){
   return `<div class="goal-step-row${step.completed||step.done?" done":""}"><button class="os-check" onclick="toggleGoalToday(${index})" aria-label="Отметить шаг"></button><div class="task-title" onclick="toggleGoalToday(${index})"><b>${escapeHtml(step.title)}</b><span>${escapeHtml(step.goalTitle||"Цель")}</span></div><button class="menu-btn" onclick="deleteGoalToday(${index})" aria-label="Убрать из сегодня">×</button></div>`;
@@ -4123,7 +4124,7 @@ function habitPeriods(day){
   const groups=["Утро","День","Вечер"];
   const icons={Утро:"I",День:"II",Вечер:"III"};
   return groups.map(period=>{
-    const items=day.habits.map((habit,i)=>Object.assign({index:i},habit)).filter(h=>(h.period||"Утро")===period);
+    const items=day.habits.map((habit,i)=>Object.assign({index:i},habit)).filter(h=>(h.period||"Утро")===period).filter(h=>!h.done);
     return `<div class="habit-period"><h3><span class="habit-emoji">${icons[period]}</span>${period}</h3>${items.map((h,n)=>`<div class="habit-row${h.done?" done":""}"><span class="habit-emoji">${String(n+1).padStart(2,"0")}</span><span onclick="toggleDayItem('habit',${h.index})">${escapeHtml(h.title)}</span><button class="os-check" onclick="toggleDayItem('habit',${h.index})" aria-label="Отметить привычку"></button></div>`).join("")}<button class="add-line" onclick="addHabit()">+ Добавить привычку</button></div>`;
   }).join("");
 }
@@ -4138,7 +4139,18 @@ function hqItem(type,index,title,meta){
 }
 function toggleDayItem(type,index){
   const list=todayDay()[type==="event"?"events":type==="habit"?"habits":"tasks"];
-  list[index].done=!list[index].done;
+  const item=list[index];
+  item.done=!item.done;
+  if((type==="task"||type==="habit")&&item.source==="Todoist"&&item.rawTodoistId){
+    try{
+      const key='life_os_todoist_done_v2';
+      const saved=JSON.parse(localStorage.getItem(key)||'{}');
+      saved[todayKey]=saved[todayKey]||{task:{},habit:{}};
+      saved[todayKey][type]=saved[todayKey][type]||{};
+      saved[todayKey][type][String(item.rawTodoistId)]=!!item.done;
+      localStorage.setItem(key,JSON.stringify(saved));
+    }catch(_){}
+  }
   save();
   renderAll();
 }
@@ -5824,6 +5836,15 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
     'Привычки | Вечер':'Вечер'
   };
 
+  const LOCAL_DONE_KEY='life_os_todoist_done_v2';
+
+  function isLocallyDone(kind,id){
+    try{
+      const saved=JSON.parse(localStorage.getItem(LOCAL_DONE_KEY)||'{}');
+      return !!(saved[todayKey]&&saved[todayKey][kind]&&saved[todayKey][kind][String(id)]);
+    }catch(_){return false}
+  }
+
   function livePeriod(item){
     if(PERIOD_BY_SECTION[item.section])return PERIOD_BY_SECTION[item.section];
     const hour=Number(String(item.time||'').slice(0,2));
@@ -5844,7 +5865,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 
   function isHabit(item){
     const section=String(item.section||'');
-    return section.startsWith('Привычки |')||section.startsWith('Блок |');
+    return section.startsWith('Привычки |');
   }
 
   function withTime(item){
@@ -5871,16 +5892,18 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
         title:withTime(item),
         note:item.time||'',
         period:livePeriod(item),
-        done:!!item.done,
+        done:!!item.done||isLocallyDone('habit',item.id||index),
         source:'Todoist',
+        rawTodoistId:String(item.id||index),
         section:item.section||''
       })),
       tasks:todo.filter(item=>!isHabit(item)).map((item,index)=>({
         id:`todo-task-${item.id||index}`,
         title:withTime(item),
         note:[item.project,item.section].filter(Boolean).join(' · '),
-        done:!!item.done,
-        source:'Todoist'
+        done:!!item.done||isLocallyDone('task',item.id||index),
+        source:'Todoist',
+        rawTodoistId:String(item.id||index)
       }))
     };
   }
@@ -6013,5 +6036,14 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 })();
 </script>
 <!-- LIFE_OS_HOME_REORDER_END -->
+
+<!-- LIFE_OS_EXTERNAL_SOURCE_UI_START -->
+<style>
+#home .section-card:has(#homeTasks) .icon-btn,#home .section-card:has(#homeTasks) .add-line,
+#home .section-card:has(#homeCalendar) .icon-btn,#home .section-card:has(#homeCalendar) .add-line,
+#home .section-card:has(#homeHabits) .icon-btn,#home .section-card:has(#homeHabits) .add-line{display:none!important}
+</style>
+<!-- LIFE_OS_EXTERNAL_SOURCE_UI_END -->
+
 </body>
 </html>
