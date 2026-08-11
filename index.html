@@ -6151,7 +6151,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
  function cleanTitle(item){return String(item.title||'').replace(/^\s*\d{1,2}:\d{2}\s*[·•-]?\s*/,'').trim()}
  function cleanBlockTitle(v){return String(v||'').replace(/\s*·\s*(?:см\.\s*)?Todoist\s*$/i,'').replace(/\s*·\s*привычки\s+в\s+Todoist\s*$/i,'').trim()||'Сейчас'}
  function nowMin(){var d=new Date();return d.getHours()*60+d.getMinutes()}
- function actionRows(day,includeDone){var rows=[];(day.tasks||[]).forEach(function(x,i){if(includeDone||!x.done)rows.push({kind:'task',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Дело',done:!!x.done})});(day.habits||[]).forEach(function(x,i){if(includeDone||!x.done)rows.push({kind:'habit',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Привычка',done:!!x.done})});return rows.sort(function(a,b){return (a.time==null?99999:a.time)-(b.time==null?99999:b.time)})}
+ function actionRows(day,includeDone){var rows=[];(day.tasks||[]).forEach(function(x,i){if(x&&x.source==='Todoist'&&x.rawTodoistId&&(includeDone||!x.done))rows.push({kind:'task',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Дело',done:!!x.done})});(day.habits||[]).forEach(function(x,i){if(x&&x.source==='Todoist'&&x.rawTodoistId&&(includeDone||!x.done))rows.push({kind:'habit',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Привычка',done:!!x.done})});return rows.sort(function(a,b){return (a.time==null?99999:a.time)-(b.time==null?99999:b.time)})}
  function eventRows(day){return (day.events||[]).map(function(e,i){return{index:i,item:e,start:hm(e.start||e.time),end:hm(e.end),title:cleanBlockTitle(e.title||'Событие')}}).filter(function(e){return e.start!=null}).sort(function(a,b){return a.start-b.start})}
  function model(day){
    var now=nowMin(),pending=actionRows(day,false),events=eventRows(day);
@@ -6196,7 +6196,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
  function completedRows(day){
    var map={},out=[];
    actionRows(day,true).filter(function(a){return a.done}).forEach(function(a){var k=actionArchiveKey(a);if(map[k])return;map[k]=1;a.completedAt='';out.push(a)});
-   readArchive().forEach(function(x){if(map[x.key])return;map[x.key]=1;out.push({kind:x.kind||'task',index:-1,item:{rawTodoistId:x.id||''},time:x.time,title:x.title,type:x.type||((x.kind==='habit')?'Привычка':'Дело'),done:true,archived:true,completedAt:x.completedAt||''})});
+   readArchive().forEach(function(x){if(!x||!x.id||map[x.key])return;map[x.key]=1;out.push({kind:x.kind||'task',index:-1,item:{rawTodoistId:x.id||''},time:x.time,title:x.title,type:x.type||((x.kind==='habit')?'Привычка':'Дело'),done:true,archived:true,completedAt:x.completedAt||''})});
    return out.sort(function(a,b){return (a.time==null?99999:a.time)-(b.time==null?99999:b.time)});
  }
  window.lifeOsArchiveCompletedItem=function(kind,item){if(!item)return;archiveCompleted({kind:kind,index:-1,item:item,time:itemTime(item),title:cleanTitle(item),type:kind==='habit'?'Привычка':'Дело',done:true})};
@@ -6264,6 +6264,6 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 })();
 </script>
 
-<script src="data/todoist-writeback.js"></script>
+<script src="data/todoist-writeback.js?v=20260811-2300"></script>
 </body>
 </html>
