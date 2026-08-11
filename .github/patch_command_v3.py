@@ -36,7 +36,7 @@ block=r'''<!-- LIFE_OS_COMMAND_BLOCK_START -->
 <script>
 (function(){
  const CMD_ID='lifeCommandCard';
- function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
+ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]})}
  function hm(v){var m=String(v||'').match(/(?:^|\s)(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):null}
  function fmt(min){if(min==null)return'';min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0')}
  function itemTime(item){return hm(item.note)||hm(item.time)||hm(item.start)||hm(item.title)}
@@ -53,7 +53,7 @@ block=r'''<!-- LIFE_OS_COMMAND_BLOCK_START -->
   if(activeEvent){var ee=activeEvent.end==null?Math.min(1440,activeEvent.start+60):activeEvent.end,parts=splitActions(pending,activeEvent.start,ee),following=events.find(function(e){return e.start>=ee});return{mode:'Сейчас',start:activeEvent.start,end:ee,title:activeEvent.title,meta:activeEvent.item.place||activeEvent.item.category||'',actions:parts.current,carry:parts.carry,next:following?{time:following.start,title:following.title}:null}}
   var inferred=inferredBlock(schedule,now);
   if(inferred){var p=splitActions(pending,inferred.start,inferred.end),ne=events.find(function(e){return e.start>now}),ns=schedule.find(function(a){return a.time!=null&&a.time>=inferred.end}),next=null;if(ne&&(!ns||ne.start<=ns.time))next={time:ne.start,title:ne.title};else if(ns)next={time:ns.time,title:ns.title};return{mode:'Сейчас',start:inferred.start,end:inferred.end,title:inferred.title,meta:'',actions:p.current,carry:p.carry,next:next}}
-  var nextEvent=events.find(function(e){return e.start>now}),nextAction=schedule.find(function(a){return a.time!=null&&a.time>now}),next=null;if(nextEvent&&(!nextAction||nextEvent.start<=nextAction.time))next={time:nextEvent.start,title:nextEvent.title};else if(nextAction)next={time:nextAction.time,title:nextAction.title};var end=next?next.time:1440,carry=pending.filter(function(a){return a.time==null||a.time<now});return{mode:'Сейчас',start:now,end:end,title:'Свободное время',meta:'',actions:[],carry:carry,next:next}
+  var nextEvent=events.find(function(e){return e.start>now}),nextAction=schedule.find(function(a){return a.time!=null&&a.time>now}),next=null;if(nextEvent&&(!nextAction||nextEvent.start<=nextAction.time))next={time:nextEvent.start,title:nextEvent.title};else if(nextAction)next={time:nextAction.time,title:nextAction.title};var stop=next?next.time:1440,carry=pending.filter(function(a){return a.time==null||a.time<now});return{mode:'Сейчас',start:now,end:stop,title:'Свободное время',meta:'',actions:[],carry:carry,next:next}
  }
  function row(a){var cls=a.kind==='habit'?'kind-habit':'kind-task';return '<div class="life-command-row"><button class="os-check" type="button" onclick="toggleDayItem(\''+a.kind+'\','+a.index+');setTimeout(window.renderLifeCommandBlock,0)" aria-label="Выполнено"></button><div><div class="life-command-row-title">'+esc(a.title)+'<span class="life-command-kind '+cls+'">'+esc(a.type)+'</span></div></div><div class="life-command-row-time">'+(a.time!=null?esc(fmt(a.time)):'')+'</div></div>'}
  function render(){if(typeof todayDay!=='function')return;var hq=document.querySelector('#home .hq');if(!hq)return;var day=todayDay(),m=model(day),card=document.getElementById(CMD_ID);if(!card){card=document.createElement('section');card.id=CMD_ID;card.className='section-card';hq.insertBefore(card,hq.firstElementChild)}var rows=m.actions.length?m.actions.map(row).join(''):'<div class="life-command-empty">В этом блоке ничего не осталось.</div>';var carry=m.carry&&m.carry.length?'<div class="life-command-carry"><div class="life-command-carry-title">Осталось · '+m.carry.length+'</div>'+m.carry.map(row).join('')+'</div>':'';var nx=m.next?'<div class="life-command-next">Дальше в <b>'+esc(fmt(m.next.time))+'</b> — '+esc(m.next.title)+'</div>':'';card.innerHTML='<div class="life-command-head"><div><div class="life-command-kicker">'+esc(m.mode)+'</div><div class="life-command-time">'+esc(fmt(m.start))+(m.end<1440?'–'+esc(fmt(m.end)):'')+'</div><div class="life-command-title">'+esc(m.title)+'</div>'+(m.meta?'<div class="life-command-meta">'+esc(m.meta)+'</div>':'')+'</div><div class="life-command-clock">'+esc(fmt(nowMin()))+'</div></div><div class="life-command-actions">'+rows+carry+'</div>'+nx}
@@ -63,7 +63,7 @@ block=r'''<!-- LIFE_OS_COMMAND_BLOCK_START -->
 <!-- LIFE_OS_COMMAND_BLOCK_END -->'''
 
 pattern=re.escape(start)+r'.*?'+re.escape(end)
-text2=re.sub(pattern,block,text,count=1,flags=re.S)
+text2=re.sub(pattern,lambda _: block,text,count=1,flags=re.S)
 if text2==text:
     raise SystemExit('replacement failed')
 p.write_text(text2,encoding='utf-8')
