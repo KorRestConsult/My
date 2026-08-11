@@ -4,9 +4,18 @@
     "city": "Рязань",
     "timezone": "Europe/Moscow",
     "source": "Google Calendar + Todoist",
-    "updatedAt": "2026-08-11T18:00:00+03:00"
+    "updatedAt": "2026-08-11T18:17:00+03:00"
   },
-  "calendarToday": [],
+  "calendarToday": [
+    {
+      "id": "q0bt0tl7idhokpaosq7hn10loo",
+      "start": "18:26",
+      "end": "18:50",
+      "title": "Встретить Сабину — Рязань-1",
+      "place": "Вокзал Рязань-1",
+      "source": "Google Calendar"
+    }
+  ],
   "todoist": {
     "project": "Штаб",
     "sections": {
@@ -14,23 +23,28 @@
       "habitsDay": "Привычки | День",
       "habitsEvening": "Привычки | Вечер",
       "today": "Дела на сегодня",
-      "goals": "Шаги к цели"
+      "goals": "Шаги к цели",
+      "home": "Блок | Дом и быт",
+      "money": "Блок | Деньги и документы",
+      "life": "Блок | Личные дела",
+      "growth": "Блок | Развитие"
     },
     "today": [
-      {"time":"17:30","title":"Поесть перед залом","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"18:00","title":"Душ · перезагрузка","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"18:30","title":"Переодеться и собраться в зал","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"19:00","title":"Выйти в зал","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"19:20","title":"Тренировка · 2 часа","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"21:20","title":"Домой после зала","section":"Привычки | Вечер","labels":["Здоровье"]},
-      {"time":"21:45","title":"Дом · 15 минут порядка","section":"Блок | Дом и быт"},
-      {"time":"22:00","title":"Финансы и жизнь · 15 минут","section":"Блок | Деньги и документы"},
-      {"time":"22:15","title":"Цели · 15 минут","section":"Блок | Личные дела"},
-      {"time":"23:20","title":"Подготовить костюм на завтра","section":"Привычки | Вечер"},
-      {"time":"23:25","title":"Поставить гаджеты на зарядку","section":"Привычки | Вечер"},
-      {"time":"23:45","title":"Итог дня: 3 строки","section":"Привычки | Вечер"},
-      {"time":"23:50","title":"Умыться + вечерний уход","section":"Привычки | Вечер"},
-      {"time":"23:57","title":"Почистить зубы","section":"Привычки | Вечер"}
+      {"id":"6hG8W8Xc2vMc4GWX","time":"17:30","title":"Поесть перед залом","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8W8hW49qXv855","time":"18:00","title":"Душ · перезагрузка","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8W8mGMmw3MH25","time":"18:30","title":"Переодеться и собраться в зал","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8W8rGQ9rGfG75","time":"19:00","title":"Выйти в зал","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8W8v6m2pHJJ95","time":"19:20","title":"Тренировка · 2 часа","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8W8x492G76Q7X","time":"21:20","title":"Домой после зала","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
+      {"id":"6hG8fP9CfgH64Xr5","time":"21:45","title":"Дом · 15 минут порядка","section":"Блок | Дом и быт","labels":[],"done":false},
+      {"id":"6hG8fP9jxHm3mxWX","time":"22:00","title":"Финансы и жизнь · 15 минут","section":"Блок | Деньги и документы","labels":[],"done":false},
+      {"id":"6hG8fP9fGPVHxCmX","time":"22:15","title":"Цели · 15 минут","section":"Блок | Личные дела","labels":[],"done":false},
+      {"id":"6hG8cjrCCJwjhQM5","time":"23:20","title":"Подготовить костюм на завтра","section":"Привычки | Вечер","labels":[],"done":false},
+      {"id":"6hG8cjrqVhmfCfVX","time":"23:25","title":"Поставить гаджеты на зарядку","section":"Привычки | Вечер","labels":[],"done":false},
+      {"id":"6hG8HR6GV4HQGCxX","time":"23:45","title":"Итог дня: 3 строки","section":"Привычки | Вечер","labels":[],"done":false},
+      {"id":"6hG8HQW9HVHMJmHX","time":"23:50","title":"Умыться + вечерний уход","section":"Привычки | Вечер","labels":[],"done":false},
+      {"id":"6hG8HQXxQW9FfJ3X","time":"23:57","title":"Почистить зубы","section":"Привычки | Вечер","labels":[],"done":false},
+      {"id":"6hG8gGhmFCFxpXfv","time":"18:26","title":"Встретить Сабину на вокзале Рязань-1","section":"Дела на сегодня","project":"Личное","labels":[],"done":false}
     ]
   }
 }
