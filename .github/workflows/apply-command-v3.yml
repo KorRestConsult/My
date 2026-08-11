@@ -30,3 +30,4 @@ jobs:
           git add -A
           git commit -m "Довести логику временных блоков и меток"
           git push origin main
+# retry: 2
