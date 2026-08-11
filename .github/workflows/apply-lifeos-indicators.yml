@@ -1,0 +1,52 @@
+name: Apply Life OS indicators
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-lifeos-indicators.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch visual indicators
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+
+          old="#lifeCommandCard{position:relative;overflow:hidden;padding:0!important;border-radius:16px!important;background:linear-gradient(160deg,#fffdf8 0%,#f7efe1 100%)!important;border:1px solid rgba(155,112,58,.24)!important;box-shadow:0 14px 34px rgba(69,47,22,.08);margin-bottom:14px}"
+          new="#lifeCommandCard{position:relative;overflow:hidden;padding:0!important;border-radius:16px!important;background:linear-gradient(155deg,#fffaf0 0%,#f3e5cf 100%)!important;border:1px solid rgba(166,112,43,.38)!important;box-shadow:0 16px 38px rgba(83,55,22,.13),inset 0 0 0 1px rgba(255,255,255,.48);margin-bottom:16px}"
+          if old not in s: raise SystemExit('card css anchor not found')
+          s=s.replace(old,new,1)
+
+          old=".life-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 15px;background:linear-gradient(135deg,rgba(216,190,146,.18),rgba(255,255,255,.34));border-bottom:1px solid rgba(116,91,57,.14)}"
+          new=".life-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 15px;background:linear-gradient(135deg,rgba(206,164,96,.24),rgba(255,249,238,.74));border-bottom:1px solid rgba(143,96,37,.22);box-shadow:inset 0 -10px 24px rgba(154,106,49,.045)}"
+          if old not in s: raise SystemExit('head css anchor not found')
+          s=s.replace(old,new,1)
+
+          anchor=".life-command-row-time{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}"
+          extra=anchor+"\n.life-command-row.is-overdue{margin-left:-7px;margin-right:-7px;padding-left:7px;padding-right:7px;border-radius:9px;background:linear-gradient(90deg,rgba(182,86,77,.075),rgba(182,86,77,.025) 62%,transparent)}\n.life-command-row.is-overdue .os-check{border-color:rgba(182,86,77,.62)!important}\n.life-command-row.is-overdue .life-command-row-time{color:rgba(166,71,62,.86);font-weight:750}\n.life-command-overdue{display:inline-block;margin-left:6px;padding:2px 5px;border-radius:999px;background:rgba(182,86,77,.08);border:1px solid rgba(182,86,77,.14);color:rgba(154,67,59,.72);font:500 7.5px/1.15 Inter,system-ui,sans-serif;vertical-align:2px;letter-spacing:.01em}"
+          if anchor not in s: raise SystemExit('time css anchor not found')
+          s=s.replace(anchor,extra,1)
+
+          old="function row(a){var cls=a.kind==='habit'?'kind-habit':'kind-task';return '<div class=\"life-command-row\"><button class=\"os-check\" type=\"button\" onclick=\"toggleDayItem(\\''+a.kind+'\\','+a.index+');setTimeout(window.renderLifeCommandBlock,0)\" aria-label=\"Выполнено\"></button><div><div class=\"life-command-row-title\">'+esc(a.title)+'<span class=\"life-command-kind '+cls+'\">'+esc(a.type)+'</span></div></div><div class=\"life-command-row-time\">'+(a.time!=null?esc(fmt(a.time)):'')+'</div></div>'}"
+          new="function row(a){var cls=a.kind==='habit'?'kind-habit':'kind-task';var overdue=a.time!=null&&a.time<nowMin()&&!a.done;var overdueTag=overdue?'<span class=\"life-command-overdue\">просрочено</span>':'';return '<div class=\"life-command-row'+(overdue?' is-overdue':'')+'\"><button class=\"os-check\" type=\"button\" onclick=\"toggleDayItem(\\''+a.kind+'\\','+a.index+');setTimeout(window.renderLifeCommandBlock,0)\" aria-label=\"Выполнено\"></button><div><div class=\"life-command-row-title\">'+esc(a.title)+'<span class=\"life-command-kind '+cls+'\">'+esc(a.type)+'</span>'+overdueTag+'</div></div><div class=\"life-command-row-time\">'+(a.time!=null?esc(fmt(a.time)):'')+'</div></div>'}"
+          if old not in s: raise SystemExit('row function anchor not found')
+          s=s.replace(old,new,1)
+
+          p.write_text(s)
+          PY
+      - name: Commit patch and cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Подсветить текущий блок и просроченные задачи"
+          git push
+          git rm .github/workflows/apply-lifeos-indicators.yml
+          git commit -m "Убрать временный workflow индикаторов"
+          git push
