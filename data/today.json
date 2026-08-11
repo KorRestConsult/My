@@ -4,31 +4,13 @@
     "city": "Рязань",
     "timezone": "Europe/Moscow",
     "source": "Google Calendar + Todoist",
-    "updatedAt": "2026-08-11T18:17:00+03:00"
+    "updatedAt": "2026-08-11T18:18:00+03:00"
   },
   "calendarToday": [
-    {
-      "id": "q0bt0tl7idhokpaosq7hn10loo",
-      "start": "18:26",
-      "end": "18:50",
-      "title": "Встретить Сабину — Рязань-1",
-      "place": "Вокзал Рязань-1",
-      "source": "Google Calendar"
-    }
+    {"id":"q0bt0tl7idhokpaosq7hn10loo","start":"18:26","end":"18:50","title":"Встретить Сабину — Рязань-1","place":"Вокзал Рязань-1","source":"Google Calendar"}
   ],
   "todoist": {
     "project": "Штаб",
-    "sections": {
-      "habitsMorning": "Привычки | Утро",
-      "habitsDay": "Привычки | День",
-      "habitsEvening": "Привычки | Вечер",
-      "today": "Дела на сегодня",
-      "goals": "Шаги к цели",
-      "home": "Блок | Дом и быт",
-      "money": "Блок | Деньги и документы",
-      "life": "Блок | Личные дела",
-      "growth": "Блок | Развитие"
-    },
     "today": [
       {"id":"6hG8W8Xc2vMc4GWX","time":"17:30","title":"Поесть перед залом","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
       {"id":"6hG8W8hW49qXv855","time":"18:00","title":"Душ · перезагрузка","section":"Привычки | Вечер","labels":["Здоровье"],"done":false},
