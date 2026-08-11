@@ -2762,11 +2762,11 @@ function todayDay(){
   const day=state.days[todayKey];
   day.tasks=day.tasks||[];
   day.events=day.events||[];
-  if(!day.tasks.length)day.tasks=defaultTasks.map(item=>Object.assign({},item));
-  if(!day.events.length)day.events=defaultCalendar.map(item=>Object.assign({},item));
+  if(!day.tasks.length&&!window.LIFE_OS_LIVE_ACTIVE)day.tasks=defaultTasks.map(item=>Object.assign({},item));
+  if(!day.events.length&&!window.LIFE_OS_LIVE_ACTIVE)day.events=defaultCalendar.map(item=>Object.assign({},item));
   day.tasks=day.tasks.filter(item=>!["reminders-placeholder","plan-day"].includes(item.id));
   day.events=day.events.filter(item=>item.id!=="calendar-placeholder");
-  day.habits=day.habits&&day.habits.length?day.habits:defaultDay().habits;
+  day.habits=day.habits&&day.habits.length?day.habits:(window.LIFE_OS_LIVE_ACTIVE?[]:defaultDay().habits);
   day.goalSteps=day.goalSteps||[];
   day.dailyGoal=day.dailyGoal||defaultDay().dailyGoal;
   day.nutrition=day.nutrition||defaultDay().nutrition;
@@ -5943,6 +5943,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
       if(!response.ok)throw new Error(`HTTP ${response.status}`);
       const data=await response.json();
       const live=normalizeLiveToday(data);
+      window.LIFE_OS_LIVE_ACTIVE=true;
       if(typeof todayDay!=='function'||typeof renderHome!=='function')return;
       const day=todayDay();
       day.events=live.events;
@@ -6029,6 +6030,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
     const taskCard=taskRoot.closest('.section-card');
     const calendarCard=calendarRoot.closest('.section-card');
     const habitCard=habitRoot.closest('.section-card');
+    if(habitCard)habitCard.style.display='none';
     const goalCard=goalRoot&&goalRoot.closest('.section-card');
     const duo=calendarCard&&calendarCard.parentElement&&calendarCard.parentElement.classList.contains('hq-two')?calendarCard.parentElement:null;
 
