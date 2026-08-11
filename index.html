@@ -1720,8 +1720,23 @@ window.LIFE_OS_SECRETARY_CONFIG = {
 window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Рязань","timezone":"Europe/Moscow","updatedAt":"2026-07-27T09:30:00+03:00","source":"sample"},"money":{"balanceRub":1730,"spentTodayRub":0,"earnedTodayRub":0,"mustPay":[{"title":"Коммуналка","amountRub":null,"dueDate":null,"status":"control"}]},"focus":[{"title":"Core REST AI — подготовить демо и коммерческое предложение","area":"Деньги / работа","priority":1,"nextStep":"Собрать короткую презентацию и сценарий продажи для кофеен"},{"title":"Разобрать хвосты по быту","area":"Дом","priority":2,"nextStep":"Один бытовой блок на 20–30 минут"},{"title":"Проверить лечение / здоровье","area":"Здоровье","priority":3,"nextStep":"Не сорвать текущие назначения"}],"calendarToday":[{"time":"12:00","title":"Созвон / встреча","place":"","source":"Google Calendar"}],"tasksToday":[{"title":"Подготовить сайт / демо","project":"Работа","source":"Todoist","status":"active","priority":"high"}],"waiting":[{"title":"Москва / сайт косметики","status":"вероятность сделки снижена","nextCheck":"держать на контроле, но не считать основным доходом"},{"title":"Ирина Новикова","status":"резюме отправлено, ответа нет","nextCheck":"не зависать на ожидании"},{"title":"Медкнижки","status":"тишина","nextCheck":"проверить отдельно"}],"risks":[{"title":"Распыление","level":"high","text":"Не брать новые ИИ-игрушки и случайные проекты, пока не сделан денежный шаг дня."}],"health":[{"title":"Текущие назначения","status":"проверять по Штабу / Журналу здоровья","action":"не отмечать без фактического подтверждения"}],"homeCar":[{"title":"Коммуналка / квартира / машина","status":"контроль активных хвостов","action":"показывать только актуальное, не весь архив"}],"projects":[{"title":"Core REST AI","status":"главный рабочий фокус","nextStep":"упаковать как решение для общепита"},{"title":"Life OS / Секретарь","status":"строится командный экран","nextStep":"вывести реальные данные на сайт"},{"title":"ИИ-инструменты","status":"заморозка","nextStep":"не устанавливать новое без денежной пользы"}],"weather":{"city":"Рязань","summary":"погода будет подключена отдельным источником","tempMinC":null,"tempMaxC":null,"recommendation":"Пока показывать пустое состояние или моковые данные."}};
 </script>
 
+<!-- LIFE_OS_BOOT_SPLASH_STYLE_START -->
+<style id="lifeOsBootSplashStyle">
+#lifeBootSplash{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;background:linear-gradient(180deg,#191714 0%,#242019 100%);color:#f7efe2;transition:opacity .28s ease,visibility .28s ease}
+#lifeBootSplash.life-boot-hide{opacity:0;visibility:hidden;pointer-events:none}
+.life-boot-inner{display:grid;justify-items:center;gap:13px;transform:translateY(-4vh)}
+.life-boot-mark{display:flex;align-items:center;gap:13px;font:700 38px/1 Georgia,"Times New Roman",serif;letter-spacing:.01em}
+.life-boot-mark:before{content:"";width:4px;height:44px;border-radius:99px;background:linear-gradient(#d7a254,#8a5b25);box-shadow:0 0 18px rgba(201,145,65,.2)}
+.life-boot-sub{font:600 9px/1.2 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.24em;text-transform:uppercase;color:rgba(247,239,226,.48)}
+.life-boot-line{width:74px;height:2px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:3px}.life-boot-line:after{content:"";display:block;width:44%;height:100%;background:#b9853e;animation:lifeBootMove 1s ease-in-out infinite alternate}@keyframes lifeBootMove{from{transform:translateX(-20%)}to{transform:translateX(150%)}}
+</style>
+<!-- LIFE_OS_BOOT_SPLASH_STYLE_END -->
 </head>
 <body>
+<!-- LIFE_OS_BOOT_SPLASH_START -->
+<div id="lifeBootSplash" aria-hidden="true"><div class="life-boot-inner"><div class="life-boot-mark">Life OS</div><div class="life-boot-sub">Илья · система дня</div><div class="life-boot-line"></div></div></div>
+<script>(function(){var el=document.getElementById('lifeBootSplash');function hide(){if(!el)return;el.classList.add('life-boot-hide');setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el)},320)}window.addEventListener('load',function(){setTimeout(hide,120)});setTimeout(hide,1800)})();</script>
+<!-- LIFE_OS_BOOT_SPLASH_END -->
 <header class="topbar">
   <div class="shell">
     <div class="page-heading" aria-live="polite">
@@ -6057,53 +6072,69 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 <!-- LIFE_OS_COMMAND_BLOCK_START -->
 <style>
 #home .life-primary-tasks{display:none!important}
-#home .life-panel-blocks>.section-card:has(#homeCalendar){display:none!important}
-#lifeCommandCard{padding:16px!important;border-radius:14px!important;background:linear-gradient(155deg,#fffaf0,#f2e3c9)!important;border:1px solid rgba(183,119,36,.23)!important;box-shadow:0 12px 32px rgba(62,43,22,.07),inset 0 1px 0 rgba(255,255,255,.65);margin-bottom:14px;position:relative;overflow:hidden}#lifeCommandCard:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,rgba(183,119,36,.70),rgba(218,176,111,.28));pointer-events:none}
-.life-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:0 0 14px;padding:11px 12px 12px;border-radius:10px;background:rgba(193,141,67,.075);border:1px solid rgba(183,119,36,.12)}
-.life-command-kicker{font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2);margin-bottom:6px}
+#home .life-panel-blocks>.section-card:has(#homeCalendar),
+#home .life-panel-blocks>.section-card:has(#homeHabits){display:none!important}
+#lifeCommandCard{position:relative;overflow:hidden;padding:0!important;border-radius:16px!important;background:linear-gradient(160deg,#fffdf8 0%,#f7efe1 100%)!important;border:1px solid rgba(155,112,58,.24)!important;box-shadow:0 14px 34px rgba(69,47,22,.08);margin-bottom:14px}
+#lifeCommandCard:before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,rgba(185,133,62,.9),rgba(185,133,62,.25),transparent)}
+.life-command-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 16px 15px;background:linear-gradient(135deg,rgba(216,190,146,.18),rgba(255,255,255,.34));border-bottom:1px solid rgba(116,91,57,.14)}
+.life-command-kicker{font-size:10px;font-weight:850;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2);margin-bottom:6px}
 .life-command-time{font-size:13px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
-.life-command-title{font:700 24px/1.08 Georgia,"Times New Roman",serif;color:var(--ink);margin-top:4px;max-width:620px}
+.life-command-title{font:700 25px/1.08 Georgia,"Times New Roman",serif;color:var(--ink);margin-top:5px;max-width:620px}
 .life-command-meta{font-size:11px;color:var(--muted);margin-top:6px}
 .life-command-clock{min-width:52px;text-align:right;font-size:11px;font-weight:800;color:var(--muted);font-variant-numeric:tabular-nums}
-.life-command-actions{border-top:1px solid var(--line);padding-top:8px;margin-top:12px}
-.life-command-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid rgba(116,91,57,.11)}
+.life-command-actions{padding:8px 16px 13px}
+.life-command-row{display:grid;grid-template-columns:28px minmax(0,1fr) auto;align-items:center;gap:9px;padding:10px 0;border-bottom:1px solid rgba(116,91,57,.11)}
 .life-command-row:last-child{border-bottom:0}.life-command-row .os-check{width:23px;height:23px}.life-command-row-title{font-size:13px;line-height:1.25;color:var(--ink)}
-.life-command-kind{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:999px;font:500 8.5px/1.15 Inter,system-ui,sans-serif;letter-spacing:.01em;vertical-align:2px;border:1px solid transparent}
-.life-command-kind.kind-habit{background:rgba(188,143,78,.10);border-color:rgba(188,143,78,.16);color:rgba(126,91,43,.72)}
-.life-command-kind.kind-task{background:rgba(92,126,151,.09);border-color:rgba(92,126,151,.15);color:rgba(68,96,116,.72)}
+.life-command-kind{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:999px;font:500 8px/1.15 Inter,system-ui,sans-serif;letter-spacing:.01em;vertical-align:2px;border:1px solid transparent}
+.life-command-kind.kind-habit{background:rgba(190,148,87,.09);border-color:rgba(190,148,87,.14);color:rgba(126,91,43,.63)}
+.life-command-kind.kind-task{background:rgba(94,125,148,.08);border-color:rgba(94,125,148,.14);color:rgba(69,94,113,.64)}
 .life-command-row-time{font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
-.life-command-empty{padding:9px 0 2px;color:var(--muted);font-size:12px}
-.life-command-next{margin-top:10px;padding:10px 11px;border:1px solid rgba(183,119,36,.18);border-radius:10px;background:rgba(255,255,255,.38);font-size:11px;color:var(--muted)}.life-command-next b{color:var(--ink)}
-.life-command-carry{margin-top:9px;padding-top:8px;border-top:1px dashed rgba(116,91,57,.18)}
+.life-command-empty{padding:10px 0 4px;color:var(--muted);font-size:12px}
+.life-command-next{margin:4px 16px 15px;padding:10px 11px;border:1px solid rgba(183,119,36,.16);border-radius:10px;background:rgba(255,255,255,.42);font-size:11px;color:var(--muted)}.life-command-next b{color:var(--ink)}
+.life-command-carry{margin-top:7px;padding-top:8px;border-top:1px dashed rgba(116,91,57,.18)}
 .life-command-carry-title{font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:rgba(112,96,78,.62);margin-bottom:1px}
 .life-command-carry .life-command-row{opacity:.82}
-@media(max-width:560px){#lifeCommandCard{padding:14px 12px!important}.life-command-title{font-size:22px}.life-command-row-title{font-size:13.5px}.life-command-head{margin-bottom:12px}.life-command-kind{font-size:8px;padding:2px 5px}}
+@media(max-width:560px){#lifeCommandCard{border-radius:14px!important}.life-command-head{padding:14px 12px 13px}.life-command-actions{padding:7px 12px 11px}.life-command-next{margin:4px 12px 13px}.life-command-title{font-size:23px}.life-command-row-title{font-size:13.5px}.life-command-kind{font-size:7.8px;padding:2px 5px}}
 </style>
 <script>
 (function(){
  const CMD_ID='lifeCommandCard';
- function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]})}
+ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]})}
  function hm(v){var m=String(v||'').match(/(?:^|\s)(\d{1,2}):(\d{2})/);return m?Number(m[1])*60+Number(m[2]):null}
  function fmt(min){if(min==null)return'';min=((min%1440)+1440)%1440;return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0')}
  function itemTime(item){return hm(item.note)||hm(item.time)||hm(item.start)||hm(item.title)}
  function cleanTitle(item){return String(item.title||'').replace(/^\s*\d{1,2}:\d{2}\s*[·•-]?\s*/,'').trim()}
- function durationFromTitle(title){var s=String(title||'').toLowerCase(),m=s.match(/(\d+(?:[.,]\d+)?)\s*(?:ч|час|часа|часов)\b/);if(m)return Math.round(Number(m[1].replace(',','.'))*60);m=s.match(/(\d+)\s*(?:мин|минута|минуты|минут)\b/);return m?Number(m[1]):null}
+ function cleanBlockTitle(v){return String(v||'').replace(/\s*·\s*(?:см\.\s*)?Todoist\s*$/i,'').replace(/\s*·\s*привычки\s+в\s+Todoist\s*$/i,'').trim()||'Сейчас'}
  function nowMin(){var d=new Date();return d.getHours()*60+d.getMinutes()}
  function actionRows(day,includeDone){var rows=[];(day.tasks||[]).forEach(function(x,i){if(includeDone||!x.done)rows.push({kind:'task',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Дело',done:!!x.done})});(day.habits||[]).forEach(function(x,i){if(includeDone||!x.done)rows.push({kind:'habit',index:i,item:x,time:itemTime(x),title:cleanTitle(x),type:'Привычка',done:!!x.done})});return rows.sort(function(a,b){return (a.time==null?99999:a.time)-(b.time==null?99999:b.time)})}
- function eventRows(day){return (day.events||[]).map(function(e,i){return{index:i,item:e,start:hm(e.start||e.time),end:hm(e.end),title:e.title||'Событие'}}).filter(function(e){return e.start!=null}).sort(function(a,b){return a.start-b.start})}
- function inferredBlock(schedule,now){var timed=schedule.filter(function(a){return a.time!=null}),active=null;for(var i=0;i<timed.length;i++){var a=timed[i];if(a.time>now)break;var dur=durationFromTitle(a.title),next=timed[i+1]&&timed[i+1].time,end=dur?Math.min(1440,a.time+dur):(next==null?Math.min(1440,a.time+60):next);if(now<end)active={start:a.time,end:end,title:a.title,source:a}}return active}
- function splitActions(pending,start,end){var current=pending.filter(function(a){return a.time!=null&&a.time>=start&&a.time<end}),carry=pending.filter(function(a){return a.time!=null&&a.time<start}),untimed=pending.filter(function(a){return a.time==null});return{current:current,carry:carry.concat(untimed)}}
+ function eventRows(day){return (day.events||[]).map(function(e,i){return{index:i,item:e,start:hm(e.start||e.time),end:hm(e.end),title:cleanBlockTitle(e.title||'Событие')}}).filter(function(e){return e.start!=null}).sort(function(a,b){return a.start-b.start})}
  function model(day){
-  var now=nowMin(),schedule=actionRows(day,true),pending=actionRows(day,false),events=eventRows(day);
-  var activeEvent=events.find(function(e){return e.start<=now&&(e.end==null||now<e.end)});
-  if(activeEvent){var ee=activeEvent.end==null?Math.min(1440,activeEvent.start+60):activeEvent.end,parts=splitActions(pending,activeEvent.start,ee),following=events.find(function(e){return e.start>=ee});return{mode:'Сейчас',start:activeEvent.start,end:ee,title:activeEvent.title,meta:activeEvent.item.place||activeEvent.item.category||'',actions:parts.current,carry:parts.carry,next:following?{time:following.start,title:following.title}:null}}
-  var inferred=inferredBlock(schedule,now);
-  if(inferred){var p=splitActions(pending,inferred.start,inferred.end),ne=events.find(function(e){return e.start>now}),ns=schedule.find(function(a){return a.time!=null&&a.time>=inferred.end}),next=null;if(ne&&(!ns||ne.start<=ns.time))next={time:ne.start,title:ne.title};else if(ns)next={time:ns.time,title:ns.title};return{mode:'Сейчас',start:inferred.start,end:inferred.end,title:inferred.title,meta:'',actions:p.current,carry:p.carry,next:next}}
-  var nextEvent=events.find(function(e){return e.start>now}),nextAction=schedule.find(function(a){return a.time!=null&&a.time>now}),next=null;if(nextEvent&&(!nextAction||nextEvent.start<=nextAction.time))next={time:nextEvent.start,title:nextEvent.title};else if(nextAction)next={time:nextAction.time,title:nextAction.title};var stop=next?next.time:1440,carry=pending.filter(function(a){return a.time==null||a.time<now});return{mode:'Сейчас',start:now,end:stop,title:'Свободное время',meta:'',actions:[],carry:carry,next:next}
+   var now=nowMin(),pending=actionRows(day,false),events=eventRows(day);
+   var active=events.find(function(e){return e.start<=now&&(e.end==null||now<e.end)});
+   var start,end,title,meta,nextEvent;
+   if(active){
+     start=active.start;end=active.end==null?Math.min(1440,start+60):active.end;title=active.title;meta=active.item.place||active.item.category||'';nextEvent=events.find(function(e){return e.start>=end});
+   }else{
+     var prev=null;events.forEach(function(e){var ee=e.end==null?e.start+60:e.end;if(ee<=now)prev=e});
+     nextEvent=events.find(function(e){return e.start>now});
+     start=prev?(prev.end==null?prev.start+60:prev.end):now;
+     end=nextEvent?nextEvent.start:1440;
+     title='Свободное время';meta='';
+   }
+   var current=pending.filter(function(a){return a.time!=null&&a.time>=start&&a.time<end});
+   var floating=pending.filter(function(a){return a.time==null});
+   floating.forEach(function(a){if(!current.some(function(x){return x.kind===a.kind&&x.index===a.index}))current.push(a)});
+   current.sort(function(a,b){return (a.time==null?99999:a.time)-(b.time==null?99999:b.time)});
+   var carry=pending.filter(function(a){return a.time!=null&&a.time<start});
+   var nextAction=pending.find(function(a){return a.time!=null&&a.time>=end});
+   var next=null;
+   if(nextEvent)next={time:nextEvent.start,title:nextEvent.title};
+   else if(nextAction)next={time:nextAction.time,title:nextAction.title};
+   return{mode:'Сейчас',start:start,end:end,title:title,meta:meta,actions:current,carry:carry,next:next};
  }
  function row(a){var cls=a.kind==='habit'?'kind-habit':'kind-task';return '<div class="life-command-row"><button class="os-check" type="button" onclick="toggleDayItem(\''+a.kind+'\','+a.index+');setTimeout(window.renderLifeCommandBlock,0)" aria-label="Выполнено"></button><div><div class="life-command-row-title">'+esc(a.title)+'<span class="life-command-kind '+cls+'">'+esc(a.type)+'</span></div></div><div class="life-command-row-time">'+(a.time!=null?esc(fmt(a.time)):'')+'</div></div>'}
  function render(){if(typeof todayDay!=='function')return;var hq=document.querySelector('#home .hq');if(!hq)return;var day=todayDay(),m=model(day),card=document.getElementById(CMD_ID);if(!card){card=document.createElement('section');card.id=CMD_ID;card.className='section-card';hq.insertBefore(card,hq.firstElementChild)}var rows=m.actions.length?m.actions.map(row).join(''):'<div class="life-command-empty">В этом блоке ничего не осталось.</div>';var carry=m.carry&&m.carry.length?'<div class="life-command-carry"><div class="life-command-carry-title">Осталось · '+m.carry.length+'</div>'+m.carry.map(row).join('')+'</div>':'';var nx=m.next?'<div class="life-command-next">Дальше в <b>'+esc(fmt(m.next.time))+'</b> — '+esc(m.next.title)+'</div>':'';card.innerHTML='<div class="life-command-head"><div><div class="life-command-kicker">'+esc(m.mode)+'</div><div class="life-command-time">'+esc(fmt(m.start))+(m.end<1440?'–'+esc(fmt(m.end)):'')+'</div><div class="life-command-title">'+esc(m.title)+'</div>'+(m.meta?'<div class="life-command-meta">'+esc(m.meta)+'</div>':'')+'</div><div class="life-command-clock">'+esc(fmt(nowMin()))+'</div></div><div class="life-command-actions">'+rows+carry+'</div>'+nx}
- window.renderLifeCommandBlock=render;var old=window.refreshLifeOsToday;if(typeof old==='function')window.refreshLifeOsToday=async function(){var r=await old.apply(this,arguments);render();return r};window.addEventListener('load',function(){setTimeout(render,150);setInterval(render,60000)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(render,50)});setTimeout(render,50)
+ window.renderLifeCommandBlock=render;var old=window.refreshLifeOsToday;if(typeof old==='function')window.refreshLifeOsToday=async function(){var r=await old.apply(this,arguments);render();return r};window.addEventListener('load',function(){setTimeout(render,100);setInterval(render,60000)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(render,50)});setTimeout(render,50)
 })();
 </script>
 <!-- LIFE_OS_COMMAND_BLOCK_END -->
