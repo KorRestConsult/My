@@ -6116,11 +6116,13 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 .life-command-carry .life-command-row{opacity:.82}
 .life-command-future{margin-top:7px;padding-top:8px;border-top:1px dashed rgba(116,91,57,.18)}
 .life-command-future-title{font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;color:rgba(112,96,78,.62);margin-bottom:1px}
-.life-command-progress{margin:7px 0 3px;padding:9px 0 7px;display:grid;grid-template-columns:1fr auto;gap:7px 10px;align-items:center}
-.life-command-progress-label{font-size:9px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:rgba(112,96,78,.7)}
-.life-command-progress-value{font-size:10px;font-weight:800;color:var(--gold2);font-variant-numeric:tabular-nums}
-.life-command-progress-track{grid-column:1/-1;height:5px;border-radius:99px;background:rgba(116,91,57,.10);overflow:hidden}
+.life-command-progress{margin:7px 0 10px;padding:11px 12px 10px;display:grid;grid-template-columns:1fr auto;gap:7px 10px;align-items:center;border:1px solid rgba(63,143,101,.24);border-radius:11px;background:linear-gradient(145deg,rgba(63,143,101,.11),rgba(255,250,242,.70));box-shadow:inset 3px 0 0 rgba(63,143,101,.55)}
+.life-command-progress-label{font-size:9px;font-weight:780;letter-spacing:.08em;text-transform:uppercase;color:rgba(46,103,70,.78)}
+.life-command-progress-value{font-size:11px;font-weight:850;color:#2f6f4b;font-variant-numeric:tabular-nums}
+.life-command-progress-track{grid-column:1/-1;height:6px;border-radius:99px;background:rgba(63,143,101,.12);overflow:hidden}
 .life-command-progress-fill{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green2),#86b596);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.life-command-daylist{display:grid;gap:0}
+.life-command-daylist .life-command-row:first-child{margin-top:0}
 .life-command-completed{margin-top:9px;padding-top:9px;border-top:1px dashed rgba(63,143,101,.22)}
 .life-command-completed-title{font-size:9px;font-weight:750;letter-spacing:.10em;text-transform:uppercase;color:rgba(50,112,77,.72);margin-bottom:2px}
 .life-command-row{transition:background .28s ease,border-color .28s ease,opacity .28s ease,transform .22s ease,box-shadow .28s ease}
@@ -6156,7 +6158,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
    var active=events.find(function(e){return e.start<=now&&(e.end==null||now<e.end)});
    var start,end,title,meta,nextEvent;
    if(active){
-     start=active.start;end=active.end==null?Math.min(1440,start+60):active.end;title=active.title;meta=active.item.place||active.item.category||'';nextEvent=events.find(function(e){return e.start>=end});
+     start=active.start;end=active.end==null?Math.min(1440,start+60):active.end;title=active.title;meta=active.item.place||'';nextEvent=events.find(function(e){return e.start>=end});
    }else{
      var prev=null;events.forEach(function(e){var ee=e.end==null?e.start+60:e.end;if(ee<=now)prev=e});
      nextEvent=events.find(function(e){return e.start>now});
@@ -6217,7 +6219,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
      setTimeout(function(){try{if(typeof renderAll==='function')renderAll()}catch(_){ }render()},720);
    }catch(error){
      button.disabled=false;if(rowEl){rowEl.classList.remove('is-completing');rowEl.classList.add('is-sync-error')}
-     if(sync)sync.textContent='не синхронизировано';
+     if(sync)sync.textContent='не удалось · повтори';
      setTimeout(function(){if(rowEl)rowEl.classList.remove('is-sync-error');if(sync)sync.textContent=''},1800);
      console.warn('Life OS completion failed',error);
    }
@@ -6232,16 +6234,12 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
  function render(){
    if(typeof todayDay!=='function')return;var hq=document.querySelector('#home .hq');if(!hq)return;
    var day=todayDay(),m=model(day),card=document.getElementById(CMD_ID);if(!card){card=document.createElement('section');card.id=CMD_ID;card.className='section-card';hq.insertBefore(card,hq.firstElementChild)}
-   var pending=actionRows(day,false),completed=completedRows(day),used={};(m.actions||[]).concat(m.carry||[]).forEach(function(a){used[a.kind+':'+a.index]=true});
-   var future=pending.filter(function(a){return !used[a.kind+':'+a.index]});
+   var pending=actionRows(day,false),completed=completedRows(day);
    var total=pending.length+completed.length,doneCount=completed.length,pct=total?Math.round(doneCount/total*100):0;
    var progress='<div class="life-command-progress"><div class="life-command-progress-label">Прогресс дня</div><div class="life-command-progress-value">'+doneCount+' / '+total+'</div><div class="life-command-progress-track"><div class="life-command-progress-fill" style="width:'+pct+'%"></div></div></div>';
-   var rows=m.actions.length?m.actions.map(row).join(''):'<div class="life-command-empty">В этом блоке активных пунктов нет.</div>';
-   var carry=m.carry&&m.carry.length?'<div class="life-command-carry"><div class="life-command-carry-title">Просрочено · '+m.carry.length+'</div>'+m.carry.map(row).join('')+'</div>':'';
-   var futureRows=future.length?'<div class="life-command-future"><div class="life-command-future-title">Дальше сегодня · '+future.length+'</div>'+future.map(row).join('')+'</div>':'';
+   var dayRows=pending.length?'<div class="life-command-daylist">'+pending.map(row).join('')+'</div>':'<div class="life-command-empty">На сегодня активных пунктов не осталось.</div>';
    var completedHtml=completed.length?'<div class="life-command-completed"><div class="life-command-completed-title">Выполнено · '+completed.length+'</div>'+completed.map(row).join('')+'</div>':'';
-   var nx=m.next?'<div class="life-command-next">Следующий блок в <b>'+esc(fmt(m.next.time))+'</b> — '+esc(m.next.title)+'</div>':'';
-   card.innerHTML='<div class="life-command-head"><div><div class="life-command-kicker">'+esc(m.mode)+'</div><div class="life-command-time">'+esc(fmt(m.start))+(m.end<1440?'–'+esc(fmt(m.end)):'')+'</div><div class="life-command-title">'+esc(m.title)+'</div>'+(m.meta?'<div class="life-command-meta">'+esc(m.meta)+'</div>':'')+'</div><div class="life-command-clock">'+esc(fmt(nowMin()))+'</div></div><div class="life-command-actions">'+progress+rows+carry+futureRows+completedHtml+'</div>'+nx;
+   card.innerHTML='<div class="life-command-head"><div><div class="life-command-kicker">'+esc(m.mode)+'</div><div class="life-command-time">'+esc(fmt(m.start))+(m.end<1440?'–'+esc(fmt(m.end)):'')+'</div><div class="life-command-title">'+esc(m.title)+'</div>'+(m.meta?'<div class="life-command-meta">'+esc(m.meta)+'</div>':'')+'</div><div class="life-command-clock">'+esc(fmt(nowMin()))+'</div></div><div class="life-command-actions">'+progress+dayRows+completedHtml+'</div>';
  }
  window.renderLifeCommandBlock=render;var old=window.refreshLifeOsToday;if(typeof old==='function')window.refreshLifeOsToday=async function(){var r=await old.apply(this,arguments);render();return r};window.addEventListener('load',function(){setTimeout(render,100);setInterval(render,60000)});document.addEventListener('visibilitychange',function(){if(!document.hidden)setTimeout(render,50)});setTimeout(render,50)
 })();

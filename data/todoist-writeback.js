@@ -56,8 +56,19 @@
 
   async function completeTodoistTask(taskId){
     if(!taskId||!token())return false;
-    const res=await api('/tasks/'+encodeURIComponent(taskId)+'/close',{method:'POST'});
+    const uuid=(globalThis.crypto&&crypto.randomUUID)?crypto.randomUUID():(Date.now().toString(16)+'-'+Math.random().toString(16).slice(2));
+    const commands=[{type:'item_close',uuid,args:{id:String(taskId)}}];
+    const body=new URLSearchParams();
+    body.set('commands',JSON.stringify(commands));
+    const res=await api('/sync',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body:body.toString()
+    });
     if(!res.ok)throw new Error('Todoist close failed: '+res.status);
+    const data=await res.json();
+    const status=data&&data.sync_status&&data.sync_status[uuid];
+    if(status!=='ok')throw new Error('Todoist close rejected');
     return true;
   }
 
