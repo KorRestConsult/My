@@ -5865,7 +5865,7 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 
   function isHabit(item){
     const section=String(item.section||'');
-    return section.startsWith('Привычки |');
+    return section.startsWith('Привычки |')||section.startsWith('Блок |');
   }
 
   function withTime(item){
@@ -5924,9 +5924,9 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
       const calendarTitle=document.querySelector('#homeCalendar')?.closest('.section-card')?.querySelector('h2');
       const tasksTitle=document.querySelector('#homeTasks')?.closest('.section-card')?.querySelector('h2');
       const habitsTitle=document.querySelector('#homeHabits')?.closest('.section-card')?.querySelector('h2');
-      if(calendarTitle)calendarTitle.textContent='Расписание · Google Calendar';
-      if(tasksTitle)tasksTitle.textContent='Дела · Todoist';
-      if(habitsTitle)habitsTitle.textContent='Привычки · Todoist';
+      if(calendarTitle)calendarTitle.textContent='Расписание';
+      if(tasksTitle)tasksTitle.textContent='Дела';
+      if(habitsTitle)habitsTitle.textContent='Привычки';
     }catch(error){
       console.warn('Life OS live today:',error);
     }
@@ -6044,6 +6044,14 @@ function observe(){const r=document.getElementById("financeKpis");if(!r)return f
 #home .section-card:has(#homeHabits) .icon-btn,#home .section-card:has(#homeHabits) .add-line{display:none!important}
 </style>
 <!-- LIFE_OS_EXTERNAL_SOURCE_UI_END -->
+
+
+<!-- LIFE_OS_CLEAN_LABELS_START -->
+<style>
+#home #secretaryPanel>.secretary-top{display:none!important}
+#home #secretaryPanel{padding-top:12px!important}
+</style>
+<!-- LIFE_OS_CLEAN_LABELS_END -->
 
 </body>
 </html>
