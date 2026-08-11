@@ -1,0 +1,22 @@
+name: Apply live Todoist only
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-live-only-20260811.yml'
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index
+        run: python .github/patch_live_only_20260811.py
+      - name: Commit patch and cleanup
+        run: |
+          rm -f .github/patch_live_only_20260811.py .github/workflows/apply-live-only-20260811.yml
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Показывать только живые задачи Todoist и сбросить кеш" || exit 0
+          git push
