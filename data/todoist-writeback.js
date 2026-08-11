@@ -104,7 +104,7 @@
 
   document.addEventListener('click',function(event){
     const button=event.target.closest('#lifeCommandCard .os-check');
-    if(!button)return;
+    if(!button||button.dataset.lifeosManaged==='1')return;
     const ref=taskFromRow(button.closest('.life-command-row'));
     const taskId=ref&&ref.item&&ref.item.rawTodoistId;
     if(!taskId)return;
