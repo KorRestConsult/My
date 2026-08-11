@@ -1,83 +1,94 @@
 name: Finalize Life OS home
+
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/finalize-life-os-home.yml'
+
 permissions:
   contents: write
+
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Patch main screen
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
+          import re, textwrap
 
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
 
-          # 1) Todoist classification is project-based: Привычки vs Дела.
-          old = """  function isHabit(item){\n    const section=String(item.section||'');\n    return section.startsWith('Привычки |')||section.startsWith('Блок |');\n  }"""
-          new = """  function isHabit(item){\n    const project=String(item.project||'').trim().toLowerCase();\n    return project==='привычки';\n  }"""
+          old="""  function isHabit(item){
+            const section=String(item.section||'');
+            return section.startsWith('Привычки |')||section.startsWith('Блок |');
+          }"""
+          old=old.replace('            ','    ')
+          new="""  function isHabit(item){
+            const project=String(item.project||'').trim().toLowerCase();
+            return project==='привычки';
+          }""".replace('            ','    ')
           if old in s:
-              s = s.replace(old, new, 1)
+              s=s.replace(old,new,1)
           else:
-              s = re.sub(r"  function isHabit\(item\)\{.*?\n  \}", new, s, count=1, flags=re.S)
+              s=re.sub(r"  function isHabit\(item\)\{.*?\n  \}",new,s,count=1,flags=re.S)
 
-          # 2) Clean boot splash so no legacy/demo content flashes during reload.
           if 'id="lifeOsBootStyles"' not in s:
-              boot_css = r'''
-<style id="lifeOsBootStyles">
-#lifeOsBoot{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:#171512;color:#f5ede0;transition:opacity .32s ease,visibility .32s ease}
-#lifeOsBoot.life-os-boot-hide{opacity:0;visibility:hidden;pointer-events:none}
-.life-os-boot-inner{display:grid;justify-items:center;gap:12px;transform:translateY(-3vh)}
-.life-os-boot-mark{width:58px;height:58px;border:1px solid rgba(193,139,64,.62);border-radius:15px;display:grid;place-items:center;font:700 27px/1 Georgia,"Times New Roman",serif;color:#c38b40;box-shadow:inset 0 0 28px rgba(185,133,62,.08)}
-.life-os-boot-title{font:700 29px/1 Georgia,"Times New Roman",serif;letter-spacing:.025em}
-.life-os-boot-sub{font:600 9px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,237,224,.48)}
-.life-os-boot-line{width:78px;height:2px;border-radius:99px;background:linear-gradient(90deg,transparent,#b9853e,transparent);animation:lifeOsBootPulse 1s ease-in-out infinite alternate}
-@keyframes lifeOsBootPulse{from{opacity:.35;transform:scaleX(.72)}to{opacity:1;transform:scaleX(1)}}
-#home .section-card:has(#homeHabits){display:none!important}
-</style>
-'''
-              s = s.replace('</head>', boot_css + '\n</head>', 1)
+              boot_css=textwrap.dedent('''
+              <style id="lifeOsBootStyles">
+              #lifeOsBoot{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;background:#171512;color:#f5ede0;transition:opacity .32s ease,visibility .32s ease}
+              #lifeOsBoot.life-os-boot-hide{opacity:0;visibility:hidden;pointer-events:none}
+              .life-os-boot-inner{display:grid;justify-items:center;gap:12px;transform:translateY(-3vh)}
+              .life-os-boot-mark{width:58px;height:58px;border:1px solid rgba(193,139,64,.62);border-radius:15px;display:grid;place-items:center;font:700 27px/1 Georgia,"Times New Roman",serif;color:#c38b40;box-shadow:inset 0 0 28px rgba(185,133,62,.08)}
+              .life-os-boot-title{font:700 29px/1 Georgia,"Times New Roman",serif;letter-spacing:.025em}
+              .life-os-boot-sub{font:600 9px/1.2 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:rgba(245,237,224,.48)}
+              .life-os-boot-line{width:78px;height:2px;border-radius:99px;background:linear-gradient(90deg,transparent,#b9853e,transparent);animation:lifeOsBootPulse 1s ease-in-out infinite alternate}
+              @keyframes lifeOsBootPulse{from{opacity:.35;transform:scaleX(.72)}to{opacity:1;transform:scaleX(1)}}
+              #home .section-card:has(#homeHabits){display:none!important}
+              </style>
+              ''')
+              s=s.replace('</head>',boot_css+'\n</head>',1)
 
           if 'id="lifeOsBoot"' not in s:
-              boot_html = r'''<div id="lifeOsBoot" aria-hidden="true"><div class="life-os-boot-inner"><div class="life-os-boot-mark">И</div><div class="life-os-boot-title">Life OS</div><div class="life-os-boot-line"></div><div class="life-os-boot-sub">Личная система</div></div></div>'''
-              s = s.replace('<body>', '<body>\n' + boot_html, 1)
+              boot_html='<div id="lifeOsBoot" aria-hidden="true"><div class="life-os-boot-inner"><div class="life-os-boot-mark">И</div><div class="life-os-boot-title">Life OS</div><div class="life-os-boot-line"></div><div class="life-os-boot-sub">Личная система</div></div></div>'
+              s=s.replace('<body>','<body>\n'+boot_html,1)
 
           if 'LIFE_OS_BOOT_SCRIPT' not in s:
-              boot_js = r'''
-<!-- LIFE_OS_BOOT_SCRIPT -->
-<script>
-(function(){
-  const boot=document.getElementById('lifeOsBoot');
-  if(!boot)return;
-  let hidden=false;
-  function hideBoot(){
-    if(hidden)return; hidden=true;
-    boot.classList.add('life-os-boot-hide');
-    setTimeout(()=>boot.remove(),380);
-  }
-  window.addEventListener('load',()=>setTimeout(hideBoot,520),{once:true});
-  setTimeout(hideBoot,1800);
-})();
-</script>
-'''
-              s = s.replace('</body>', boot_js + '\n</body>', 1)
+              boot_js=textwrap.dedent('''
+              <!-- LIFE_OS_BOOT_SCRIPT -->
+              <script>
+              (function(){
+                const boot=document.getElementById('lifeOsBoot');
+                if(!boot)return;
+                let hidden=false;
+                function hideBoot(){
+                  if(hidden)return;
+                  hidden=true;
+                  boot.classList.add('life-os-boot-hide');
+                  setTimeout(()=>boot.remove(),380);
+                }
+                window.addEventListener('load',()=>setTimeout(hideBoot,520),{once:true});
+                setTimeout(hideBoot,1800);
+              })();
+              </script>
+              ''')
+              s=s.replace('</body>',boot_js+'\n</body>',1)
 
-          p.write_text(s, encoding='utf-8')
+          p.write_text(s,encoding='utf-8')
           PY
-      - name: Remove temporary workflow
+      - name: Cleanup workflow
         run: rm -f .github/workflows/finalize-life-os-home.yml
       - name: Commit result
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html .github/workflows/finalize-life-os-home.yml
-          if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'Зафиксировать логику Привычки и Дела и добавить загрузку Life OS'
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Зафиксировать Привычки и Дела и добавить загрузку Life OS"
+          git push origin main
