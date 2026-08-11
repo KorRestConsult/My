@@ -1,0 +1,93 @@
+<!-- LIFE_OS_HOME_REORDER_START -->
+<style>
+#home .hq-hero{display:none!important}
+#home #secretaryPanel{display:grid!important}
+#home #homeTasks,#home #homeCalendar,#home #homeHabits{max-height:none!important;overflow:visible!important;padding-right:0!important}
+#home .task-list{max-width:none!important}
+#home .life-primary-tasks{padding:16px!important;border-radius:12px!important}
+#home .life-primary-tasks h2{font-size:15px!important;letter-spacing:.06em}
+#home .life-panel-blocks{display:grid;gap:12px;margin-top:12px}
+#home #secretaryPanel{padding:14px!important;border-radius:12px!important}
+#home #secretaryPanel>.secretary-top{margin-bottom:0}
+#home #secretaryPanel .life-panel-blocks>.section-card{padding:14px!important;border-radius:10px!important;background:var(--paper)!important}
+#home #secretaryPanel .life-panel-blocks>.section-card h2{font-size:13px!important}
+#home #secretaryPanel .life-panel-blocks .event-row,
+#home #secretaryPanel .life-panel-blocks .task-row,
+#home #secretaryPanel .life-panel-blocks .habit-row,
+#home .life-primary-tasks .task-row{margin:10px 0!important}
+#home .life-primary-tasks .task-title,
+#home #secretaryPanel .life-panel-blocks .event-title,
+#home #secretaryPanel .life-panel-blocks .habit-row,
+#home #secretaryPanel .life-panel-blocks .goal-step-row{font-size:12.5px!important}
+@media (max-width:560px){
+  #home .life-primary-tasks{padding:14px 12px!important}
+  #home #secretaryPanel{padding:12px!important}
+  #home .life-panel-blocks{gap:10px;margin-top:10px}
+  #home #secretaryPanel .life-panel-blocks>.section-card{padding:12px!important}
+  #home .life-primary-tasks .task-row,
+  #home #secretaryPanel .life-panel-blocks .event-row,
+  #home #secretaryPanel .life-panel-blocks .task-row,
+  #home #secretaryPanel .life-panel-blocks .habit-row,
+  #home #secretaryPanel .life-panel-blocks .goal-step-row{margin:12px 0!important}
+  #home .life-primary-tasks .task-title,
+  #home #secretaryPanel .life-panel-blocks .event-time,
+  #home #secretaryPanel .life-panel-blocks .event-title,
+  #home #secretaryPanel .life-panel-blocks .habit-row,
+  #home #secretaryPanel .life-panel-blocks .goal-step-row{font-size:13px!important}
+  #home #secretaryPanel .life-panel-blocks .event-meta,
+  #home #secretaryPanel .life-panel-blocks .task-title span{font-size:11px!important}
+}
+</style>
+<script>
+(function(){
+  function reorderLifeHome(){
+    const hq=document.querySelector('#home .hq');
+    const hero=document.querySelector('#home .hq-hero');
+    const secretary=document.getElementById('secretaryPanel');
+    const taskRoot=document.getElementById('homeTasks');
+    const calendarRoot=document.getElementById('homeCalendar');
+    const habitRoot=document.querySelector('#home > .hq #homeHabits');
+    const goalRoot=document.getElementById('homeGoals');
+    const finance=document.getElementById('homeFinancePanel');
+    if(!hq||!secretary||!taskRoot||!calendarRoot||!habitRoot)return;
+    if(hero)hero.style.display='none';
+
+    const taskCard=taskRoot.closest('.section-card');
+    const calendarCard=calendarRoot.closest('.section-card');
+    const habitCard=habitRoot.closest('.section-card');
+    const goalCard=goalRoot&&goalRoot.closest('.section-card');
+    const duo=calendarCard&&calendarCard.parentElement&&calendarCard.parentElement.classList.contains('hq-two')?calendarCard.parentElement:null;
+
+    if(taskCard){
+      taskCard.classList.add('life-primary-tasks');
+      hq.insertBefore(taskCard,hq.firstElementChild);
+    }
+
+    let blocks=secretary.querySelector('.life-panel-blocks');
+    if(!blocks){
+      secretary.innerHTML=`
+        <div class="secretary-top">
+          <div class="section-title-row">
+            <div class="section-icon"><svg viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h1M4 12h1M4 18h1"></path></svg></div>
+            <h2>Панель дня Ильи</h2>
+          </div>
+          <button class="ghost" type="button" onclick="window.refreshLifeOsToday&&window.refreshLifeOsToday()">Обновить</button>
+        </div>
+        <div class="life-panel-blocks"></div>`;
+      blocks=secretary.querySelector('.life-panel-blocks');
+    }
+
+    [calendarCard,habitCard,goalCard,finance].filter(Boolean).forEach(card=>{
+      card.classList.add('life-expanded-card');
+      blocks.appendChild(card);
+    });
+
+    if(duo&&duo.children.length===0)duo.remove();
+  }
+
+  reorderLifeHome();
+  window.addEventListener('load',reorderLifeHome);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)reorderLifeHome()});
+})();
+</script>
+<!-- LIFE_OS_HOME_REORDER_END -->
