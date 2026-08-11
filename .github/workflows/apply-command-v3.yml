@@ -1,0 +1,32 @@
+name: Apply command v3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-command-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch command block
+        run: python3 .github/patch_command_v3.py
+      - name: Cleanup temporary files
+        run: |
+          rm -f .github/patch_command_v3.py
+          rm -f .github/workflows/apply-command-v3.yml
+          rm -f .github/workflows/calendar-authority-tags-20260811.yml
+      - name: Commit result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Довести логику временных блоков и меток"
+          git push origin main
