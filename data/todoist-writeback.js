@@ -81,6 +81,7 @@
         if(done){
           ref.item.done=true;
           rememberDone(ref.kind,ref.id);
+          try{if(typeof window.lifeOsArchiveCompletedItem==='function')window.lifeOsArchiveCompletedItem(ref.kind,ref.item)}catch(_){ }
           changed=true;
         }
       }catch(error){console.warn('Todoist status check failed',ref.id,error)}
