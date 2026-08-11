@@ -1,0 +1,150 @@
+name: Patch Life OS home
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-lifeos-home.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Patch current index.html in place
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '<!-- LIFE_OS_LIVE_TODAY_START -->'
+
+          if marker not in text:
+              injection = r'''<!-- LIFE_OS_LIVE_TODAY_START -->
+          <script>
+          (function(){
+            const LIVE_TODAY_URL='data/today.json';
+            const PERIOD_BY_SECTION={
+              'Привычки | Утро':'Утро',
+              'Привычки | День':'День',
+              'Привычки | Вечер':'Вечер'
+            };
+
+            function livePeriod(item){
+              if(PERIOD_BY_SECTION[item.section])return PERIOD_BY_SECTION[item.section];
+              const hour=Number(String(item.time||'').slice(0,2));
+              if(Number.isFinite(hour)&&hour<12)return 'Утро';
+              if(Number.isFinite(hour)&&hour<17)return 'День';
+              return 'Вечер';
+            }
+
+            function uniqueByTitle(items){
+              const seen=new Set();
+              return (items||[]).filter(item=>{
+                const key=String(item.title||'').trim().toLowerCase();
+                if(!key||seen.has(key))return false;
+                seen.add(key);
+                return true;
+              });
+            }
+
+            function isHabit(item){
+              const section=String(item.section||'');
+              return section.startsWith('Привычки |')||section.startsWith('Блок |');
+            }
+
+            function withTime(item){
+              return item.time?`${item.time} · ${item.title}`:item.title;
+            }
+
+            function normalizeLiveToday(data){
+              const todo=uniqueByTitle(data&&data.todoist&&data.todoist.today||[]);
+              return {
+                events:(data&&data.calendarToday||[]).map((event,index)=>({
+                  id:`gcal-${event.id||index}`,
+                  start:event.start||event.time||'',
+                  end:event.end||'',
+                  time:event.start||event.time||'',
+                  title:event.title||'Событие',
+                  category:event.place||event.source||'Google Calendar',
+                  place:event.place||'',
+                  comment:event.source||'Google Calendar',
+                  done:false,
+                  source:'Google Calendar'
+                })),
+                habits:todo.filter(isHabit).map((item,index)=>({
+                  id:`todo-habit-${item.id||index}`,
+                  title:withTime(item),
+                  note:item.time||'',
+                  period:livePeriod(item),
+                  done:!!item.done,
+                  source:'Todoist',
+                  section:item.section||''
+                })),
+                tasks:todo.filter(item=>!isHabit(item)).map((item,index)=>({
+                  id:`todo-task-${item.id||index}`,
+                  title:withTime(item),
+                  note:[item.project,item.section].filter(Boolean).join(' · '),
+                  done:!!item.done,
+                  source:'Todoist'
+                }))
+              };
+            }
+
+            async function refreshLifeOsToday(){
+              try{
+                const response=await fetch(`${LIVE_TODAY_URL}?v=${Date.now()}`,{cache:'no-store'});
+                if(!response.ok)throw new Error(`HTTP ${response.status}`);
+                const data=await response.json();
+                const live=normalizeLiveToday(data);
+                if(typeof todayDay!=='function'||typeof renderHome!=='function')return;
+                const day=todayDay();
+                day.events=live.events;
+                day.habits=live.habits;
+                day.tasks=live.tasks;
+                renderHome();
+
+                const calendarTitle=document.querySelector('#homeCalendar')?.closest('.section-card')?.querySelector('h2');
+                const tasksTitle=document.querySelector('#homeTasks')?.closest('.section-card')?.querySelector('h2');
+                const habitsTitle=document.querySelector('#homeHabits')?.closest('.section-card')?.querySelector('h2');
+                if(calendarTitle)calendarTitle.textContent='Расписание · Google Calendar';
+                if(tasksTitle)tasksTitle.textContent='Дела · Todoist';
+                if(habitsTitle)habitsTitle.textContent='Привычки · Todoist';
+              }catch(error){
+                console.warn('Life OS live today:',error);
+              }
+            }
+
+            window.refreshLifeOsToday=refreshLifeOsToday;
+            window.addEventListener('load',()=>{
+              refreshLifeOsToday();
+              setInterval(refreshLifeOsToday,60000);
+            });
+            document.addEventListener('visibilitychange',()=>{
+              if(!document.hidden)refreshLifeOsToday();
+            });
+          })();
+          </script>
+          <!-- LIFE_OS_LIVE_TODAY_END -->'''
+              if '</body>' not in text:
+                  raise SystemExit('index.html has no </body>')
+              text = text.replace('</body>', injection + '\n</body>', 1)
+              path.write_text(text, encoding='utf-8')
+
+          workflow = Path('.github/workflows/patch-lifeos-home.yml')
+          if workflow.exists():
+              workflow.unlink()
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Подключить Calendar и Todoist к главной"
+          git push origin main
