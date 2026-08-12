@@ -82,10 +82,51 @@
     };
   }
 
+  function makeUuid(){
+    try{if(crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID()}catch(_){ }
+    return 'lifeos-'+Date.now()+'-'+Math.random().toString(16).slice(2);
+  }
+
+  async function closeViaTaskEndpoint(taskId){
+    await request('/tasks/'+encodeURIComponent(String(taskId))+'/close',{
+      method:'POST',
+      headers:{Accept:'application/json'}
+    });
+    return true;
+  }
+
+  async function closeViaSync(taskId){
+    const uuid=makeUuid();
+    const commands=[{type:'item_close',uuid:uuid,args:{id:String(taskId)}}];
+    const body=new URLSearchParams({commands:JSON.stringify(commands)}).toString();
+    const res=await request('/sync',{
+      method:'POST',
+      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8',Accept:'application/json'},
+      body:body
+    });
+    const data=await res.json();
+    const status=data&&data.sync_status&&data.sync_status[uuid];
+    if(status!=='ok')throw new Error('SYNC_'+(typeof status==='string'?status:'FAILED'));
+    return true;
+  }
+
   async function completeTodoistTask(taskId){
     if(!taskId)throw new Error('TASK_ID_MISSING');
-    await request('/tasks/'+encodeURIComponent(String(taskId))+'/close',{method:'POST'});
-    setTimeout(syncLiveTodoist,200);
+    let firstError=null;
+    try{
+      await closeViaTaskEndpoint(taskId);
+    }catch(error){
+      firstError=error;
+      try{
+        await closeViaSync(taskId);
+      }catch(syncError){
+        const message='close='+(firstError&&firstError.message||firstError)+'; sync='+(syncError&&syncError.message||syncError);
+        window.LIFE_OS_TODOIST_LAST_ERROR=message;
+        throw new Error(message);
+      }
+    }
+    setTimeout(syncLiveTodoist,150);
+    setTimeout(syncLiveTodoist,900);
     return true;
   }
 
@@ -115,6 +156,7 @@
       day.tasks=rows.filter(x=>String(x.project_id||'')===TASKS_PROJECT).map(toSiteItem);
       window.LIFE_OS_LIVE_ACTIVE=true;
       window.LIFE_OS_TODOIST_DIRECT_ACTIVE=true;
+      window.LIFE_OS_TODOIST_LAST_ERROR='';
 
       try{if(typeof renderHome==='function')renderHome()}catch(_){ }
       try{if(typeof window.renderLifeCommandBlock==='function')window.renderLifeCommandBlock()}catch(_){ }
