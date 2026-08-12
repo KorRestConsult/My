@@ -2,10 +2,9 @@
   const TOKEN_KEY='life_os_todoist_token';
   const LOCAL_DONE_KEY='life_os_todoist_done_v2';
   const API='https://api.todoist.com/api/v1';
-  const PROJECTS=[
-    {id:'6h9M43R7RWC7JcC5',name:'Привычки',type:'habit'},
-    {id:'6h9M43XMVgmVRRhm',name:'Дела',type:'task'}
-  ];
+  const HABITS_PROJECT='6h9M43R7RWC7JcC5';
+  const TASKS_PROJECT='6h9M43XMVgmVRRhm';
+  const ALLOWED_PROJECTS=new Set([HABITS_PROJECT,TASKS_PROJECT]);
 
   function installTokenFromHash(){
     const raw=String(location.hash||'');
@@ -17,9 +16,20 @@
     return true;
   }
 
-  installTokenFromHash();
-  function token(){return localStorage.getItem(TOKEN_KEY)||''}
-  window.LIFE_OS_TODOIST_BRIDGE_ACTIVE=!!token();
+  function token(){return String(localStorage.getItem(TOKEN_KEY)||'').trim()}
+
+  async function request(path,options){
+    const t=token();
+    if(!t)throw new Error('TOKEN_MISSING');
+    const opts=Object.assign({mode:'cors',cache:'no-store'},options||{});
+    opts.headers=Object.assign({},opts.headers||{},{Authorization:'Bearer '+t});
+    const res=await fetch(API+path,opts);
+    if(!res.ok){
+      let detail='';try{detail=await res.text()}catch(_){ }
+      throw new Error('Todoist '+res.status+(detail?' '+detail.slice(0,160):''));
+    }
+    return res;
+  }
 
   function todayIso(){
     const d=new Date();
@@ -37,14 +47,6 @@
     }catch(_){ }
   }
 
-  async function api(path,options){
-    const t=token();
-    if(!t)throw new Error('TOKEN_MISSING');
-    const opts=Object.assign({cache:'no-store',mode:'cors'},options||{});
-    opts.headers=Object.assign({},opts.headers||{},{Authorization:'Bearer '+t});
-    return fetch(API+path,opts);
-  }
-
   function currentItems(){
     if(typeof todayDay!=='function')return[];
     const day=todayDay();
@@ -54,66 +56,52 @@
     return out;
   }
 
-  function dueDate(task){
-    const raw=task&&((task.due&&task.due.date)||task.due_date||(task.due&&task.due.datetime)||task.due_datetime)||'';
-    return String(raw).slice(0,10);
-  }
-
   function dueTime(task){
-    const raw=task&&((task.due&&task.due.datetime)||task.due_datetime)||'';
-    if(raw){
-      const d=new Date(String(raw));
-      if(!Number.isNaN(d.getTime())){
-        try{return new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}catch(_){ }
-      }
-    }
-    const text=String(task&&((task.due&&task.due.string)||task.due_string)||'');
-    const m=text.match(/(?:^|\s)(\d{1,2}):(\d{2})(?:\s|$)/);
-    return m?m[1].padStart(2,'0')+':'+m[2]:'';
+    const due=task&&task.due||{};
+    const raw=due.datetime||((String(due.date||'').includes('T'))?due.date:'');
+    if(!raw)return'';
+    const d=new Date(raw);
+    if(!Number.isFinite(d.getTime()))return'';
+    return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
   }
 
-  async function loadProject(project){
-    let cursor='';
-    const all=[];
-    do{
-      const qs=new URLSearchParams({project_id:project.id,limit:'200'});
-      if(cursor)qs.set('cursor',cursor);
-      const res=await api('/tasks?'+qs.toString());
-      if(!res.ok){
-        let detail='';try{detail=await res.text()}catch(_){ }
-        throw new Error('Todoist tasks '+res.status+(detail?' '+detail.slice(0,120):''));
-      }
-      const data=await res.json();
-      const rows=Array.isArray(data)?data:(Array.isArray(data&&data.results)?data.results:[]);
-      all.push(...rows);
-      cursor=Array.isArray(data)?'':String(data&&data.next_cursor||'');
-    }while(cursor);
-    return all.map(task=>({task:task,project:project}));
-  }
-
-  function toSiteItem(ref){
-    const task=ref.task,project=ref.project,time=dueTime(task);
+  function toSiteItem(task){
+    const projectId=String(task.project_id||'');
+    const kind=projectId===TASKS_PROJECT?'task':'habit';
+    const time=dueTime(task);
     return {
-      id:'todo-'+project.type+'-'+String(task.id||''),
-      title:(time?time+' · ':'')+String(task.content||'').trim(),
-      note:project.name,
+      id:'todo-'+kind+'-'+String(task.id),
+      title:(time?time+' · ':'')+String(task.content||''),
+      note:projectId===TASKS_PROJECT?'Дела':'Привычки',
       done:false,
       source:'Todoist',
       rawTodoistId:String(task.id||''),
-      section:'',
-      project:project.name,
+      section:String(task.section_id||''),
+      project:projectId===TASKS_PROJECT?'Дела':'Привычки',
       labels:Array.isArray(task.labels)?task.labels:[]
     };
   }
 
+  async function completeTodoistTask(taskId){
+    if(!taskId)throw new Error('TASK_ID_MISSING');
+    await request('/tasks/'+encodeURIComponent(String(taskId))+'/close',{method:'POST'});
+    setTimeout(syncLiveTodoist,200);
+    return true;
+  }
+
+  async function fetchTodayRows(){
+    const q=encodeURIComponent('today | overdue');
+    const res=await request('/tasks/filter?query='+q+'&limit=200');
+    const data=await res.json();
+    const rows=Array.isArray(data&&data.results)?data.results:[];
+    return rows.filter(x=>ALLOWED_PROJECTS.has(String(x.project_id||'')));
+  }
+
   async function syncLiveTodoist(){
-    if(!token()||typeof todayDay!=='function')return false;
-    window.LIFE_OS_TODOIST_BRIDGE_ACTIVE=true;
+    if(typeof todayDay!=='function')return false;
     try{
-      const date=todayIso();
-      const groups=await Promise.all(PROJECTS.map(loadProject));
-      const refs=groups.flat().filter(ref=>dueDate(ref.task)===date&&ref.task&&ref.task.id);
-      const ids=new Set(refs.map(ref=>String(ref.task.id)));
+      const rows=await fetchTodayRows();
+      const ids=new Set(rows.map(x=>String(x.id||'')));
       const previous=currentItems();
 
       previous.forEach(ref=>{
@@ -123,28 +111,22 @@
       });
 
       const day=todayDay();
-      day.habits=refs.filter(ref=>ref.project.type==='habit').map(toSiteItem);
-      day.tasks=refs.filter(ref=>ref.project.type==='task').map(toSiteItem);
+      day.habits=rows.filter(x=>String(x.project_id||'')===HABITS_PROJECT).map(toSiteItem);
+      day.tasks=rows.filter(x=>String(x.project_id||'')===TASKS_PROJECT).map(toSiteItem);
       window.LIFE_OS_LIVE_ACTIVE=true;
+      window.LIFE_OS_TODOIST_DIRECT_ACTIVE=true;
+
       try{if(typeof renderHome==='function')renderHome()}catch(_){ }
       try{if(typeof window.renderLifeCommandBlock==='function')window.renderLifeCommandBlock()}catch(_){ }
       return true;
     }catch(error){
-      console.warn('Life OS Todoist live sync failed',error);
+      window.LIFE_OS_TODOIST_LAST_ERROR=String(error&&error.message||error);
+      console.warn('Life OS Todoist direct sync failed',error);
       return false;
     }
   }
 
-  async function completeTodoistTask(taskId){
-    if(!taskId)throw new Error('TASK_ID_MISSING');
-    const res=await api('/tasks/'+encodeURIComponent(String(taskId))+'/close',{method:'POST'});
-    if(!(res.status===200||res.status===204)){
-      let detail='';try{detail=await res.text()}catch(_){ }
-      throw new Error('Todoist close '+res.status+(detail?' '+detail.slice(0,160):''));
-    }
-    setTimeout(syncLiveTodoist,250);
-    return true;
-  }
+  installTokenFromHash();
 
   window.lifeOsCompleteTodoist=completeTodoistTask;
   window.lifeOsRefreshTodoist=syncLiveTodoist;
@@ -155,15 +137,14 @@
   if(typeof oldRefresh==='function'){
     window.refreshLifeOsToday=async function(){
       const result=await oldRefresh.apply(this,arguments);
-      if(token())await syncLiveTodoist();
+      await syncLiveTodoist();
       return result;
     };
   }
 
   window.addEventListener('load',()=>{
-    if(!token())return;
-    setTimeout(syncLiveTodoist,300);
+    setTimeout(syncLiveTodoist,250);
     setInterval(syncLiveTodoist,10000);
   });
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&token())setTimeout(syncLiveTodoist,80)});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(syncLiveTodoist,50)});
 })();
