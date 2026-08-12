@@ -4,7 +4,7 @@
     "city": "Рязань",
     "timezone": "Europe/Moscow",
     "source": "Google Calendar + Todoist",
-    "updatedAt": "2026-08-12T10:03:56+03:00",
+    "updatedAt": "2026-08-12T13:00:38+03:00",
     "syncMode": "snapshot"
   },
   "calendarToday": [
@@ -27,8 +27,6 @@
   ],
   "todoist": {
     "today": [
-      {"id":"6hG8fP7G6Q6vFj75","time":"18:00","title":"Дом · продолжить разбор","project":"Привычки","section":"Блок | Дом и быт","labels":[],"done":false,"type":"habit"},
-      {"id":"6hG8fP6HqXM49575","time":"18:45","title":"Финансы и жизнь · двигать текущую проблему","project":"Привычки","section":"Блок | Деньги и документы","labels":[],"done":false,"type":"habit"},
       {"id":"6hG8fP3v6fPq45R5","time":"19:30","title":"Цели · сверить и продвинуть","project":"Привычки","section":"Блок | Личные дела","labels":[],"done":false,"type":"habit"},
       {"id":"6hG8M5mjRJWG9wX5","time":"20:15","title":"ИИ · изучить одно и применить на практике","project":"Привычки","section":"Блок | Развитие","labels":[],"done":false,"type":"habit"},
       {"id":"6hG8fP345XFV69j5","time":"20:15","title":"Развитие · один текущий фокус","project":"Привычки","section":"Блок | Развитие","labels":[],"done":false,"type":"habit"},
