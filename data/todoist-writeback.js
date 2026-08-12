@@ -1,34 +1,22 @@
 (function(){
-  const TOKEN_KEY='life_os_todoist_token';
   const LOCAL_DONE_KEY='life_os_todoist_done_v2';
-  const API='https://api.todoist.com/api/v1';
+  const BRIDGE='https://ilya-todoist-bridge.netlify.app/todoist';
   const HABITS_PROJECT='6h9M43R7RWC7JcC5';
   const TASKS_PROJECT='6h9M43XMVgmVRRhm';
   const ALLOWED_PROJECTS=new Set([HABITS_PROJECT,TASKS_PROJECT]);
 
-  function installTokenFromHash(){
-    const raw=String(location.hash||'');
-    const match=raw.match(/todoist-token=([A-Fa-f0-9]{32,128})/);
-    if(!match)return false;
-    localStorage.setItem(TOKEN_KEY,match[1]);
-    history.replaceState(null,'',location.pathname+location.search+'#home');
-    try{if(typeof showView==='function')showView('home')}catch(_){ }
-    return true;
-  }
+  try{localStorage.removeItem('life_os_todoist_token')}catch(_){ }
 
-  function token(){return String(localStorage.getItem(TOKEN_KEY)||'').trim()}
-
-  async function request(path,options){
-    const t=token();
-    if(!t)throw new Error('TOKEN_MISSING');
+  async function bridgeRequest(url,options){
     const opts=Object.assign({mode:'cors',cache:'no-store'},options||{});
-    opts.headers=Object.assign({},opts.headers||{},{Authorization:'Bearer '+t});
-    const res=await fetch(API+path,opts);
-    if(!res.ok){
-      let detail='';try{detail=await res.text()}catch(_){ }
-      throw new Error('Todoist '+res.status+(detail?' '+detail.slice(0,160):''));
+    const res=await fetch(url,opts);
+    let data=null;
+    try{data=await res.json()}catch(_){ }
+    if(!res.ok||!data||data.ok!==true){
+      const detail=data&&data.error?String(data.error):('HTTP_'+res.status);
+      throw new Error(detail);
     }
-    return res;
+    return data;
   }
 
   function todayIso(){
@@ -82,59 +70,21 @@
     };
   }
 
-  function makeUuid(){
-    try{if(crypto&&typeof crypto.randomUUID==='function')return crypto.randomUUID()}catch(_){ }
-    return 'lifeos-'+Date.now()+'-'+Math.random().toString(16).slice(2);
-  }
-
-  async function closeViaTaskEndpoint(taskId){
-    await request('/tasks/'+encodeURIComponent(String(taskId))+'/close',{
-      method:'POST',
-      headers:{Accept:'application/json'}
-    });
-    return true;
-  }
-
-  async function closeViaSync(taskId){
-    const uuid=makeUuid();
-    const commands=[{type:'item_close',uuid:uuid,args:{id:String(taskId)}}];
-    const body=new URLSearchParams({commands:JSON.stringify(commands)}).toString();
-    const res=await request('/sync',{
-      method:'POST',
-      headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8',Accept:'application/json'},
-      body:body
-    });
-    const data=await res.json();
-    const status=data&&data.sync_status&&data.sync_status[uuid];
-    if(status!=='ok')throw new Error('SYNC_'+(typeof status==='string'?status:'FAILED'));
-    return true;
-  }
-
   async function completeTodoistTask(taskId){
     if(!taskId)throw new Error('TASK_ID_MISSING');
-    let firstError=null;
-    try{
-      await closeViaTaskEndpoint(taskId);
-    }catch(error){
-      firstError=error;
-      try{
-        await closeViaSync(taskId);
-      }catch(syncError){
-        const message='close='+(firstError&&firstError.message||firstError)+'; sync='+(syncError&&syncError.message||syncError);
-        window.LIFE_OS_TODOIST_LAST_ERROR=message;
-        throw new Error(message);
-      }
-    }
+    await bridgeRequest(BRIDGE,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'complete',taskId:String(taskId)})
+    });
     setTimeout(syncLiveTodoist,150);
     setTimeout(syncLiveTodoist,900);
     return true;
   }
 
   async function fetchTodayRows(){
-    const q=encodeURIComponent('today | overdue');
-    const res=await request('/tasks/filter?query='+q+'&limit=200');
-    const data=await res.json();
-    const rows=Array.isArray(data&&data.results)?data.results:[];
+    const data=await bridgeRequest(BRIDGE+'?action=today');
+    const rows=Array.isArray(data.results)?data.results:[];
     return rows.filter(x=>ALLOWED_PROJECTS.has(String(x.project_id||'')));
   }
 
@@ -155,7 +105,8 @@
       day.habits=rows.filter(x=>String(x.project_id||'')===HABITS_PROJECT).map(toSiteItem);
       day.tasks=rows.filter(x=>String(x.project_id||'')===TASKS_PROJECT).map(toSiteItem);
       window.LIFE_OS_LIVE_ACTIVE=true;
-      window.LIFE_OS_TODOIST_DIRECT_ACTIVE=true;
+      window.LIFE_OS_TODOIST_DIRECT_ACTIVE=false;
+      window.LIFE_OS_TODOIST_BRIDGE_ACTIVE=true;
       window.LIFE_OS_TODOIST_LAST_ERROR='';
 
       try{if(typeof renderHome==='function')renderHome()}catch(_){ }
@@ -163,17 +114,15 @@
       return true;
     }catch(error){
       window.LIFE_OS_TODOIST_LAST_ERROR=String(error&&error.message||error);
-      console.warn('Life OS Todoist direct sync failed',error);
+      console.warn('Life OS Todoist bridge sync failed',error);
       return false;
     }
   }
 
-  installTokenFromHash();
-
   window.lifeOsCompleteTodoist=completeTodoistTask;
   window.lifeOsRefreshTodoist=syncLiveTodoist;
   window.lifeOsSyncTodoistLive=syncLiveTodoist;
-  window.lifeOsHasTodoistToken=()=>!!token();
+  window.lifeOsHasTodoistToken=()=>true;
 
   const oldRefresh=window.refreshLifeOsToday;
   if(typeof oldRefresh==='function'){
@@ -185,7 +134,7 @@
   }
 
   window.addEventListener('load',()=>{
-    setTimeout(syncLiveTodoist,250);
+    setTimeout(syncLiveTodoist,180);
     setInterval(syncLiveTodoist,10000);
   });
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)setTimeout(syncLiveTodoist,50)});
