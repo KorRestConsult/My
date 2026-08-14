@@ -4,7 +4,7 @@
     "city": "Рязань",
     "timezone": "Europe/Moscow",
     "source": "Google Calendar + Todoist",
-    "updatedAt": "2026-08-14T11:58:09+03:00",
+    "updatedAt": "2026-08-14T13:03:36+03:00",
     "syncMode": "snapshot"
   },
   "calendarToday": [
@@ -12,14 +12,12 @@
     {"id":"916t2jilhgpoclgi3kpnbu4c84_20260814T041000Z","start":"07:10","end":"08:30","title":"Утро","place":"","source":"Google Calendar"},
     {"id":"0092lj6asdolb1isu4ggof1urg_20260814T053000Z","start":"08:30","end":"09:00","title":"Дорога · на работу","place":"","source":"Google Calendar"},
     {"id":"jqginl5hg2nmb4f1chir0uspo8_20260814T060000Z","start":"09:00","end":"11:30","title":"Работа","place":"","source":"Google Calendar"},
-    {"id":"5vafa2hp7nrcauptq99h8cej60","start":"11:15","end":"11:30","title":"КЛ | День 1 — старт и фактическая диагностика","place":"","source":"Google Calendar"},
     {"id":"25tbtk01mhp6jqhgqb42bh6r6c_20260814T083000Z","start":"11:30","end":"11:45","title":"Кофе","place":"","source":"Google Calendar"},
     {"id":"0h5egbk0v9vqe5030e4iaed60k_20260814T084500Z","start":"11:45","end":"13:00","title":"Работа","place":"","source":"Google Calendar"},
     {"id":"ocf8h2nd02g3v5rj4or2qsbdu8_20260814T100000Z","start":"13:00","end":"14:00","title":"Обед","place":"","source":"Google Calendar"},
     {"id":"njmjms6hcib5gemqs9vecpbvbc_20260814T110000Z","start":"14:00","end":"17:00","title":"Работа","place":"","source":"Google Calendar"},
     {"id":"g5ekqbbvp7oagvhrjht89fqmq8_20260814T140000Z","start":"17:00","end":"17:30","title":"Дорога · домой","place":"","source":"Google Calendar"},
     {"id":"04qet3vip6j0t44g26la6595m8_20260814T143000Z","start":"17:30","end":"18:00","title":"Перезагрузка · душ","place":"","source":"Google Calendar"},
-    {"id":"o1kcfm60oj5kt3qhlnpniro1c4_20260814T144500Z","start":"17:45","end":"18:00","title":"КЛ | Итог рабочего дня","place":"","source":"Google Calendar"},
     {"id":"v250g6kgahbbm9ac9j6036cqfo_20260814T150000Z","start":"18:00","end":"18:45","title":"Дом и быт","place":"","source":"Google Calendar"},
     {"id":"7v1kuaugiqn044did6aesdathg_20260814T154500Z","start":"18:45","end":"19:30","title":"Деньги и документы","place":"","source":"Google Calendar"},
     {"id":"v46pjp1pstmbcqu1927o6fvbno_20260814T163000Z","start":"19:30","end":"20:15","title":"Личные дела","place":"","source":"Google Calendar"},
