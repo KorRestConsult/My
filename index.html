@@ -1744,7 +1744,8 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 #home .section-card:has(#homeHabits){display:none!important}
 
 /* Mortgage command centre */
-.mortgage-os{display:grid;gap:10px}
+.mortgage-os{display:grid;gap:10px;min-width:0;max-width:100%}
+.mortgage-os>*{min-width:0;max-width:100%}
 .mortgage-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#173a2d 0%,#244b3a 58%,#2d6049 100%);color:#fff4df;border-color:rgba(255,255,255,.12);padding:18px}
 .mortgage-hero:after{content:"0%";position:absolute;right:-13px;bottom:-34px;font:700 108px/1 Georgia,"Times New Roman",serif;color:rgba(255,255,255,.045);pointer-events:none}
 .mortgage-hero-top{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
@@ -1761,7 +1762,8 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 .mortgage-progress-head b{color:#f1c879;font-size:12px}
 .mortgage-progress{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
 .mortgage-progress>div{height:100%;border-radius:inherit;background:linear-gradient(90deg,#c1812f,#f1c879);transition:width .35s ease}
-.mortgage-layout{display:grid;grid-template-columns:.86fr 1.14fr;gap:10px}
+.mortgage-layout{display:grid;grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);gap:10px;min-width:0;max-width:100%}
+.mortgage-layout>*{min-width:0;max-width:100%}
 .mortgage-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .mortgage-field{display:grid;gap:5px;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}
 .mortgage-field input{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.66);color:var(--ink);padding:9px 10px;font-size:13px;font-weight:750;text-transform:none;letter-spacing:0;outline:none}
@@ -1791,7 +1793,7 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 .mortgage-win b{display:block;font:700 18px/1 Georgia,"Times New Roman",serif;color:var(--gold2)}
 .mortgage-win span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.35}
 .mortgage-next-win{margin-top:9px;border:1px solid rgba(47,134,93,.24);border-radius:9px;background:rgba(47,134,93,.08);padding:9px 10px;color:#2c6f4d;font-size:10px;font-weight:800}
-.mortgage-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.mortgage-table-wrap{width:100%;min-width:0;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:10px}
 .mortgage-table{width:100%;min-width:900px;border-collapse:collapse;background:rgba(255,255,255,.42);font-size:10px}
 .mortgage-table th{position:sticky;top:0;z-index:1;background:#e9dfcf;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.07em;text-align:left;padding:8px 7px;white-space:nowrap}
 .mortgage-table td{border-top:1px solid var(--line);padding:6px 7px;white-space:nowrap;vertical-align:middle}
@@ -1810,6 +1812,8 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
   .mortgage-kpis,.mortgage-scenarios,.mortgage-wins{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:560px){
+  #mortgage{min-width:0;max-width:100%;overflow:hidden}
+  #mortgage .card{min-width:0;max-width:100%}
   .mortgage-hero{padding:14px;border-radius:11px}
   .mortgage-amount{font-size:31px}
   .mortgage-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:14px}
