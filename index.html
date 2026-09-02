@@ -1742,6 +1742,83 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
 .life-os-boot-line{width:78px;height:2px;border-radius:99px;background:linear-gradient(90deg,transparent,#b9853e,transparent);animation:lifeOsBootPulse 1s ease-in-out infinite alternate}
 @keyframes lifeOsBootPulse{from{opacity:.35;transform:scaleX(.72)}to{opacity:1;transform:scaleX(1)}}
 #home .section-card:has(#homeHabits){display:none!important}
+
+/* Mortgage command centre */
+.mortgage-os{display:grid;gap:10px}
+.mortgage-hero{position:relative;overflow:hidden;background:linear-gradient(145deg,#173a2d 0%,#244b3a 58%,#2d6049 100%);color:#fff4df;border-color:rgba(255,255,255,.12);padding:18px}
+.mortgage-hero:after{content:"0%";position:absolute;right:-13px;bottom:-34px;font:700 108px/1 Georgia,"Times New Roman",serif;color:rgba(255,255,255,.045);pointer-events:none}
+.mortgage-hero-top{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
+.mortgage-eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:#d9b16e;font-weight:850}
+.mortgage-amount{margin-top:7px;font:700 40px/1 Georgia,"Times New Roman",serif;color:#fff8eb}
+.mortgage-sub{margin-top:7px;color:rgba(255,244,223,.7);font-size:11px;line-height:1.4}
+.mortgage-sheet-link{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(217,177,110,.44);border-radius:8px;padding:8px 10px;color:#f0c87e;text-decoration:none;font-size:10px;font-weight:850;background:rgba(0,0,0,.1);white-space:nowrap}
+.mortgage-kpis{position:relative;z-index:1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}
+.mortgage-kpi{border:1px solid rgba(255,255,255,.13);border-radius:9px;background:rgba(255,255,255,.065);padding:10px;min-width:0}
+.mortgage-kpi span{display:block;color:rgba(255,244,223,.62);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+.mortgage-kpi b{display:block;margin-top:5px;color:#fff4df;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mortgage-progress-wrap{position:relative;z-index:1;margin-top:14px}
+.mortgage-progress-head{display:flex;justify-content:space-between;gap:10px;font-size:10px;color:rgba(255,244,223,.72);margin-bottom:6px}
+.mortgage-progress-head b{color:#f1c879;font-size:12px}
+.mortgage-progress{height:10px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}
+.mortgage-progress>div{height:100%;border-radius:inherit;background:linear-gradient(90deg,#c1812f,#f1c879);transition:width .35s ease}
+.mortgage-layout{display:grid;grid-template-columns:.86fr 1.14fr;gap:10px}
+.mortgage-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.mortgage-field{display:grid;gap:5px;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.07em;font-weight:800}
+.mortgage-field input{width:100%;min-width:0;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.66);color:var(--ink);padding:9px 10px;font-size:13px;font-weight:750;text-transform:none;letter-spacing:0;outline:none}
+.mortgage-field input:focus{border-color:rgba(193,129,47,.72);box-shadow:0 0 0 3px rgba(193,129,47,.1)}
+.mortgage-rate-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.mortgage-rate{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.58);color:var(--gold2);padding:7px 10px;font-size:10px;font-weight:900}
+.mortgage-rate.active{background:var(--green);border-color:var(--green);color:#fff4df}
+.mortgage-note{margin-top:9px;color:var(--muted);font-size:10px;line-height:1.45}
+.mortgage-chart{height:205px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,.64),rgba(239,230,215,.7));padding:10px}
+.mortgage-chart svg{width:100%;height:100%;overflow:visible}
+.mortgage-chart-grid{stroke:rgba(116,91,57,.12);stroke-width:1}
+.mortgage-chart-plan{fill:none;stroke:#c1812f;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mortgage-chart-fact{fill:none;stroke:#2f865d;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mortgage-chart-label{fill:#756b5f;font-size:9px;font-family:Arial,sans-serif}
+.mortgage-legend{display:flex;gap:14px;align-items:center;margin-top:8px;color:var(--muted);font-size:9px}
+.mortgage-legend i{display:inline-block;width:15px;height:3px;border-radius:99px;margin-right:5px;background:#c1812f;vertical-align:2px}
+.mortgage-legend i.fact{background:#2f865d}
+.mortgage-scenarios{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.mortgage-scenario{border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.58);padding:11px;text-align:left;color:var(--ink);transition:.18s}
+.mortgage-scenario.active{border-color:rgba(193,129,47,.7);background:linear-gradient(145deg,rgba(193,129,47,.14),rgba(255,255,255,.68));box-shadow:inset 3px 0 0 #c1812f}
+.mortgage-scenario small{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+.mortgage-scenario strong{display:block;margin-top:5px;font-size:18px;color:var(--green)}
+.mortgage-scenario span{display:block;margin-top:4px;color:var(--muted);font-size:10px;line-height:1.35}
+.mortgage-wins{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.mortgage-win{border:1px solid var(--line);border-radius:9px;background:var(--paper2);padding:10px;position:relative;overflow:hidden}
+.mortgage-win.reached{border-color:rgba(47,134,93,.45);background:linear-gradient(145deg,rgba(47,134,93,.12),rgba(255,255,255,.5))}
+.mortgage-win b{display:block;font:700 18px/1 Georgia,"Times New Roman",serif;color:var(--gold2)}
+.mortgage-win span{display:block;margin-top:5px;color:var(--muted);font-size:9px;line-height:1.35}
+.mortgage-next-win{margin-top:9px;border:1px solid rgba(47,134,93,.24);border-radius:9px;background:rgba(47,134,93,.08);padding:9px 10px;color:#2c6f4d;font-size:10px;font-weight:800}
+.mortgage-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.mortgage-table{width:100%;min-width:900px;border-collapse:collapse;background:rgba(255,255,255,.42);font-size:10px}
+.mortgage-table th{position:sticky;top:0;z-index:1;background:#e9dfcf;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.07em;text-align:left;padding:8px 7px;white-space:nowrap}
+.mortgage-table td{border-top:1px solid var(--line);padding:6px 7px;white-space:nowrap;vertical-align:middle}
+.mortgage-table tr.is-current{background:rgba(193,129,47,.1)}
+.mortgage-table tr.is-win{background:rgba(47,134,93,.07)}
+.mortgage-table input{width:94px;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.75);padding:6px 7px;font-size:10px;color:var(--ink)}
+.mortgage-table input.mortgage-comment{width:150px}
+.mortgage-status{display:inline-flex;border:1px solid var(--line);border-radius:99px;padding:3px 7px;font-size:8px;font-weight:850;color:var(--muted);background:rgba(255,255,255,.5)}
+.mortgage-status.win{color:#2c6f4d;border-color:rgba(47,134,93,.3);background:rgba(47,134,93,.1)}
+.mortgage-status.due{color:#8a5f13;border-color:rgba(193,129,47,.36);background:rgba(193,129,47,.1)}
+.mortgage-status.missed{color:#9b4a3d;border-color:rgba(192,68,57,.32);background:rgba(192,68,57,.09)}
+.mortgage-table-note{margin-top:8px;color:var(--muted);font-size:9px;line-height:1.4}
+@media(max-width:760px){
+  .mortgage-hero-top,.mortgage-layout{grid-template-columns:1fr}
+  .mortgage-sheet-link{width:max-content}
+  .mortgage-kpis,.mortgage-scenarios,.mortgage-wins{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .mortgage-hero{padding:14px;border-radius:11px}
+  .mortgage-amount{font-size:31px}
+  .mortgage-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-top:14px}
+  .mortgage-kpi{padding:9px}.mortgage-kpi b{font-size:15px}
+  .mortgage-controls{grid-template-columns:1fr 1fr}
+  .mortgage-chart{height:175px}
+  .mortgage-scenarios{grid-template-columns:1fr 1fr}
+  .mortgage-scenario{padding:9px}.mortgage-scenario strong{font-size:16px}
+}
 </style>
 
 </head>
@@ -2021,6 +2098,74 @@ window.LIFE_OS_SECRETARY_SAMPLE = {"meta":{"date":"2026-07-27","city":"Ряза�
           <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></div><h2>Операции</h2></div>
         </div>
         <div id="financeOperations"></div>
+      </section>
+    </div>
+  </section>
+
+  <section class="view" id="mortgage">
+    <div class="mortgage-os">
+      <section class="card mortgage-hero">
+        <div class="mortgage-hero-top">
+          <div>
+            <div class="mortgage-eyebrow">Ипотека · ставка 0%</div>
+            <div class="mortgage-amount" id="mortgageHeroAmount">3 000 000 ₽</div>
+            <div class="mortgage-sub" id="mortgageHeroSub">Плановое закрытие — апрель 2030</div>
+          </div>
+          <a class="mortgage-sheet-link" href="https://docs.google.com/spreadsheets/d/15BsyIn4eglomCan8By63l1RV-3bTAY8Hkcy1xuyInLY/edit#gid=2026090101" target="_blank" rel="noopener">Открыть расчёт в Штабе ↗</a>
+        </div>
+        <div class="mortgage-kpis" id="mortgageKpis"></div>
+        <div class="mortgage-progress-wrap">
+          <div class="mortgage-progress-head"><span>Фактически погашено</span><b id="mortgageProgressText">0%</b></div>
+          <div class="mortgage-progress"><div id="mortgageProgressFill" style="width:0%"></div></div>
+        </div>
+      </section>
+
+      <div class="mortgage-layout">
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 17V9M12 17V5M18 17v-4"></path></svg></div><h2>Параметры плана</h2></div>
+          </div>
+          <div class="mortgage-controls">
+            <label class="mortgage-field">Цель, ₽<input id="mortgageGoalInput" type="number" min="1" step="10000" inputmode="numeric" onchange="mortgageSet('goal',this.value)"></label>
+            <label class="mortgage-field">Доход в месяц, ₽<input id="mortgageIncomeInput" type="number" min="0" step="1000" inputmode="numeric" onchange="mortgageSet('income',this.value)"></label>
+            <label class="mortgage-field">Доля дохода, %<input id="mortgageRateInput" type="number" min="1" max="100" step="1" inputmode="numeric" onchange="mortgageSet('rate',this.value)"></label>
+            <label class="mortgage-field">Уже погашено, ₽<input id="mortgagePaidInput" type="number" min="0" step="1000" inputmode="numeric" onchange="mortgageSet('paidBefore',this.value)"></label>
+            <label class="mortgage-field">Первый платёж<input id="mortgageStartInput" type="month" onchange="mortgageSet('startMonth',this.value)"></label>
+          </div>
+          <div class="mortgage-rate-row" id="mortgageRateButtons"></div>
+          <div class="mortgage-note" id="mortgagePlanNote"></div>
+        </section>
+
+        <section class="card">
+          <div class="section-head">
+            <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M4 18 9 12l4 3 7-9"></path><path d="M20 10V6h-4"></path></svg></div><h2>Траектория погашения</h2></div>
+          </div>
+          <div class="mortgage-chart" id="mortgageChart" aria-label="График планового и фактического погашения"></div>
+          <div class="mortgage-legend"><span><i></i>План</span><span><i class="fact"></i>Факт</span></div>
+        </section>
+      </div>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M5 19h14M7 16l3-4 3 2 4-6"></path></svg></div><h2>Сценарии скорости</h2></div>
+        </div>
+        <div class="mortgage-scenarios" id="mortgageScenarios"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><path d="M12 3 15 9l6 .9-4.5 4.4 1.1 6.2L12 17.6 6.4 20.5l1.1-6.2L3 9.9 9 9z"></path></svg></div><h2>Линия побед</h2></div>
+        </div>
+        <div class="mortgage-wins" id="mortgageWins"></div>
+        <div class="mortgage-next-win" id="mortgageNextWin"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div class="section-title-row"><div class="section-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4M16 3v4M4 10h16"></path></svg></div><h2>График платежей</h2></div>
+        </div>
+        <div class="mortgage-table-wrap"><table class="mortgage-table"><thead><tr><th>№</th><th>Месяц</th><th>План</th><th>Факт</th><th>Сверх плана</th><th>Всего</th><th>Остаток</th><th>Статус</th><th>Комментарий</th></tr></thead><tbody id="mortgageSchedule"></tbody></table></div>
+        <div class="mortgage-table-note">В «Факт» вносится основной платёж, в «Сверх плана» — любое дополнительное пополнение. Остаток и дата финиша пересчитываются автоматически.</div>
       </section>
     </div>
   </section>
@@ -2425,6 +2570,7 @@ const views=[
   ["projects","Проекты"],
   ["library","Знания"],
   ["finance","Финансы"],
+  ["mortgage","Ипотека"],
   ["resume","Резюме"],
   ["auto","Авто"],
   ["property","Недвижимость"],
@@ -2708,7 +2854,19 @@ function normalizeState(data){
   }
   data.auto=normalizeAutoState(data);
   data.property=normalizePropertyState(data.property);
+  data.mortgage=normalizeMortgageState(data.mortgage);
   return data;
+}
+function normalizeMortgageState(value){
+  const base={goal:3000000,income:200000,rate:35,paidBefore:0,startMonth:"2026-10",actuals:{}};
+  const mortgage=Object.assign({},base,value||{});
+  mortgage.goal=Math.max(1,Number(mortgage.goal)||base.goal);
+  mortgage.income=Math.max(0,Number(mortgage.income)||0);
+  mortgage.rate=Math.min(100,Math.max(1,Number(mortgage.rate)||base.rate));
+  mortgage.paidBefore=Math.min(mortgage.goal,Math.max(0,Number(mortgage.paidBefore)||0));
+  mortgage.startMonth=/^\d{4}-\d{2}$/.test(String(mortgage.startMonth||""))?mortgage.startMonth:base.startMonth;
+  mortgage.actuals=mortgage.actuals&&typeof mortgage.actuals==="object"?mortgage.actuals:{};
+  return mortgage;
 }
 function normalizePropertyState(property){
   const base=defaultProperties();
@@ -2806,6 +2964,7 @@ function buildNav(){
     library:'<svg viewBox="0 0 24 24"><path d="m3 8 9-5 9 5-9 5-9-5Z"></path><path d="M7 10.5v5L12 18l5-2.5v-5"></path></svg>',
     cabinet:'<svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"></circle><path d="M4 21c1.6-4 14.4-4 16 0"></path></svg>',
     finance:'<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"></rect><path d="M16 10h4M7 10h4"></path></svg>',
+    mortgage:'<svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"></path><path d="M5 10v10h14V10"></path><path d="M8 15h8M12 12v6"></path></svg>',
     resume:'<svg viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"></path><path d="M14 3v5h5M9 13h6M9 17h6"></path></svg>',
     auto:'<svg viewBox="0 0 24 24"><path d="M5 16h14M7 16l1.4-5.2A3 3 0 0 1 11.3 8h1.4a3 3 0 0 1 2.9 2.8L17 16M6 16v3M18 16v3"></path></svg>',
     property:'<svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>',
@@ -2831,6 +2990,7 @@ function showView(id,updateHash=false){
   if(pageHeadingTitle)pageHeadingTitle.textContent=viewLabel;
   if(updateHash)history.replaceState(null,"",`#${id}`);
   if(id==="finance")refreshFinanceSheet();
+  if(id==="mortgage")renderMortgage();
   window.scrollTo({top:0,behavior:"auto"});
 }
 function traitValue(id,base){
@@ -5602,6 +5762,141 @@ function resetDay(){
   save();
   renderAll();
 }
+const mortgageScenarioRates=[25,35,50,70];
+function mortgageMoney(value){
+  return `${new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(Math.round(Number(value)||0))} ₽`;
+}
+function mortgageMonthDate(key){
+  const parts=String(key||"").split("-").map(Number);
+  return new Date(parts[0]||2026,(parts[1]||1)-1,1,12,0,0);
+}
+function mortgageAddMonth(key,offset){
+  const date=mortgageMonthDate(key);
+  date.setMonth(date.getMonth()+offset);
+  return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}`;
+}
+function mortgageMonthLabel(key,short=false){
+  const label=new Intl.DateTimeFormat("ru-RU",short?{month:"short",year:"numeric"}:{month:"long",year:"numeric"}).format(mortgageMonthDate(key)).replace(" г.","");
+  return label.charAt(0).toUpperCase()+label.slice(1);
+}
+function mortgageTodayMonth(){
+  const now=new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+}
+function mortgageEsc(value){
+  return String(value==null?"":value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[char]);
+}
+function mortgageBuildModel(rateOverride){
+  const cfg=normalizeMortgageState(state.mortgage);
+  const rate=Number(rateOverride==null?cfg.rate:rateOverride);
+  const payment=Math.max(0,Math.round(cfg.income*rate/100));
+  const initialRemaining=Math.max(0,cfg.goal-cfg.paidBefore);
+  const months=payment>0?Math.ceil(initialRemaining/payment):0;
+  const schedule=[];
+  let planPaid=cfg.paidBefore;
+  let factPaid=cfg.paidBefore;
+  const today=mortgageTodayMonth();
+  for(let index=0;index<months;index++){
+    const key=mortgageAddMonth(cfg.startMonth,index);
+    const plan=Math.min(payment,Math.max(0,cfg.goal-planPaid));
+    planPaid+=plan;
+    const saved=cfg.actuals[key]||{};
+    const actual=Math.max(0,Number(saved.actual)||0);
+    const extra=Math.max(0,Number(saved.extra)||0);
+    const total=Math.min(Math.max(0,cfg.goal-factPaid),actual+extra);
+    factPaid+=total;
+    const hasPayment=actual+extra>0;
+    let status="Запланировано",statusClass="";
+    if(hasPayment&&total>=plan){status=key>today?"Внесено заранее":"Победа";statusClass="win"}
+    else if(hasPayment){status="Частично";statusClass="due"}
+    else if(key<today){status="Пропущено";statusClass="missed"}
+    else if(key===today){status="Внести";statusClass="due"}
+    schedule.push({index:index+1,key,plan,actual,extra,total,note:saved.note||"",planPaid,factPaid,remainingPlan:Math.max(0,cfg.goal-planPaid),remainingFact:Math.max(0,cfg.goal-factPaid),status,statusClass,isCurrent:key===today});
+  }
+  const rawActualPaid=cfg.paidBefore+Object.values(cfg.actuals).reduce((sum,item)=>sum+Math.max(0,Number(item&&item.actual)||0)+Math.max(0,Number(item&&item.extra)||0),0);
+  const actualPaid=Math.min(cfg.goal,rawActualPaid);
+  return {cfg,rate,payment,months,schedule,actualPaid,progress:cfg.goal?Math.min(100,actualPaid/cfg.goal*100):0,payoff:schedule.length?schedule[schedule.length-1].key:cfg.startMonth,finalPayment:schedule.length?schedule[schedule.length-1].plan:0};
+}
+function mortgageSet(field,value){
+  state.mortgage=normalizeMortgageState(state.mortgage);
+  if(field==="startMonth")state.mortgage.startMonth=value;
+  else state.mortgage[field]=Math.max(0,Number(value)||0);
+  state.mortgage=normalizeMortgageState(state.mortgage);
+  save();
+  renderMortgage();
+}
+function mortgageSetRate(rate){
+  state.mortgage=normalizeMortgageState(state.mortgage);
+  state.mortgage.rate=Number(rate);
+  save();
+  renderMortgage();
+}
+function mortgageUpdateActual(key,field,value){
+  state.mortgage=normalizeMortgageState(state.mortgage);
+  const row=state.mortgage.actuals[key]||{actual:"",extra:"",note:""};
+  row[field]=field==="note"?String(value||""):Math.max(0,Number(value)||0);
+  state.mortgage.actuals[key]=row;
+  save();
+  renderMortgage();
+}
+function mortgageChartHtml(model){
+  const width=640,height=172,padX=42,padTop=10,padBottom=28;
+  const innerW=width-padX-12,innerH=height-padTop-padBottom;
+  const points=[{remaining:Math.max(0,model.cfg.goal-model.cfg.paidBefore)}].concat(model.schedule.map(row=>({remaining:row.remainingPlan})));
+  const planPoints=points.map((point,index)=>`${padX+(points.length<2?0:index/(points.length-1)*innerW)},${padTop+(model.cfg.goal?point.remaining/model.cfg.goal:0)*innerH}`).join(" ");
+  let lastFactIndex=0;
+  model.schedule.forEach((row,index)=>{if(row.actual+row.extra>0)lastFactIndex=index+1});
+  const factRows=[{remaining:Math.max(0,model.cfg.goal-model.cfg.paidBefore)}].concat(model.schedule.slice(0,lastFactIndex).map(row=>({remaining:row.remainingFact})));
+  const factPoints=factRows.map((point,index)=>`${padX+(points.length<2?0:index/(points.length-1)*innerW)},${padTop+(model.cfg.goal?point.remaining/model.cfg.goal:0)*innerH}`).join(" ");
+  const endLabel=model.schedule.length?mortgageMonthLabel(model.schedule[model.schedule.length-1].key,true):"—";
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Остаток по ипотеке: план и факт"><line class="mortgage-chart-grid" x1="${padX}" y1="${padTop}" x2="${padX+innerW}" y2="${padTop}"/><line class="mortgage-chart-grid" x1="${padX}" y1="${padTop+innerH/2}" x2="${padX+innerW}" y2="${padTop+innerH/2}"/><line class="mortgage-chart-grid" x1="${padX}" y1="${padTop+innerH}" x2="${padX+innerW}" y2="${padTop+innerH}"/><text class="mortgage-chart-label" x="0" y="${padTop+3}">${Math.round(model.cfg.goal/100000)/10} млн</text><text class="mortgage-chart-label" x="18" y="${padTop+innerH+3}">0</text><polyline class="mortgage-chart-plan" points="${planPoints}"/>${factPoints?`<polyline class="mortgage-chart-fact" points="${factPoints}"/>`:""}<text class="mortgage-chart-label" x="${padX}" y="${height-5}">${mortgageMonthLabel(model.cfg.startMonth,true)}</text><text class="mortgage-chart-label" text-anchor="end" x="${padX+innerW}" y="${height-5}">${endLabel}</text></svg>`;
+}
+function renderMortgage(){
+  const root=document.getElementById("mortgage");
+  if(!root)return;
+  state.mortgage=normalizeMortgageState(state.mortgage);
+  const model=mortgageBuildModel();
+  const cfg=model.cfg;
+  const living=Math.max(0,cfg.income-model.payment);
+  const payoffLabel=model.months?mortgageMonthLabel(model.payoff):"Цель закрыта";
+  document.getElementById("mortgageHeroAmount").textContent=mortgageMoney(cfg.goal);
+  document.getElementById("mortgageHeroSub").textContent=model.months?`Плановое закрытие — ${payoffLabel.toLowerCase()}`:"Ипотека полностью погашена";
+  document.getElementById("mortgageKpis").innerHTML=[
+    ["Платёж в месяц",mortgageMoney(model.payment)],
+    ["Остаётся на жизнь",mortgageMoney(living)],
+    ["Срок",model.months?`${model.months} мес.`:"0 мес."],
+    ["Последний платёж",mortgageMoney(model.finalPayment)]
+  ].map(item=>`<div class="mortgage-kpi"><span>${item[0]}</span><b>${item[1]}</b></div>`).join("");
+  document.getElementById("mortgageProgressText").textContent=`${model.progress.toFixed(model.progress&&model.progress<1?1:0)}% · ${mortgageMoney(model.actualPaid)}`;
+  document.getElementById("mortgageProgressFill").style.width=`${model.progress}%`;
+  document.getElementById("mortgageGoalInput").value=cfg.goal;
+  document.getElementById("mortgageIncomeInput").value=cfg.income;
+  document.getElementById("mortgageRateInput").value=cfg.rate;
+  document.getElementById("mortgagePaidInput").value=cfg.paidBefore;
+  document.getElementById("mortgageStartInput").value=cfg.startMonth;
+  document.getElementById("mortgageRateButtons").innerHTML=mortgageScenarioRates.map(rate=>`<button class="mortgage-rate${rate===cfg.rate?" active":""}" onclick="mortgageSetRate(${rate})">${rate}% дохода</button>`).join("");
+  document.getElementById("mortgagePlanNote").innerHTML=`Доход <b>${mortgageMoney(cfg.income)}</b> учитывается с ${mortgageMonthLabel(cfg.startMonth).toLowerCase()}. На ипотеку направляется <b>${cfg.rate}%</b>. Проценты банка — <b>0 ₽</b>.`;
+  document.getElementById("mortgageChart").innerHTML=mortgageChartHtml(model);
+  document.getElementById("mortgageScenarios").innerHTML=mortgageScenarioRates.map(rate=>{
+    const scenario=mortgageBuildModel(rate);
+    const free=Math.max(0,cfg.income-scenario.payment);
+    return `<button class="mortgage-scenario${rate===cfg.rate?" active":""}" onclick="mortgageSetRate(${rate})"><small>${rate}% дохода</small><strong>${mortgageMoney(scenario.payment)}</strong><span>${scenario.months} мес. · до ${mortgageMonthLabel(scenario.payoff).toLowerCase()}<br>Свободно ${mortgageMoney(free)}</span></button>`;
+  }).join("");
+  const milestoneLevels=[25,50,75,100];
+  const milestones=milestoneLevels.map(level=>{
+    const target=cfg.goal*level/100;
+    const row=model.schedule.find(item=>item.planPaid>=target);
+    return {level,target,key:row?row.key:model.payoff,reached:model.actualPaid>=target};
+  });
+  document.getElementById("mortgageWins").innerHTML=milestones.map(item=>`<div class="mortgage-win${item.reached?" reached":""}"><b>${item.level}%${item.reached?" ✓":""}</b><span>${mortgageMoney(item.target)}<br>${item.reached?"Победа зафиксирована":`План: ${mortgageMonthLabel(item.key)}`}</span></div>`).join("");
+  const next=milestones.find(item=>!item.reached);
+  document.getElementById("mortgageNextWin").textContent=next?`Следующая победа — ${next.level}%. Осталось ${mortgageMoney(Math.max(0,next.target-model.actualPaid))}; по плану — ${mortgageMonthLabel(next.key).toLowerCase()}.`:"Главная победа достигнута: ипотека закрыта полностью.";
+  document.getElementById("mortgageSchedule").innerHTML=model.schedule.map(row=>{
+    const actualRaw=cfg.actuals[row.key]&&cfg.actuals[row.key].actual!=null?cfg.actuals[row.key].actual:"";
+    const extraRaw=cfg.actuals[row.key]&&cfg.actuals[row.key].extra!=null?cfg.actuals[row.key].extra:"";
+    return `<tr class="${row.isCurrent?"is-current ":""}${row.statusClass==="win"?"is-win":""}"><td>${row.index}</td><td><b>${mortgageMonthLabel(row.key,true)}</b></td><td>${mortgageMoney(row.plan)}</td><td><input type="number" min="0" step="1000" inputmode="numeric" value="${mortgageEsc(actualRaw)}" placeholder="0" aria-label="Фактический платёж за ${mortgageEsc(mortgageMonthLabel(row.key))}" onchange="mortgageUpdateActual('${row.key}','actual',this.value)"></td><td><input type="number" min="0" step="1000" inputmode="numeric" value="${mortgageEsc(extraRaw)}" placeholder="0" aria-label="Дополнительный платёж за ${mortgageEsc(mortgageMonthLabel(row.key))}" onchange="mortgageUpdateActual('${row.key}','extra',this.value)"></td><td><b>${mortgageMoney(row.total)}</b></td><td>${mortgageMoney(row.remainingFact)}</td><td><span class="mortgage-status ${row.statusClass}">${row.status}</span></td><td><input class="mortgage-comment" value="${mortgageEsc(row.note)}" placeholder="Комментарий" aria-label="Комментарий за ${mortgageEsc(mortgageMonthLabel(row.key))}" onchange="mortgageUpdateActual('${row.key}','note',this.value)"></td></tr>`;
+  }).join("");
+}
 function renderAll(){
   renderHome();
   renderSecretarySnapshot();
@@ -5618,6 +5913,7 @@ function renderAll(){
   renderCar();
   renderProperty();
   renderHealth();
+  renderMortgage();
   renderAppleSync();
   renderTotals();
 }
