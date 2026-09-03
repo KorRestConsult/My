@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Позвонить</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f5f1e9;color:#24201a;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:24px}.card{width:min(460px,100%);background:#fffaf2;border:1px solid rgba(116,91,57,.18);border-radius:18px;padding:28px;text-align:center;box-shadow:0 18px 50px rgba(78,57,31,.12)}.icon{font-size:40px}.label{margin-top:10px;color:#756b5f;font-size:13px}.number{font-size:28px;font-weight:800;margin:8px 0 20px;word-break:break-word}.call{display:block;width:100%;border:0;border-radius:14px;background:#244b3a;color:#fffaf2;padding:15px 18px;font-size:18px;font-weight:800;text-decoration:none}.hint{margin-top:14px;color:#756b5f;font-size:12px;line-height:1.4}.bad{color:#b6564d}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="icon">☎</div>
+    <div class="label">Звонок</div>
+    <div class="number" id="number">—</div>
+    <a class="call" id="call" href="#">Позвонить</a>
+    <div class="hint" id="hint">Если вызов не открылся автоматически, нажмите кнопку.</div>
+  </main>
+<script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  const raw=params.get('n')||params.get('phone')||'';
+  const digits=raw.replace(/\D/g,'');
+  let phone='';
+  if(digits.length===11 && digits[0]==='8') phone='+7'+digits.slice(1);
+  else if(digits.length===11 && digits[0]==='7') phone='+'+digits;
+  else if(digits.length>=10 && digits.length<=15) phone='+'+digits;
+  const numberEl=document.getElementById('number');
+  const callEl=document.getElementById('call');
+  const hintEl=document.getElementById('hint');
+  if(!phone){
+    numberEl.textContent='Номер не указан';
+    callEl.style.display='none';
+    hintEl.textContent='В ссылке должен быть параметр ?n=+79991234567';
+    hintEl.classList.add('bad');
+    return;
+  }
+  const pretty=phone.replace(/^\+7(\d{3})(\d{3})(\d{2})(\d{2})$/,'+7 $1 $2-$3-$4');
+  numberEl.textContent=pretty;
+  callEl.href='tel:'+phone;
+  callEl.addEventListener('click',()=>{ setTimeout(()=>{hintEl.textContent='Если macOS спросит, выберите FaceTime/Телефон для вызова.'},250); });
+  // Переход из Google Sheets уже является действием пользователя; пробуем сразу передать номер системе.
+  setTimeout(()=>{ location.href='tel:'+phone; },120);
+})();
+</script>
+</body>
+</html>
