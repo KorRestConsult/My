@@ -27,7 +27,7 @@ function blobStore() {
 }
 
 export function isAuthorized(req: Request) {
-  const expected = env("ZHKH_ACCESS_KEY");
+  const expected = env("ZHKH_ACCESS_KEY") || env("DASHBOARD_TOKEN");
   if (!expected) return false;
   const direct = req.headers.get("x-zhkh-key") || "";
   const auth = req.headers.get("authorization") || "";
@@ -39,16 +39,16 @@ export function seedState() {
   return {
     schemaVersion: 1,
     property: {
-      address: env("ZHKH_ADDRESS"),
+      address: env("ZHKH_ADDRESS") || env("PROPERTY_ADDRESS"),
     },
     services: {
       electricity: {
         title: "Электроэнергия",
         provider: "ООО «Р-Энергия»",
-        account: env("ZHKH_ELECTRIC_ACCOUNT"),
-        currentDebt: num("ZHKH_ELECTRIC_DEBT"),
+        account: env("ZHKH_ELECTRIC_ACCOUNT") || env("ELECTRIC_ACCOUNT"),
+        currentDebt: num("ZHKH_ELECTRIC_DEBT") ?? num("ELECTRIC_DEBT"),
         currency: "RUB",
-        verifiedAt: env("ZHKH_ELECTRIC_VERIFIED_AT") || null,
+        verifiedAt: env("ZHKH_ELECTRIC_VERIFIED_AT") || env("ELECTRIC_VERIFIED_AT") || null,
         confidence: "confirmed",
         collection: "public-form",
         source: "Р-Энергия / Абонент+",
@@ -56,10 +56,10 @@ export function seedState() {
       tko: {
         title: "ТКО",
         provider: "ООО «Эко-Пронск»",
-        account: env("ZHKH_TKO_ACCOUNT"),
-        currentDebt: num("ZHKH_TKO_DEBT"),
+        account: env("ZHKH_TKO_ACCOUNT") || env("TKO_ACCOUNT"),
+        currentDebt: num("ZHKH_TKO_DEBT") ?? num("TKO_DEBT"),
         currency: "RUB",
-        verifiedAt: env("ZHKH_TKO_VERIFIED_AT") || null,
+        verifiedAt: env("ZHKH_TKO_VERIFIED_AT") || env("TKO_VERIFIED_AT") || null,
         confidence: "confirmed",
         collection: "public-form",
         source: "Эко-Пронск / Абонент+",
@@ -67,7 +67,7 @@ export function seedState() {
       gas: {
         title: "Газ",
         provider: "ООО «Газпром межрегионгаз Рязань»",
-        account: env("ZHKH_GAS_ACCOUNT"),
+        account: env("ZHKH_GAS_ACCOUNT") || env("GAS_ACCOUNT"),
         currentDebt: null,
         currency: "RUB",
         verifiedAt: null,
@@ -78,7 +78,7 @@ export function seedState() {
       water: {
         title: "ХВС / водоотведение",
         provider: "МП «Водоканал города Рязани»",
-        account: env("ZHKH_WATER_ACCOUNT"),
+        account: env("ZHKH_WATER_ACCOUNT") || env("WATER_ACCOUNT"),
         currentDebt: null,
         currency: "RUB",
         verifiedAt: null,
@@ -100,8 +100,8 @@ export function seedState() {
       },
       housing: {
         title: "УК / содержание дома",
-        provider: env("ZHKH_UK_NAME"),
-        account: env("ZHKH_KVC_ACCOUNT"),
+        provider: env("ZHKH_UK_NAME") || env("UK_NAME"),
+        account: env("ZHKH_KVC_ACCOUNT") || env("KVTS_ACCOUNT"),
         currentDebt: null,
         currency: "RUB",
         verifiedAt: null,
