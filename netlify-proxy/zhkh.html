@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ЖКХ — Лесопарковая</title>
+<style>
+:root{color-scheme:light dark;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#111;color:#f5f5f5}
+main{max-width:920px;margin:0 auto;padding:24px 16px 56px}
+h1{font-size:28px;margin:0 0 6px}.muted{color:#999}.top{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+button,input{font:inherit;border-radius:12px;border:1px solid #333;background:#1b1b1b;color:#fff;padding:11px 13px}
+button{cursor:pointer}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:20px}
+.card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:18px;padding:16px}
+.value{font-size:28px;font-weight:700;margin:10px 0 4px}.ok{color:#8ee89b}.warn{color:#ffd27b}.bad{color:#ff8b8b}
+.row{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #292929;padding:10px 0}.row:first-child{border-top:0}
+.small{font-size:13px}.hide{display:none}#login{margin-top:24px;display:flex;gap:8px;flex-wrap:wrap}#err{margin-top:12px;color:#ff8b8b}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 5px;border-bottom:1px solid #292929}th{color:#aaa;font-weight:500}
+</style>
+</head>
+<body><main>
+<div class="top"><div><h1>ЖКХ · Лесопарковая</h1><div class="muted" id="address">Личный монитор коммуналки</div></div><button id="refreshBtn" class="hide">Обновить сейчас</button></div>
+<div id="login"><input id="key" type="password" autocomplete="current-password" placeholder="Ключ доступа"><button id="loginBtn">Открыть</button></div>
+<div id="err"></div>
+<section id="app" class="hide">
+<div class="grid">
+  <div class="card"><div class="muted small">Известный текущий долг</div><div class="value" id="total">—</div><div class="small muted" id="unknown"></div></div>
+  <div class="card"><div class="muted small">Последнее обновление</div><div class="value" style="font-size:20px" id="updated">—</div><div class="small muted" id="bankSync"></div></div>
+</div>
+<div class="grid" id="services"></div>
+<div class="card" style="margin-top:12px"><h2 style="font-size:18px;margin-top:0">Последние коммунальные платежи</h2><div style="overflow:auto"><table><thead><tr><th>Дата</th><th>Кому</th><th>Сумма</th><th>Банк</th></tr></thead><tbody id="payments"></tbody></table></div></div>
+</section>
+<script>
+const $=s=>document.querySelector(s);
+let key=localStorage.getItem("zhkhKey")||"";
+$("#key").value=key;
+function money(v){return v==null?"не получено":new Intl.NumberFormat("ru-RU",{style:"currency",currency:"RUB"}).format(v)}
+function fmtDate(v){if(!v)return"—";try{return new Date(v).toLocaleString("ru-RU",{timeZone:"Europe/Moscow"})}catch{return v}}
+async function api(path,method="GET"){
+  const r=await fetch(path,{method,headers:{"x-zhkh-key":key}});
+  if(!r.ok)throw new Error(r.status===401?"Неверный ключ доступа":"Ошибка "+r.status);
+  return r.json();
+}
+function serviceCard(s){
+  const debt=s.currentDebt;
+  const cls=debt==null?"warn":debt>0?"bad":"ok";
+  return '<div class="card"><div class="top"><strong>'+escapeHtml(s.title||"")+'</strong><span class="'+cls+'">'+(debt==null?"нет суммы":money(debt))+'</span></div>'+
+    '<div class="row small"><span class="muted">Поставщик</span><span>'+escapeHtml(s.provider||"—")+'</span></div>'+
+    '<div class="row small"><span class="muted">Лицевой счёт</span><span>'+escapeHtml(s.account||"—")+'</span></div>'+
+    '<div class="row small"><span class="muted">Проверено</span><span>'+escapeHtml(s.verifiedAt||"—")+'</span></div>'+
+    '<div class="row small"><span class="muted">Контур</span><span>'+escapeHtml(s.collection||"—")+'</span></div></div>';
+}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function render(d){
+  $("#address").textContent=d.property?.address||"Личный монитор коммуналки";
+  $("#total").textContent=money(d.summary?.knownDebtTotal);
+  const u=d.summary?.unknownDebtServices||[];
+  $("#unknown").textContent=u.length?"Нет свежей суммы: "+u.join(", "):"Все суммы получены";
+  $("#updated").textContent=fmtDate(d.lastRefreshAt);
+  $("#bankSync").textContent="ZenMoney: "+fmtDate(d.zenmoney?.lastSyncAt)+(d.zenmoney?.lastError?" · ошибка":"");
+  $("#services").innerHTML=Object.values(d.services||{}).map(serviceCard).join("");
+  const payments=(d.zenmoney?.payments||[]).slice(0,30);
+  $("#payments").innerHTML=payments.length?payments.map(p=>'<tr><td>'+escapeHtml(p.date)+'</td><td>'+escapeHtml(p.title)+'</td><td>'+money(p.outcome||0)+'</td><td>'+escapeHtml(p.bank||"—")+'</td></tr>').join(""):'<tr><td colspan="4" class="muted">Коммунальные платежи пока не найдены</td></tr>';
+  $("#login").classList.add("hide");$("#app").classList.remove("hide");$("#refreshBtn").classList.remove("hide");$("#err").textContent="";
+}
+async function load(){try{render(await api("/api/zhkh/status"))}catch(e){$("#err").textContent=e.message}}
+$("#loginBtn").onclick=()=>{key=$("#key").value.trim();localStorage.setItem("zhkhKey",key);load()};
+$("#refreshBtn").onclick=async()=>{const b=$("#refreshBtn");b.disabled=true;b.textContent="Проверяю…";try{render(await api("/api/zhkh/refresh","POST"))}catch(e){$("#err").textContent=e.message}finally{b.disabled=false;b.textContent="Обновить сейчас"}};
+if(key)load();
+</script>
+</main></body></html>
